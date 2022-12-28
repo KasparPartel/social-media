@@ -1,0 +1,48 @@
+package controllers
+
+import (
+	"encoding/json"
+	"net/http"
+)
+
+type User struct {
+	Email       string `json:"email"`
+	Login       string `json:"login"`
+	Password    string `json:"password"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	AboutMe     string `json:"aboutMe"`
+	DateOfBirth int    `json:"dateOfBirth"`
+}
+
+// /user/:id
+func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
+	if r.Method != "PUT" && r.Method != "GET" && r.Method != "DELETE" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
+	// get porfile info if public
+	if r.Method == "GET" {
+		testUser := &User{
+			Email:       "example@example.com",
+			FirstName:   "John",
+			LastName:    "Doe",
+			DateOfBirth: 1672248421,
+			Login:       "foobar",
+			AboutMe:     "test about me",
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(testUser)
+		return
+	}
+
+	if r.Method == "PUT" {
+		// update profile info if autorized
+	}
+
+	if r.Method == "DELETE" {
+		// delete porfile info if autorized
+	}
+}
