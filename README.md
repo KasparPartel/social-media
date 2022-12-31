@@ -2,7 +2,7 @@
 
 # API
 ## **/login POST**
-POST: request to login
+- POST: request to login
 
 parametrs: 
 ```
@@ -12,7 +12,7 @@ password:    string
 ```
 
 ## **/register POST**
-POST: request to register
+- POST: request to register
 
 parametrs: 
 ```
@@ -25,8 +25,38 @@ aboutMe     string
 dateOfBirth int
 ```
 
+return:
+```
+data:{
+    id          int 
+    email       string
+    login       string
+    firstName   string
+    lastName    string
+    dateOfBirth int
+    }
+errors: [{
+    code        uint
+    description string}]
+```
+
+errors: 
+```
+ErrEmailFormat     = 1
+ErrPasswordLow     = 2
+ErrPasswordBig     = 3
+ErrPasswordFormat  = 4
+ErrLoginLow        = 5
+ErrLoginHigh       = 6
+ErrLoginFormat     = 7
+ErrFirstNameFormat = 8
+ErrLastNameFormat  = 9
+ErrUniqueEmail     = 10
+ErrUniqueLogin     = 11
+```
+
 ## **/logout POST**
-POST: request to logout
+- POST: request to logout
 
 to logout you don't need any information
 
