@@ -1,0 +1,39 @@
+.login-form {
+    width: 320px;
+    padding: 10px;
+    border: 5px solid gray;
+    margin: 10px;
+}
+.register-form {
+    width: 320px;
+    padding: 10px;
+    border: 5px solid gray;
+    margin: 10px;
+
+}
+
+body {
+    background-color: aqua;
+}
+
+.form-selector__login-button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.form-selector__regi-button {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
