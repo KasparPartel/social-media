@@ -8,6 +8,9 @@ import (
 
 func main() {
 	http.HandleFunc("/user/", controllers.UserHandler)
+	http.HandleFunc("/register", controllers.RegistrationHandler)
+	http.HandleFunc("/login", controllers.LoginHandler)
+	http.HandleFunc("/logout", controllers.LogoutHandler)
 	http.HandleFunc("/post/", controllers.PostHandler)
 	http.HandleFunc("/comment/", controllers.GetCommentHandler)
 	http.HandleFunc("/chat/", controllers.ChatHandler)

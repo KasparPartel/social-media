@@ -3,17 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"social-network/packages/db/sqlite"
 )
-
-type User struct {
-	Email       string `json:"email"`
-	Login       string `json:"login"`
-	Password    string `json:"password"`
-	FirstName   string `json:"firstName"`
-	LastName    string `json:"lastName"`
-	AboutMe     string `json:"aboutMe"`
-	DateOfBirth int    `json:"dateOfBirth"`
-}
 
 // /user/:id
 func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
@@ -24,7 +15,7 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
 
 	// get porfile info if public
 	if r.Method == "GET" {
-		testUser := &User{
+		testUser := &sqlite.User{
 			Email:       "example@example.com",
 			FirstName:   "John",
 			LastName:    "Doe",
