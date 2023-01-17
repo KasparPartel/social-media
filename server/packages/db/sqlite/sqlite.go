@@ -11,6 +11,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var db *sql.DB
@@ -18,6 +19,7 @@ var db *sql.DB
 type User struct {
 	UUID        string
 	Id          int    `json:"id"`
+	AvatarId    int    `json:"avatarId"`
 	Email       string `json:"email"`
 	Login       string `json:"login"`
 	Password    string `json:"password"`
@@ -78,6 +80,25 @@ func CreateUser(user User) (int, error) {
 	}
 
 	return int(id), nil
+}
+
+func AuthorizeUser(user User) (*User, error) {
+	u := User{}
+
+	err := db.QueryRow(`SELECT uuid, id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE login = ? OR email = ?`, user.Login, user.Login).
+		Scan(&u.UUID, &u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(user.Password))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
 
 func init() {

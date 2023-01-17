@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT, 
     uuid TEXT UNIQUE NOT NULL, 
-    avatarId INTEGER UNIQUE,
+    avatarId INTEGER DEFAULT 0,
     email TEXT UNIQUE NOT NULL, 
     login TEXT UNIQUE NOT NULL, 
     password TEXT NOT NULL, 
     firstName TEXT NOT NULL, 
     lastName TEXT NOT NULL, 
     aboutMe TEXT, 
-    dateOfBirth TIMESTAMP NOT NULL,
+    dateOfBirth INTEGER NOT NULL,
     isPublic TEXT NOT NULL
 );

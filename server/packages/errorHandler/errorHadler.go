@@ -17,6 +17,7 @@ const (
 	ErrLastNameFormat  = 9
 	ErrUniqueEmail     = 10
 	ErrUniqueLogin     = 11
+	ErrIncorrectCred   = 12
 )
 
 type Response struct {
