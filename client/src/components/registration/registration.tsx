@@ -1,48 +1,64 @@
 import './registration.css'
-import { useState } from 'react';
-import { FormProps } from '../../App'
+import '../../constants.css'
+import { ErrorResponse, IdContext, FormProps } from '../models'
+import { useContext, useState } from 'react';
+import ErrorWindow from '../error-window/error-window'
+import { ImageUpload, RegistrationRequest, AdditionalInfoRequest, SkipToMainPage } from '../additional-functions/af'
 
-export function Registration({ view }: FormProps) {
+export function Registration({ setViewExtention }: FormProps) {
+    const { setId } = useContext(IdContext)
+    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     return (
         <div className='registration-page'>
             <div className='registration'>
-                <form className='form'>
+                <form
+                    className='form'
+                    onSubmit={(e) => RegistrationRequest(e, { setViewExtention, }, setErrorArr, setId)}
+                >
                     <input
-                        placeholder="Email"
-                        type="email"
-                        className="form__field" />
-
+                        name='email'
+                        placeholder='Email'
+                        type='email'
+                        className='form__field'
+                    />
                     <input
-                        placeholder="Password"
-                        type="password"
-                        className="form__field" />
-
+                        name='password'
+                        placeholder='Password'
+                        type='password'
+                        className='form__field'
+                    />
                     <input
-                        placeholder="First Name"
-                        type="text"
-                        className="form__field" />
-
+                        name='firstName'
+                        placeholder='First Name'
+                        type='text'
+                        className='form__field'
+                    />
                     <input
-                        placeholder="Last Name"
-                        type="text"
-                        className="form__field" />
-
+                        name='lastName'
+                        placeholder='Last Name'
+                        type='text'
+                        className='form__field'
+                    />
                     <input
-                        placeholder="Birthday"
-                        type="date"
-                        className="form__field" />
-
+                        name='dateOfBirth'
+                        placeholder='Birthday'
+                        type='date'
+                        className='form__field'
+                    />
+                    <ErrorWindow
+                        errorArr={errorArr}
+                    />
                     <input
-                        type="button"
-                        className="form__button"
-                        value="Register"
-                        onClick={() => RegistrationRequest(view)} />
+                        type='submit'
+                        className='form__button'
+                        value='Register'
+                    />
                     <input
-                        type="button"
-                        className="switch-button"
-                        onClick={() => view(0)}
-                        value="Sign in"
+                        type='button'
+                        className='switch-button'
+                        onClick={() => setViewExtention(0)}
+                        value='Sign in'
                     />
                 </form>
             </div>
@@ -52,61 +68,70 @@ export function Registration({ view }: FormProps) {
 }
 
 export function AdditionalInfo() {
+    const { id } = useContext(IdContext)
     const [image, setImage] = useState(null);
+    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     return (
         <div className='additional-info-page'>
             <div className='additional-info'>
-                <form className='form'>
+                <form
+                    className='form'
+                    onSubmit={(e) => AdditionalInfoRequest(e, setErrorArr, id)}
+                >
                     {image &&
                         (<div className='form__image-container form__image-container_centered'>
                             <img
                                 className='form__image'
-                                alt="not found"
+                                alt='not found'
                                 src={URL.createObjectURL(image)} />
 
                             <input
                                 className='form__button form__button_remove'
-                                type="button"
+                                type='button'
                                 onClick={() => setImage(null)}
-                                value="Remove"
+                                value='Remove'
                             />
                         </div>)}
-
-                    <label className='form__button form__button_with-label label_cursor-pointer '>
+                    <label className='form__button form__button_with-label label_cursor-pointer'>
+                        Image upload
                         <input
+                            name='avatar'
                             style={{ display: 'none' }}
-                            type="file"
+                            type='file'
+                            accept='image/png, image/jpeg'
                             onChange={(e) => ImageUpload(e, setImage)}
                         />
-                        Image upload
                     </label>
 
                     <input
-                        placeholder="Username"
-                        type="text"
-                        className="form__field"
+                        name='login'
+                        placeholder='Username'
+                        type='text'
+                        className='form__field'
                     />
 
                     <input
-                        placeholder="About Me"
-                        type="text"
-                        className="form__field"
+                        name='aboutMe'
+                        placeholder='About Me'
+                        type='text'
+                        className='form__field'
                     />
-
-                    <div className="form__button-container">
+                    <ErrorWindow
+                        errorArr={errorArr}
+                    />
+                    <div className='form__button-container'>
                         <input
-                            type="button"
+                            type='button'
                             className='form__button form__button_skip'
-                            value="Skip"
+                            value='Skip'
                             onClick={() => SkipToMainPage()}
                         />
 
                         <input
-                            type="button"
+                            type='submit'
                             className='form__button'
-                            value="Finish"
-                            onClick={() => AdditionalInfoRequest()}
+                            value='Finish'
                         />
                     </div>
                 </form>
@@ -116,20 +141,3 @@ export function AdditionalInfo() {
     )
 }
 
-function RegistrationRequest(view: FormProps["view"]) {
-    alert("Registration response")
-    view(2)
-}
-
-function SkipToMainPage() {
-    alert("main page")
-}
-
-function AdditionalInfoRequest() {
-    alert("Additional info request")
-}
-
-function ImageUpload(e: React.ChangeEvent<HTMLInputElement>, setImage: React.Dispatch<any>) {
-    if (!e.target.files) return
-    setImage(e.target.files[0])
-}

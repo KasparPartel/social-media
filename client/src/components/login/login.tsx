@@ -1,40 +1,48 @@
 import './login.css'
-import { FormProps } from '../../App'
+import '../../constants.css'
+import { ErrorResponse, IdContext, FormProps } from '../models'
+import { LoginRequest } from '../additional-functions/af'
+import ErrorWindow from '../error-window/error-window'
+import { useContext, useState } from 'react'
 
-export default function Login({ view }: FormProps) {
+
+
+export default function Login({ setViewExtention }: FormProps) {
+    const { setId } = useContext(IdContext)
+    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     return (
         <div className='login-page'>
             <div className='cover'></div>
             <div className='login'>
-                <form className='form'>
+                <form className='form' onSubmit={(e) => LoginRequest(e, setErrorArr, setId)}>
                     <input
-                        type="text"
-                        className="form__field"
-                        placeholder='Login' />
-
+                        name='login'
+                        type='text'
+                        className='form__field'
+                        placeholder='Login'
+                    />
                     <input
-                        type="password"
-                        className="form__field"
-                        placeholder='Password' />
-
+                        name='password'
+                        type='password'
+                        className='form__field'
+                        placeholder='Password'
+                    />
+                    <ErrorWindow errorArr={errorArr}
+                    />
                     <input
-                        type="button"
-                        className="form__button"
-                        value="Log In"
-                        onClick={() => LoginRequest()} />
+                        type='submit'
+                        className='form__button'
+                        value='Log In'
+                    />
                     <input
-                        type="button"
-                        className="switch-button"
-                        onClick={() => view(1)}
-                        value="No account yet?"
+                        type='button'
+                        className='switch-button'
+                        onClick={() => setViewExtention(1)}
+                        value='No account yet?'
                     />
                 </form>
             </div>
         </div>
     )
-}
-
-function LoginRequest() {
-    alert("login response")
 }

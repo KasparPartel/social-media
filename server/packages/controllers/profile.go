@@ -15,13 +15,15 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
 
 	// get porfile info if public
 	if r.Method == "GET" {
+		login := "foobar"
+		aboutMe := "test about me"
 		testUser := &sqlite.User{
 			Email:       "example@example.com",
 			FirstName:   "John",
 			LastName:    "Doe",
 			DateOfBirth: 1672248421,
-			Login:       "foobar",
-			AboutMe:     "test about me",
+			Login:       &login,
+			AboutMe:     &aboutMe,
 		}
 
 		w.Header().Set("Content-Type", "application/json")
