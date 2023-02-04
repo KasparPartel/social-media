@@ -1,4 +1,4 @@
-import { RegistrationFormFields, LoginFormFields, AdditionalInfoFormFields, ErrorResponse, Response, FormProps } from '../models'
+import { RegistrationFormFields, LoginFormFields, AdditionalInfoFormFields, Response, RequestProps } from '../models'
 
 export function ImageUpload(e: React.ChangeEvent<HTMLInputElement>, setImage: React.Dispatch<any>) {
     if (!e.target.files) return
@@ -13,7 +13,7 @@ export function formDataExtractor(formData: FormData, formFields: LoginFormField
     });
 }
 
-export function LoginRequest(e: React.FormEvent<HTMLFormElement>, setErrorArr: React.Dispatch<React.SetStateAction<ErrorResponse[]>>, setId) {
+export function LoginRequest({ e, setErrorArr, setId, navigate }: RequestProps) {
     e.preventDefault()
 
     let formFields: LoginFormFields = {
@@ -21,16 +21,17 @@ export function LoginRequest(e: React.FormEvent<HTMLFormElement>, setErrorArr: R
         password: ""
     }
 
-
     formDataExtractor(new FormData(e.currentTarget), formFields)
 
     formFetchHandler(`http://localhost:8080/login`, 'POST', formFields).then((response: Response) => {
         if (response.errors && response.errors.length != 0) { setErrorArr(response.errors); return }
-        if (response.data != null) { setId(response.data.id); return }
+        if (response.data === null) { navigate('/internal-error'); return }
+        setId(response.data.id)
+        navigate('/main')
     })
 }
 
-export function RegistrationRequest(e: React.FormEvent<HTMLFormElement>, { setViewExtention }: FormProps, setErrorArr: React.Dispatch<React.SetStateAction<ErrorResponse[]>>, setId) {
+export function RegistrationRequest({ e, setErrorArr, setId, navigate }: RequestProps) {
     e.preventDefault()
     let formFields: RegistrationFormFields = {
         email: "",
@@ -45,13 +46,24 @@ export function RegistrationRequest(e: React.FormEvent<HTMLFormElement>, { setVi
 
     formFetchHandler(`http://localhost:8080/register`, 'POST', formFields).then((response: Response) => {
         if (response.errors && response.errors.length != 0) { setErrorArr(response.errors); return }
-        if (response.data === null) { return }
+        if (response.data === null) { navigate('/internal-error'); return }
         setId(response.data.id)
-        setViewExtention(2)
+        navigate('/additional-registration')
     })
 }
 
-export function AdditionalInfoRequest(e: React.FormEvent<HTMLFormElement>, setErrorArr, id) {
+const updateImage = async (formFields, image) => {
+    if (image === null) {
+        formFields.avatar = ""
+        return
+    }
+    await toBase64(image)
+        .then((r) => {
+            formFields.avatar = r
+        })
+}
+
+export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) {
     e.preventDefault()
     let formFields: AdditionalInfoFormFields = {
         avatar: "",
@@ -60,17 +72,17 @@ export function AdditionalInfoRequest(e: React.FormEvent<HTMLFormElement>, setEr
     }
 
     formDataExtractor(new FormData(e.currentTarget), formFields)
-    toBase64(e.currentTarget.avatar.files[0])
-        .then((r) => formFields.avatar = r)
-        .then(() => {
-            formFetchHandler(`http://localhost:8080/user/${id}`, 'PUT', formFields).then((response: Response) => {
-                if (response.errors && response.errors.length != 0) { setErrorArr(response.errors); return }
-                SkipToMainPage()
+
+    updateImage(formFields, image).then(() => {
+        formFetchHandler(`http://localhost:8080/user/${id}`, 'PUT', formFields)
+            .then((response) => {
+                if (response === null) navigate('/main')
             })
-        })
+            .catch(() => navigate('/internal-error'))
+    })
 }
 
-async function toBase64(file: File): Promise<string> {
+async function toBase64(file: Blob): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -79,18 +91,16 @@ async function toBase64(file: File): Promise<string> {
     })
 }
 
-async function formFetchHandler(inputURL: string, method: string, formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields): Promise<Response> {
+async function formFetchHandler(inputURL: string, method: string, formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields): Promise<Response | null> {
     return fetch(inputURL, {
-        method: method,
+        method,
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(formFields)
     })
-        .then((r) => r.json())
+        .then((r) => {
+            if (r.headers.has('content-type') && r.headers.get('content-type') === 'application/json') { return r.json() }
+            else return null
+        })
 }
-
-export function SkipToMainPage() {
-    alert("main page")
-}
-

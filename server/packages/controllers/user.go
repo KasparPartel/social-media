@@ -172,6 +172,13 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 // parse all trafic on /user/ endpoint tp different functions
 func UserHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	reg := regexp.MustCompile(`/user/(?:(?P<id>[0-9]{1,16})(?:/(?P<path>[a-z]{1,32}))?)?`)
 	match := reg.FindStringSubmatch(r.URL.Path)
 

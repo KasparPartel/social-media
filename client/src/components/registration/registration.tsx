@@ -1,11 +1,13 @@
 import './registration.css'
 import '../../constants.css'
-import { ErrorResponse, IdContext, FormProps } from '../models'
-import { useContext, useState } from 'react';
+import { ErrorResponse, IdContext } from '../models'
+import { ImageUpload, RegistrationRequest, AdditionalInfoRequest } from '../additional-functions/af'
 import ErrorWindow from '../error-window/error-window'
-import { ImageUpload, RegistrationRequest, AdditionalInfoRequest, SkipToMainPage } from '../additional-functions/af'
+import { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-export function Registration({ setViewExtention }: FormProps) {
+export function Registration() {
+    const navigate = useNavigate()
     const { setId } = useContext(IdContext)
     const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
@@ -14,7 +16,7 @@ export function Registration({ setViewExtention }: FormProps) {
             <div className='registration'>
                 <form
                     className='form'
-                    onSubmit={(e) => RegistrationRequest(e, { setViewExtention, }, setErrorArr, setId)}
+                    onSubmit={(e) => RegistrationRequest({ e, setErrorArr, setId, navigate })}
                 >
                     <input
                         name='email'
@@ -54,12 +56,13 @@ export function Registration({ setViewExtention }: FormProps) {
                         className='form__button'
                         value='Register'
                     />
-                    <input
-                        type='button'
-                        className='switch-button'
-                        onClick={() => setViewExtention(0)}
-                        value='Sign in'
-                    />
+                    <Link to='/login'>
+                        <input
+                            type='button'
+                            className='switch-button'
+                            value='Sign in'
+                        />
+                    </Link>
                 </form>
             </div>
             <div className='cover'></div>
@@ -68,16 +71,20 @@ export function Registration({ setViewExtention }: FormProps) {
 }
 
 export function AdditionalInfo() {
+    const navigate = useNavigate()
     const { id } = useContext(IdContext)
-    const [image, setImage] = useState(null);
-    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
+    const [image, setImage] = useState<Blob>(null);
+
+    useEffect(() => {
+        if (id === 0) navigate('/login')
+    }, [id])
 
     return (
         <div className='additional-info-page'>
             <div className='additional-info'>
                 <form
                     className='form'
-                    onSubmit={(e) => AdditionalInfoRequest(e, setErrorArr, id)}
+                    onSubmit={(e) => { AdditionalInfoRequest({ e, id, navigate, image }) }}
                 >
                     {image &&
                         (<div className='form__image-container form__image-container_centered'>
@@ -117,16 +124,14 @@ export function AdditionalInfo() {
                         type='text'
                         className='form__field'
                     />
-                    <ErrorWindow
-                        errorArr={errorArr}
-                    />
                     <div className='form__button-container'>
-                        <input
-                            type='button'
-                            className='form__button form__button_skip'
-                            value='Skip'
-                            onClick={() => SkipToMainPage()}
-                        />
+                        <Link to='/main'>
+                            <input
+                                type='button'
+                                className='form__button form__button_skip'
+                                value='Skip'
+                            />
+                        </Link>
 
                         <input
                             type='submit'

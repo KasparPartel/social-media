@@ -1,13 +1,15 @@
 import './login.css'
 import '../../constants.css'
-import { ErrorResponse, IdContext, FormProps } from '../models'
+import { ErrorResponse, IdContext } from '../models'
 import { LoginRequest } from '../additional-functions/af'
 import ErrorWindow from '../error-window/error-window'
 import { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 
-export default function Login({ setViewExtention }: FormProps) {
+export default function Login() {
+    const navigate = useNavigate()
     const { setId } = useContext(IdContext)
     const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
@@ -15,7 +17,7 @@ export default function Login({ setViewExtention }: FormProps) {
         <div className='login-page'>
             <div className='cover'></div>
             <div className='login'>
-                <form className='form' onSubmit={(e) => LoginRequest(e, setErrorArr, setId)}>
+                <form className='form' onSubmit={(e) => LoginRequest({ e, setErrorArr, setId, navigate })}>
                     <input
                         name='login'
                         type='text'
@@ -35,12 +37,13 @@ export default function Login({ setViewExtention }: FormProps) {
                         className='form__button'
                         value='Log In'
                     />
-                    <input
-                        type='button'
-                        className='switch-button'
-                        onClick={() => setViewExtention(1)}
-                        value='No account yet?'
-                    />
+                    <Link to='/registration'>
+                        <input
+                            type='button'
+                            className='switch-button'
+                            value='No account yet?'
+                        />
+                    </Link>
                 </form>
             </div>
         </div>

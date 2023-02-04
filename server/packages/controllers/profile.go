@@ -13,6 +13,8 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
 		return
 	}
 
+	a := make(map[string]string)
+
 	// get porfile info if public
 	if r.Method == "GET" {
 		login := "foobar"
@@ -31,11 +33,13 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
 		return
 	}
 
+	// update profile info if autorized
 	if r.Method == "PUT" {
-		// update profile info if autorized
+		json.NewDecoder(r.Body).Decode(&a)
+		return
 	}
 
+	// delete porfile info if autorized
 	if r.Method == "DELETE" {
-		// delete porfile info if autorized
 	}
 }

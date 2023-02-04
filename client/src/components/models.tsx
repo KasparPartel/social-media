@@ -1,9 +1,5 @@
 import { createContext } from "react"
 
-export interface FormProps {
-    setViewExtention: (b: number) => void,
-}
-
 export interface LoginFormFields {
     login: string,
     password: string,
@@ -21,6 +17,15 @@ export interface AdditionalInfoFormFields {
     avatar: string,
     login: string,
     aboutMe: string
+}
+
+export interface RequestProps {
+    e: React.FormEvent<HTMLFormElement>,
+    setErrorArr?: (errs: ErrorResponse[]) => void,
+    setId?: (id: number) => void,
+    navigate: (path: string) => void,
+    image?: Blob,
+    id?: number
 }
 
 export interface Response {
