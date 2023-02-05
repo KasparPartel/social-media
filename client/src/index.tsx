@@ -1,6 +1,8 @@
+import './normalize.css'
+import App from "./App"
 import React from "react"
+import { BrowserRouter } from "react-router-dom";
 import ReactDOM from 'react-dom/client'
-import MainPage from "./App"
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -8,6 +10,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <React.StrictMode>
-        <MainPage />
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
     </React.StrictMode>
 )

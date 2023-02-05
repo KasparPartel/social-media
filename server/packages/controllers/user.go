@@ -23,6 +23,13 @@ import (
 //
 // --->>> (data: {id, email, login, firstName, lastName, dateOfBirth}, errors: [code, description])
 func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -38,7 +45,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := &errorHandler.Response{}
 	w.Header().Set("Content-Type", "application/json")
-	errs := validator.ValidateRegister(parsedUser.Email, parsedUser.Login, parsedUser.Password, parsedUser.FirstName, parsedUser.LastName)
+	errs := validator.ValidateRegister(parsedUser.Email, parsedUser.Password, parsedUser.FirstName, parsedUser.LastName, parsedUser.Login)
 	// return all format errors
 	if len(errs) > 0 {
 		response.Errors = errs
@@ -59,16 +66,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	if !validator.IsUnique("email", err) {
 		response.Errors = []*errorHandler.ErrorResponse{{
 			Code:        errorHandler.ErrUniqueEmail,
-			Description: "email already taken",
-		}}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-
-	if !validator.IsUnique("login", err) {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrUniqueLogin,
-			Description: "login already taken",
+			Description: "email is already taken",
 		}}
 		json.NewEncoder(w).Encode(response)
 		return
@@ -96,6 +94,13 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 //
 // --->>> (data: {id, avatarId, email, login, firstName, lastName, aboutMe dateOfBirth, isPublic}, errors: [code, description])
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -167,6 +172,13 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 // parse all trafic on /user/ endpoint tp different functions
 func UserHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	reg := regexp.MustCompile(`/user/(?:(?P<id>[0-9]{1,16})(?:/(?P<path>[a-z]{1,32}))?)?`)
 	match := reg.FindStringSubmatch(r.URL.Path)
 

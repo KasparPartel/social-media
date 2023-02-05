@@ -1,0 +1,10 @@
+.error-window {
+    width: 100%;
+    height: fit-content;
+
+    color: rgb(138, 121, 73)
+}
+
+.list {
+    margin: 0;
+}
