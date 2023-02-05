@@ -13,7 +13,7 @@ func ValidateEmail(email string) *eh.ErrorResponse {
 	if !a {
 		return &eh.ErrorResponse{
 			Code:        eh.ErrEmailFormat,
-			Description: "email invalid format",
+			Description: "invalid email format",
 		}
 	}
 
@@ -24,15 +24,15 @@ func ValidatePassword(password string) *eh.ErrorResponse {
 	length := len(password)
 	if length < 8 {
 		return &eh.ErrorResponse{
-			Code:        eh.ErrPasswordLow,
-			Description: "password length must be bigger than 8 characters",
+			Code:        eh.ErrPasswordTooShort,
+			Description: "password length must be longer than 8 characters",
 		}
 	}
 
 	if length > 32 {
 		return &eh.ErrorResponse{
-			Code:        eh.ErrPasswordBig,
-			Description: "password length must be lower than 32 characters",
+			Code:        eh.ErrPasswordTooLong,
+			Description: "password length must be shorter than 32 characters",
 		}
 	}
 
@@ -41,7 +41,7 @@ func ValidatePassword(password string) *eh.ErrorResponse {
 	if !a {
 		return &eh.ErrorResponse{
 			Code:        eh.ErrPasswordFormat,
-			Description: "password contains unallowed symbols",
+			Description: "password contains restricted symbols",
 		}
 	}
 
@@ -52,15 +52,15 @@ func ValidateLogin(login string) *eh.ErrorResponse {
 	length := len(login)
 	if length < 4 {
 		return &eh.ErrorResponse{
-			Code:        eh.ErrLoginLow,
-			Description: "login length must be bigger than 4 characters",
+			Code:        eh.ErrLoginTooShort,
+			Description: "login length must be longer than 4 characters",
 		}
 	}
 
 	if length > 24 {
 		return &eh.ErrorResponse{
-			Code:        eh.ErrLoginHigh,
-			Description: "login length must be lower than 24 characters",
+			Code:        eh.ErrLoginTooLong,
+			Description: "login length must be shorter than 24 characters",
 		}
 	}
 
@@ -69,7 +69,7 @@ func ValidateLogin(login string) *eh.ErrorResponse {
 	if !a {
 		return &eh.ErrorResponse{
 			Code:        eh.ErrLoginFormat,
-			Description: "login contains unallowed symbols",
+			Description: "login contains restricted symbols",
 		}
 	}
 
@@ -104,16 +104,13 @@ func ValidateLastName(name string) *eh.ErrorResponse {
 	return nil
 }
 
-func ValidateRegister(email, login, password, firstName, lastName string) []*eh.ErrorResponse {
+func ValidateRegister(email, password, firstName, lastName string, login *string) []*eh.ErrorResponse {
 	res := make([]*eh.ErrorResponse, 0)
 
 	err := ValidateEmail(email)
 	appendError(&res, err)
 
 	err = ValidatePassword(password)
-	appendError(&res, err)
-
-	err = ValidateLogin(login)
 	appendError(&res, err)
 
 	err = ValidateFirstName(firstName)

@@ -18,16 +18,16 @@ var db *sql.DB
 
 type User struct {
 	UUID        string
-	Id          int    `json:"id"`
-	AvatarId    int    `json:"avatarId"`
-	Email       string `json:"email"`
-	Login       string `json:"login"`
-	Password    string `json:"password"`
-	FirstName   string `json:"firstName"`
-	LastName    string `json:"lastName"`
-	AboutMe     string `json:"aboutMe"`
-	DateOfBirth int    `json:"dateOfBirth"`
-	IsPublic    bool   `json:"isPublic"`
+	Id          int     `json:"id"`
+	AvatarId    int     `json:"avatarId"`
+	Email       string  `json:"email"`
+	Login       *string `json:"login"`
+	Password    string  `json:"password"`
+	FirstName   string  `json:"firstName"`
+	LastName    string  `json:"lastName"`
+	AboutMe     *string `json:"aboutMe"`
+	DateOfBirth int     `json:"dateOfBirth"`
+	IsPublic    bool    `json:"isPublic"`
 }
 
 func openDatabase() *sql.DB {
@@ -63,13 +63,13 @@ func makeMigration() {
 }
 
 func CreateUser(user User) (int, error) {
-	sqlStmt, err := db.Prepare(`INSERT INTO users(uuid, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic)
-	VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+	sqlStmt, err := db.Prepare(`INSERT INTO users(uuid, email, password, firstName, lastName, aboutMe, dateOfBirth, isPublic)
+	VALUES(?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return 0, err
 	}
 
-	ans, err := sqlStmt.Exec(user.UUID, user.Email, user.Login, user.Password, user.FirstName, user.LastName, user.AboutMe, user.DateOfBirth, user.IsPublic)
+	ans, err := sqlStmt.Exec(user.UUID, user.Email, user.Password, user.FirstName, user.LastName, user.AboutMe, user.DateOfBirth, user.IsPublic)
 	if err != nil {
 		return 0, err
 	}

@@ -13,15 +13,19 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
 		return
 	}
 
+	a := make(map[string]string)
+
 	// get porfile info if public
 	if r.Method == "GET" {
+		login := "foobar"
+		aboutMe := "test about me"
 		testUser := &sqlite.User{
 			Email:       "example@example.com",
 			FirstName:   "John",
 			LastName:    "Doe",
 			DateOfBirth: 1672248421,
-			Login:       "foobar",
-			AboutMe:     "test about me",
+			Login:       &login,
+			AboutMe:     &aboutMe,
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -29,11 +33,13 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, id int) {
 		return
 	}
 
+	// update profile info if autorized
 	if r.Method == "PUT" {
-		// update profile info if autorized
+		json.NewDecoder(r.Body).Decode(&a)
+		return
 	}
 
+	// delete porfile info if autorized
 	if r.Method == "DELETE" {
-		// delete porfile info if autorized
 	}
 }
