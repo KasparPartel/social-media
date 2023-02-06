@@ -1,174 +1,102 @@
 body {
-    height: 100%;
-    background: #77B4C8;
+    height: auto;
+    width: auto;
+    background: var(--main-blue);
 }
+
 
 .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px 40px;
+    overflow: hidden;
+    padding: 20px 20px 15px 20px;
 
     width: auto;
-    height: 80px;
+    height: 65px;
 
-    background: #F89595;
+    background: var(--navigation__header);
 
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-}
 
-.navigation {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 0px;
-    gap: 40px;
-    
-    width: 687px;
-    height: 80px;
-    
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 40px;
+    color: var(--navigation__font)
 }
 
 .navigation__profile {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
+    text-align: center;
 
-    width: 117px;
+    width: 8%;
     height: 60px;
 
-    background: #92E9BA;
+    background: var(--navigation__button);
     border-radius: 12px;
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin-left: 2080px;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 32px;
-    line-height: 39px;
-    color: #000000;
+    font-size: 30px;
+    line-height: 40px;
+    color: var(--navigation__font)
+
 }
 
 .navigation__groups {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-
-    width: 130px;
+    width: 8%;
     height: 60px;
 
-    background: #92E9BA;
+    background: var(--navigation__button);
     border-radius: 12px;
-
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-    margin-left: auto;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 32px;
-    line-height: 39px;
-    color: #000000;
-
+    font-size: 30px;
+    line-height: 40px;
+    color: var(--navigation__font)
 }
 
 .navigation__users {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-
-    width: 108px;
+    width: 7%;
     height: 60px;
 
-    background: #92E9BA;
+    background: var(--navigation__button);
     border-radius: 12px;
-
-    flex: none;
-    order: 2;
-    flex-grow: 0;
-    margin-left: auto;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 32px;
-    line-height: 39px;
-    color: #000000;
-
+    font-size: 30px;
+    line-height: 40px;
+    color: var(--navigation__font)
 }
 
 .navigation__notifications {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-
-    width: 212px;
+    width: 12%;
     height: 60px;
 
-    background: #92E9BA;
+    background: var(--navigation__button);
     border-radius: 12px;
-
-    flex: none;
-    order: 3;
-    flex-grow: 0;
-    margin-left: auto;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 32px;
-    line-height: 39px;
-    color: #000000;
-
+    font-size: 30px;
+    line-height: 40px;
+    color: var(--navigation__font)
 }
 .navigation__logout {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 0px 10px;
-    
-    width: 126px;
+    float: right;
+    width: 8%;
     height: 60px;
-    
-    background: #CF0000;
-    border-radius: 12px;
 
-    flex: none;
-    order: 4;
-    flex-grow: 0;
-    margin: 950px;
+    background: var(--navigation__button-red);
+    border-radius: 12px;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 32px;
-    line-height: 39px;
-
-    color: #FFFFFF;
-    
-    
+    font-size: 30px;
+    line-height: 40px;
+    color: var(--navigation__font-white)
 }

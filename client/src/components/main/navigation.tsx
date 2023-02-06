@@ -1,6 +1,5 @@
-import React from "react";
 import "./navigation.css"
-export default function Navigation() {
+export default function Navigation() { // &nbsp; adds a gap between the buttons
     return (
         <header className={"header"}>
             <nav className={"navigation"}>  
@@ -16,18 +15,21 @@ export default function Navigation() {
                     value={"Users"}
                     onClick={() => {window.location.assign("#/users")}}
                 />
+                &nbsp;
                 <input 
                     type={"button"} 
                     className={"navigation__groups"}
                     value={"Groups"}
                     onClick={() => {window.location.assign("#/groups")}}
                 />
+                &nbsp;
                 <input 
                     type={"button"} 
                     className={"navigation__notifications"}
                     value={"Notifications"}
                     onClick={() => {window.location.assign("#/notifications")}}
                 />
+                &nbsp; 
                 <input 
                     type={"button"} 
                     className={"navigation__profile"}
