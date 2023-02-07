@@ -1,102 +1,80 @@
 body {
     height: auto;
     width: auto;
-    background: var(--main-blue);
+    background: var(--blue);
 }
 
 
 .header {
-    overflow: hidden;
-    padding: 20px 20px 15px 20px;
-
+    padding: 12px 20px;
     width: auto;
-    height: 65px;
+    height: 20%;
 
-    background: var(--navigation__header);
-
-
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 40px;
-    color: var(--navigation__font)
+    background: var(--main-orange);
+    color: var(--black)
 }
 
-.navigation__profile {
-    text-align: center;
 
-    width: 8%;
-    height: 60px;
+.navigation {
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.navigation-left {
+    display: flex;
+    flex-wrap: wrap;
 
-    background: var(--navigation__button);
+    width: 50%;
+    gap: 20px 10px;
+}
+
+.navigation-right {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 42%;
+}
+
+.navigation-left > input[type="button"] {
+    font-size: large;
+    
+    color: var(--black);
+    background-color: var(--main-green);
     border-radius: 12px;
+    text-align: center;
+    
+    cursor: pointer;
+}
 
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 40px;
-    color: var(--navigation__font)
 
+.navigation__profile {
+    width: 10%;
+    height: 60px;
 }
 
 .navigation__groups {
-    width: 8%;
+    width: 10%;
     height: 60px;
-
-    background: var(--navigation__button);
-    border-radius: 12px;
-
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 40px;
-    color: var(--navigation__font)
 }
 
 .navigation__users {
-    width: 7%;
+    width: 10%;
     height: 60px;
-
-    background: var(--navigation__button);
-    border-radius: 12px;
-
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 40px;
-    color: var(--navigation__font)
 }
 
 .navigation__notifications {
-    width: 12%;
+    width: 15%;
     height: 60px;
-
-    background: var(--navigation__button);
-    border-radius: 12px;
-
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 40px;
-    color: var(--navigation__font)
 }
+
 .navigation__logout {
-    float: right;
-    width: 8%;
+    width: 7vw;
     height: 60px;
 
-    background: var(--navigation__button-red);
+    background: var(--main-red);
     border-radius: 12px;
 
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 40px;
-    color: var(--navigation__font-white)
+    color: var(--white);
+
+    cursor: pointer;
 }
+
