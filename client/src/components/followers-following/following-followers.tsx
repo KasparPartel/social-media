@@ -35,13 +35,16 @@ const userList: User[] = [
 
 export default function FollowingFollowers() {
     return (
-        <section className="following-followers flex-column">
-            <FollowingFollowersContainer header="Following"
-                                         userList={userList}/>
-            <hr className="container-separator"/>
-            <FollowingFollowersContainer header="Followers"
-                                         userList={userList}/>
-        </section>
+        <div className="test-container">
+            <FollowingFollowersContainer
+                header="Following"
+                userList={userList}
+            />
+            <FollowingFollowersContainer
+                header="Followers"
+                userList={userList}
+            />
+        </div>
     )
 }
 
@@ -50,7 +53,7 @@ interface FollowingFollowersContainerProps {
     userList: User[];
 }
 
-function FollowingFollowersContainer({header, userList}: FollowingFollowersContainerProps) {
+function FollowingFollowersContainer({ header, userList }: FollowingFollowersContainerProps) {
     const generateColor = () => {
         const randNum = Math.floor(Math.random() * 3);
         const colors = ["5CDC97", "65C8FF", "9673ff"];
@@ -59,17 +62,23 @@ function FollowingFollowersContainer({header, userList}: FollowingFollowersConta
     }
 
     return (
-        <div className="following-followers__container flex-column">
-            <h3>{header}</h3>
-            <ul className="flex-column">
+        <div className="following-followers">
+            <div className="following-followers__header">
+                {header}
+            </div>
+            <div className="list">
                 {userList.map((user, i) => (
-                    <li key={i}
-                        className="flex">
-                        <div className="avatar-img"
-                             style={{backgroundColor: `#${generateColor()}`}}></div>
-                        {user.firstName} {user.lastName}</li>
+                    <div
+                        className="user-card"
+                        key={i}>
+                        <div
+                            className="user-card__avatar"
+                            style={{ backgroundColor: `#${generateColor()}` }}>
+                        </div>
+                        {`${user.firstName} ${user.lastName}`}
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     )
 }
