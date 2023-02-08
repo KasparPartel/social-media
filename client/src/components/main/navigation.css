@@ -1,0 +1,39 @@
+body {
+    background: var(--blue);
+}
+
+.header {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+
+    height: 80px;
+    min-width: max-content;
+    padding: 10px 40px;
+
+    background: var(--main-orange);
+}
+
+.navigation-left {
+    display: flex;
+
+    gap: 40px;
+}
+
+.navigation__button {
+    box-sizing: border-box;
+
+    height: 100%;
+    padding: 10px;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    color: var(--black);
+    background-color: var(--main-green);
+}
+
+.navigation__button_red {
+    color: var(--white);
+    background: var(--main-red);
+}

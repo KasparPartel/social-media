@@ -3,7 +3,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 100vh;
-    background: var(--login-blue);
+    background: var(--main-blue);
 }
 
 .registration,
@@ -16,7 +16,7 @@
 .form__button-container {
     display: flex;
     flex-direction: row;
-    gap: 5%
+    gap: 5%;
 }
 
 .form__image {
@@ -44,9 +44,9 @@
 }
 
 .form__button_remove {
-    background-color: var(--form__button_remove-red);
+    background-color: var(--main-red);
 }
 
 .form__button_skip {
-    background-color: var(--form__button_skip-orange);
+    background-color: var(--main-orange);
 }

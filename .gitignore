@@ -8,6 +8,9 @@ lerna-debug.log*
 
 **/.idea
 
+# Editor config files
+**/.idea
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -107,3 +110,4 @@ dist
 
 #package lock
 package-lock.json
+
