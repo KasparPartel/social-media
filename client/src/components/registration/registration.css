@@ -16,7 +16,7 @@
 .form__button-container {
     display: flex;
     flex-direction: row;
-    gap: 5%
+    gap: 5%;
 }
 
 .form__image {
