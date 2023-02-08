@@ -2,11 +2,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 100vh;
-    background: var(--login-blue);
+    background: var(--main-blue);
 }
 
 .cover {
-    background: var(--login-purple);
+    background: var(--main-purple);
 }
 
 .login {
@@ -44,14 +44,14 @@
     width: 100%;
     min-width: 130px;
 
-    background: var(--form__field-white);
+    background: var(--main-white);
 }
 
 .form__button {
     width: 9vw;
     min-width: 130px;
 
-    background: var(--form__button-green);
+    background: var(--main-green);
 
     cursor: pointer;
 }

@@ -1,80 +1,39 @@
 body {
-    height: auto;
-    width: auto;
     background: var(--blue);
 }
 
-
 .header {
-    padding: 12px 20px;
-    width: auto;
-    height: 20%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+
+    height: 80px;
+    min-width: max-content;
+    padding: 10px 40px;
 
     background: var(--main-orange);
-    color: var(--black)
 }
 
-
-.navigation {
-    display: flex;
-    flex-wrap: wrap;
-    
-}
 .navigation-left {
     display: flex;
-    flex-wrap: wrap;
 
-    width: 50%;
-    gap: 20px 10px;
+    gap: 40px;
 }
 
-.navigation-right {
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 42%;
-}
+.navigation__button {
+    box-sizing: border-box;
 
-.navigation-left > input[type="button"] {
-    font-size: large;
-    
+    height: 100%;
+    padding: 10px;
+    border-radius: 12px;
+
+    cursor: pointer;
+
     color: var(--black);
     background-color: var(--main-green);
-    border-radius: 12px;
-    text-align: center;
-    
-    cursor: pointer;
 }
 
-
-.navigation__profile {
-    width: 10%;
-    height: 60px;
-}
-
-.navigation__groups {
-    width: 10%;
-    height: 60px;
-}
-
-.navigation__users {
-    width: 10%;
-    height: 60px;
-}
-
-.navigation__notifications {
-    width: 15%;
-    height: 60px;
-}
-
-.navigation__logout {
-    width: 7vw;
-    height: 60px;
-
-    background: var(--main-red);
-    border-radius: 12px;
-
+.navigation__button_red {
     color: var(--white);
-
-    cursor: pointer;
+    background: var(--main-red);
 }
-
