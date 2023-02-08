@@ -1,64 +1,64 @@
 import { createContext } from "react"
 
 export interface LoginFormFields {
-    login: string,
-    password: string,
+    login: string
+    password: string
 }
 
 export interface RegistrationFormFields {
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    dateOfBirth: number,
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    dateOfBirth: number
 }
 
 export interface AdditionalInfoFormFields {
-    avatar: string,
-    login: string,
+    avatar: string
+    login: string
     aboutMe: string
 }
 
 export interface RequestProps {
-    e: React.FormEvent<HTMLFormElement>,
-    setErrorArr?: (errs: ErrorResponse[]) => void,
-    setId?: (id: number) => void,
-    navigate: (path: string) => void,
-    image?: Blob,
+    e: React.FormEvent<HTMLFormElement>
+    setErrorArr?: (errs: ErrorResponse[]) => void
+    setId?: (id: number) => void
+    navigate: (path: string) => void
+    image?: Blob
     id?: number
 }
 
 export interface Response {
-    data: null | User,
-    errors: ErrorResponse[],
+    data: null | User
+    errors: ErrorResponse[]
 }
 
 export interface ErrorResponse {
-    code: number,
+    code: number
     description: string
 }
 
 export interface User {
-    id: number,
-    avatarId: number,
-    email: string,
-    login: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    aboutMe: string,
-    dateOfBirth: number,
-    isPublic: boolean,
+    id: number
+    avatarId: number
+    email: string
+    login: string
+    password: string
+    firstName: string
+    lastName: string
+    aboutMe: string
+    dateOfBirth: number
+    isPublic: boolean
 }
 
 export interface UserIdContext {
-    id: number,
+    id: number
     setId: (id: number) => void
 }
 
 export const defaultId: UserIdContext = {
     id: 0,
-    setId: () => { }
+    setId: () => {},
 }
 
-export const IdContext = createContext(defaultId) 
+export const IdContext = createContext(defaultId)

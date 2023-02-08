@@ -1,8 +1,8 @@
 :root {
     --login-blue: #3bceff;
     --login-purple: #9673ff;
-    --form__field-white: #F0F0F0;
-    --form__button-green: #2B926D;
+    --form__field-white: #f0f0f0;
+    --form__button-green: #2b926d;
     --form__button_remove-red: #aa5151;
     --form__button_skip-orange: #cb7c35;
 }
