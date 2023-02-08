@@ -1,20 +1,15 @@
-.flex {
-    display: flex;
-}
-
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-
 .post {
     box-sizing: border-box;
     min-height: 314px;
     width: 100%;
     padding: 1em;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 
-    background-color: #FF9458;
+    background-color: #ff9458;
 }
 
 .post-text {
@@ -23,12 +18,18 @@
     background-color: whitesmoke;
 }
 
+.post__actions {
+    width: 100%;
+    display: flex;
+}
 
 .post__add-comment {
     margin-left: auto;
 }
 
 .postList {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     height: 200vh;
     gap: 1em;

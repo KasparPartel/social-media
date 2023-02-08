@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4df2b942-35df-43c6-bba9-0a91dc3a2d16" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/user-post/userPost.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/user-post/userPost.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/models.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/models.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/user-post/userPost.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/user-post/userPost.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/user-post/userPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/user-post/userPost.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,11 +42,14 @@
     "last_opened_file_path": "/home/kasparjohannespartel/Dev/social-network/client",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.TypeScript",
+    "prettierjs.PrettierConfiguration.Package": "/home/kasparjohannespartel/Dev/social-network/client/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
     "ts.external.directory.path": "/home/kasparjohannespartel/Dev/social-network/client/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
