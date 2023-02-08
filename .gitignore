@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+**/.idea
+
 # Editor config files
 **/.idea
 
@@ -108,3 +110,4 @@ dist
 
 #package lock
 package-lock.json
+
