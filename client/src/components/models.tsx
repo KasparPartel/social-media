@@ -58,8 +58,7 @@ export interface UserIdContext {
 
 export const defaultId: UserIdContext = {
     id: 0,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setId: () => {},
+    setId: () => { return },
 }
 
 export const IdContext = createContext(defaultId)

@@ -1,9 +1,9 @@
 .post {
     box-sizing: border-box;
-    min-height: 314px;
     width: 100%;
+    min-width: fit-content;
     padding: 1em;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -14,9 +14,11 @@
 }
 
 .post__text {
+    max-height: 215px;
+    overflow-y: auto;
     margin: 0;
     padding: 0.5em;
-    border-radius: 10px;
+    border-radius: 12px;
     background-color: var(--main-white);
 }
 
