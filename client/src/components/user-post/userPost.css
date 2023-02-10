@@ -14,16 +14,18 @@
 }
 
 .post__text {
-    max-height: 215px;
-    overflow-y: auto;
+    box-sizing: border-box;
+    overflow-y: hidden;
     margin: 0;
     padding: 0.5em;
     border-radius: 12px;
     background-color: var(--main-white);
+
+    transition: max-height ease-in-out 0.9s;
 }
 
 .post__attachment {
-    max-width: 100%;
+    width: 100%;
 }
 
 .post__actions {
