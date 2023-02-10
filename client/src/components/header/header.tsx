@@ -1,4 +1,4 @@
-import "./navigation.css"
+import "./header.css"
 export default function Navigation() {
     return (
         <header className="header">
@@ -12,7 +12,7 @@ export default function Navigation() {
                 type="button"
                 className="navigation__button navigation__button_red"
                 value="Logout"
-                // onClick={logout}
+            // onClick={logout}
             />
         </header>
     )

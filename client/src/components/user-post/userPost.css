@@ -1,0 +1,50 @@
+.post {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: fit-content;
+    padding: 1em;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+
+    background-color: var(--main-orange);
+}
+
+.post__text {
+    max-height: 215px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.5em;
+    border-radius: 12px;
+    background-color: var(--main-white);
+}
+
+.post__attachment {
+    max-width: 100%;
+}
+
+.post__actions {
+    width: 100%;
+    display: flex;
+}
+
+.post__attachments-toggler {
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.post__add-comment {
+    margin-left: auto;
+    width: 40px;
+    cursor: pointer;
+}
+
+.postList {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 1em;
+}

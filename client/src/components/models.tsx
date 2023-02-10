@@ -58,7 +58,7 @@ export interface UserIdContext {
 
 export const defaultId: UserIdContext = {
     id: 0,
-    setId: () => {},
+    setId: () => { return },
 }
 
 export const IdContext = createContext(defaultId)
