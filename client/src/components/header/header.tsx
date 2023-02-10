@@ -12,8 +12,16 @@ export default function Navigation() {
                 type="button"
                 className="navigation__button navigation__button_red"
                 value="Logout"
-            // onClick={logout}
+                onClick={logout}
             />
         </header>
     )
+}
+
+function logout() {
+    fetch("/logout", {
+        method: "POST"
+    }).then(() => {
+        window.location.assign("/login")
+    })
 }
