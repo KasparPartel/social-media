@@ -51,9 +51,12 @@ const postList: Post[] = [
         text: "",
         attachments: [
             "https://via.placeholder.com/150",
-            "https://via.placeholder.com/150",
-            "https://via.placeholder.com/150",
+            "https://via.placeholder.com/324",
+            "https://via.placeholder.com/645",
+            "https://via.placeholder.com/90",
             "https://via.placeholder.com/900",
+            "https://via.placeholder.com/150",
+            "https://via.placeholder.com/10",
         ],
     },
     {
