@@ -1,4 +1,5 @@
 import UserPost from "./userPost"
+import "./userPost.css"
 
 // const postList: Post[] = [
 //     {
