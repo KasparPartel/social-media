@@ -31,11 +31,13 @@
 .post__actions {
     width: 100%;
     display: flex;
+    align-items: center;
 }
 
 .post__attachments-toggler {
     font-weight: 700;
     cursor: pointer;
+    margin: 0;
 }
 
 .post__add-comment {

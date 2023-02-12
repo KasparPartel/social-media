@@ -27,7 +27,7 @@ export default function Login() {
                         placeholder="Password"
                     />
                     <ErrorWindow errorArr={errorArr} />
-                    <input type="submit" className="form__button" value="Log In" />
+                    <input type="submit" className="button form__button" value="Log In" />
                     <Link to="/registration">
                         <input type="button" className="switch-button" value="No account yet?" />
                     </Link>

@@ -44,7 +44,7 @@ export function Registration() {
                         className="form__field"
                     />
                     <ErrorWindow errorArr={errorArr} />
-                    <input type="submit" className="form__button" value="Register" />
+                    <input type="submit" className="button form__button" value="Register" />
                     <Link to="/login">
                         <input type="button" className="switch-button" value="Sign in" />
                     </Link>
@@ -82,14 +82,14 @@ export function AdditionalInfo() {
                             />
 
                             <input
-                                className="form__button form__button_remove"
+                                className="button form__button form__button_remove"
                                 type="button"
                                 onClick={() => setImage(null)}
                                 value="Remove"
                             />
                         </div>
                     )}
-                    <label className="form__button form__button_with-label label_cursor-pointer">
+                    <label className="button form__button form__button_with-label label_cursor-pointer">
                         Image upload
                         <input
                             name="avatar"
@@ -117,12 +117,12 @@ export function AdditionalInfo() {
                         <Link to="/main">
                             <input
                                 type="button"
-                                className="form__button form__button_skip"
+                                className="button form__button form__button_skip"
                                 value="Skip"
                             />
                         </Link>
 
-                        <input type="submit" className="form__button" value="Finish" />
+                        <input type="submit" className="button form__button" value="Finish" />
                     </div>
                 </form>
             </div>

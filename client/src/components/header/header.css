@@ -21,16 +21,7 @@ body {
 }
 
 .navigation__button {
-    box-sizing: border-box;
-
     height: 100%;
-    padding: 10px;
-    border-radius: 12px;
-
-    cursor: pointer;
-
-    color: var(--black);
-    background-color: var(--main-green);
 }
 
 .navigation__button_red {
