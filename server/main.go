@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-
 	r := router.Router{}
 
 	r.NewRoute("POST", "/register", controllers.RegistrationHandler)
@@ -20,6 +19,7 @@ func main() {
 	r.NewRoute("GET", `/user/(?P<id>\d+)/chats`, controllers.GetChats)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/groups`, controllers.GetGroups)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followers`, controllers.GetFollowers)
+	r.NewRoute("GET", `/user/(?P<id>\d+)/followings`, controllers.GetFollowings)
 
 	r.NewRoute("POST", `/user/(?P<id>\d+)/posts`, controllers.CreatePost)
 	r.NewRoute("POST", `/user/(?P<id>\d+)/chats`, controllers.CreateChat)

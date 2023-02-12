@@ -101,6 +101,77 @@ func AuthorizeUser(user User) (*User, error) {
 	return &u, nil
 }
 
+type followersTable struct {
+	userId     int
+	followerId int
+	isAccepted bool
+}
+
+func IsFollower(userId, followerId int) (bool, error) {
+	q := `SELECT userId, followerId FROM followers WHERE userId = ? AND followerId = ?`
+
+	tempRow := followersTable{}
+	err := db.QueryRow(q, userId, followerId).Scan(&tempRow.userId, &tempRow.followerId)
+	if err == sql.ErrNoRows {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func GetId(uuid string) (int, error) {
+	id := 0
+	q := `SELECT id FROM users WHERE uuid = ?`
+
+	err := db.QueryRow(q, uuid).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func GetUserById(id int) (*User, error) {
+	u := User{}
+
+	err := db.QueryRow(`SELECT uuid, id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
+		Scan(&u.UUID, &u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
+func GetFollowings(id int) ([]int, error) {
+	arr := make([]int, 0)
+
+	q := `SELECT userId FROM followers WHERE followerId = ? AND isAccepted = 1`
+
+	rows, err := db.Query(q, id)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		tempRow := followersTable{}
+		err := rows.Scan(&tempRow.userId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		arr = append(arr, tempRow.userId)
+	}
+
+	return arr, nil
+}
+
 func init() {
 	db = openDatabase()
 	makeMigration()
