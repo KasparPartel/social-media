@@ -155,12 +155,20 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // /logout
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
 	token, err := session.SessionProvider.GetToken(r)
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

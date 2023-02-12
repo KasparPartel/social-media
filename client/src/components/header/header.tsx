@@ -1,4 +1,5 @@
 import "./header.css"
+import { Logout } from "../additional-functions/ahf"
 export default function Navigation() {
     return (
         <header className="header">
@@ -12,16 +13,8 @@ export default function Navigation() {
                 type="button"
                 className="navigation__button navigation__button_red"
                 value="Logout"
-                onClick={logout}
+                onClick={Logout}
             />
         </header>
     )
-}
-
-function logout() {
-    fetch("/logout", {
-        method: "POST"
-    }).then(() => {
-        window.location.assign("/login")
-    })
 }
