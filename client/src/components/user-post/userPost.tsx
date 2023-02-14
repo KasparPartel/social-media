@@ -21,23 +21,27 @@ export default function UserPost({ postId }: UserPostProps) {
     const [attachmentsCount, setAttachmentsCount] = useState(0)
 
     useEffect(() => {
-        fetch(`http://localhost:8080/post/${postId}`)
-            .then((res) => {
-                if (res.status >= 400) {
-                    throw new Error("Server responds with error!")
-                }
-                return res.json()
-            })
-            .then(
-                (data) => {
-                    setPost(data)
-                    setIsLoading(false)
-                },
-                (err) => {
-                    setErr(err)
-                    setIsLoading(false)
-                },
-            )
+        const getPost = async () => {
+            fetch(`http://localhost:8080/post/${postId}`)
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`This is an HTTP error: The status is ${res.status}`)
+                    }
+                    return res.json()
+                })
+                .then(
+                    (data) => {
+                        setPost(data)
+                        setIsLoading(false)
+                    },
+                    (err) => {
+                        setErr(err)
+                        setIsLoading(false)
+                    },
+                )
+        }
+
+        getPost()
     }, [])
 
     useEffect(() => {
