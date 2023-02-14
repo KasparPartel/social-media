@@ -38,14 +38,14 @@ export function LoginRequest({ e, setErrorArr, setId, navigate }: RequestProps) 
                 setErrorArr(response.errors)
                 return
             }
-            if (response.data === null) {
-                navigate("/internal-error")
+            if (response.data != null) {
+                setId(response.data.id)
+                navigate("/main")
                 return
             }
-            setId(response.data.id)
-            navigate("/main")
         },
     )
+    navigate("/internal-error")
 }
 
 export function RegistrationRequest({ e, setErrorArr, setId, navigate }: RequestProps) {
@@ -67,17 +67,17 @@ export function RegistrationRequest({ e, setErrorArr, setId, navigate }: Request
                 setErrorArr(response.errors)
                 return
             }
-            if (response.data === null) {
-                navigate("/internal-error")
+            if (response.data != null) {
+                setId(response.data.id)
+                navigate("/additional-registration")
                 return
             }
-            setId(response.data.id)
-            navigate("/additional-registration")
         },
     )
+    navigate("/internal-error")
 }
 
-const updateImage = async (formFields, image) => {
+const updateImage = async (formFields: AdditionalInfoFormFields, image) => {
     if (image === null) {
         formFields.avatar = ""
         return
@@ -100,10 +100,13 @@ export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) 
     updateImage(formFields, image).then(() => {
         formFetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields)
             .then((response) => {
-                if (response === null) navigate("/main")
+                if (response === null) {
+                    navigate("/main")
+                    return
+                }
             })
-            .catch(() => navigate("/internal-error"))
     })
+    navigate("/internal-error")
 }
 
 async function toBase64(file: Blob): Promise<string> {

@@ -1,6 +1,9 @@
 import "./header.css"
-import { Logout } from "../additional-functions/ahf"
+import { Logout } from "../additional-functions/logout"
+import { useNavigate } from "react-router-dom"
 export default function Navigation() {
+    const navigate = useNavigate()
+
     return (
         <header className="header">
             <nav className="navigation-left">
@@ -13,7 +16,7 @@ export default function Navigation() {
                 type="button"
                 className="navigation__button navigation__button_red"
                 value="Logout"
-                onClick={Logout}
+                onClick={() => { Logout(navigate) }}
             />
         </header>
     )
