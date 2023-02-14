@@ -1,6 +1,6 @@
 import "./userPost.css"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export interface Post {
     id: number
@@ -19,6 +19,9 @@ export default function UserPost({ postId }: UserPostProps) {
     const [isLoading, setIsLoading] = useState(true)
     const [attachmentsOpen, setAttachmentsOpen] = useState(false)
     const [attachmentsCount, setAttachmentsCount] = useState(0)
+    const [height, setHeight] = useState(215)
+    const [textOpen, setTextOpen] = useState(false)
+    const refText = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
         const getPost = async () => {
@@ -50,8 +53,16 @@ export default function UserPost({ postId }: UserPostProps) {
         }
     }, [post])
 
+    useEffect(() => {
+        textOpen ? setHeight(refText.current.scrollHeight) : setHeight(215)
+    }, [textOpen])
+
     const toggleAttachments = () => {
         setAttachmentsOpen(!attachmentsOpen)
+    }
+
+    const togglePostText = () => {
+        setTextOpen(!textOpen)
     }
 
     if (err) return <div>{err.message}</div>
@@ -59,7 +70,16 @@ export default function UserPost({ postId }: UserPostProps) {
     return (
         <article className="post">
             {post.text ? (
-                <p className="post__text">{post.text}</p>
+                <p
+                    ref={refText}
+                    className="post__text"
+                    style={{ maxHeight: `${height}px` }}
+                    onClick={() => {
+                        togglePostText()
+                    }}
+                >
+                    {post.text}
+                </p>
             ) : (
                 <img className="post__attachment" src={post.attachments[0]} alt="placeholder" />
             )}
