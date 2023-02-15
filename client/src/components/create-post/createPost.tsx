@@ -1,4 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+import attachmentIcon from "../../assets/attachment_icon.svg"
+import "./createPost.css"
 
 export default function CreatePost() {
     const [modalOpen, setModalOpen] = useState(false)
@@ -31,17 +34,23 @@ interface Post {
 
 function Modal({ toggleModal }: ModalProps) {
     // const [post, setPost] = useState<Post>()
-    // const [attachments, setAttachments] = useState<string[]>([])
+    const [attachments, setAttachments] = useState<string[]>([])
+
+    useEffect(() => {
+        console.log(attachments)
+    }, [attachments])
 
     const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
         toggleModal()
     }
 
-    // const handleAddAttachment = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    //     e.preventDefault()
-    //     setAttachments((prevState) => setAttachments([...prevState, e.t]))
-    // }
+    const handleAddAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const fileNames = Array.from(e.target.files).map((file) => file.name)
+            setAttachments((prevState) => [...prevState, ...fileNames])
+        }
+    }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -50,25 +59,56 @@ function Modal({ toggleModal }: ModalProps) {
         console.log(formElements)
     }
 
+    const handleRemoveAttachment = (
+        e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+        i: number,
+    ) => {
+        // e.preventDefault()
+        setAttachments((prevState) => {
+            const arrCopy = [...prevState]
+            arrCopy.splice(i, 1)
+            return [...arrCopy]
+        })
+    }
+
     return (
-        <div>
-            <button onClick={(e) => handleClose(e)}>close</button>
-            <form onSubmit={(e) => handleSubmit(e)}>
-                <label htmlFor="body">Body: </label>
-                <input type="text" name="body" />
-                <br />
-                {/*<button onClick={(e) => handleAddAttachment(e)}>Add attachment</button>*/}
-                <input type="file" name="attachment" id="attachment" />
-                <br />
-                <label htmlFor="privacy">Choose privacy: </label>
-                <br />
-                <select name="privacy">
-                    <option value="0">Public</option>
-                    <option value="1">Semi</option>
-                    <option value="2">Private</option>
-                </select>
-                <br />
-                <button>Save</button>
+        <div className="create-post">
+            {/*<button onClick={(e) => handleClose(e)}>close</button>*/}
+            <form className="create-post__form" onSubmit={(e) => handleSubmit(e)}>
+                <textarea name="body" className="create-post__text"></textarea>
+                <div className="create-post__options">
+                    <div className="create-post__settings">
+                        <select name="privacy" className="create-post__settings__privacy">
+                            <option value="0">Public</option>
+                            <option value="1">Semi</option>
+                            <option value="2">Private</option>
+                        </select>
+                        <label htmlFor="attachment" className="create-post__settings__attachment">
+                            <img src={attachmentIcon} alt="attachment" />
+                        </label>
+                        <input
+                            onChange={(e) => handleAddAttachment(e)}
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            name="attachment"
+                            id="attachment"
+                            hidden
+                        />
+                        <div>
+                            {attachments &&
+                                attachments.map((file, i) => (
+                                    <p key={i}>
+                                        {file} -{" "}
+                                        <span onClick={(e) => handleRemoveAttachment(e, i)}>
+                                            remove
+                                        </span>
+                                    </p>
+                                ))}
+                        </div>
+                    </div>
+                    <button>Create</button>
+                </div>
             </form>
         </div>
     )
