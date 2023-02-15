@@ -1,8 +1,8 @@
 package session
 
 import (
-	"fmt"
 	"net/http"
+	"social-network/packages/errorHandler"
 	"sync"
 	"time"
 
@@ -71,16 +71,26 @@ func (m *Provider) SessionAdd(userId string) string {
 	return newSessionId
 }
 
-func (m *Provider) SessionGet(sessionId string) (*Session, error) {
+func (m *Provider) SessionGet(sessionId string) (*Session, *errorHandler.ErrorResponse) {
 	if userSession, exists := m.sessionsMap[sessionId]; exists {
 		if time.Since(userSession.expireTime) < userSession.lifeTime {
 			userSession.expireTime = time.Now()
 			return userSession, nil
 		}
 		m.SessionRemove(sessionId)
-		return nil, fmt.Errorf("session expired")
+		return nil, &errorHandler.ErrorResponse{
+			Code:        errorHandler.ErrSessionExpired,
+			Description: "session expired",
+		}
 	}
-	return nil, fmt.Errorf("session doesn't exist")
+	return nil, &errorHandler.ErrorResponse{
+		Code:        errorHandler.ErrSessionNotExist,
+		Description: "session doesn't exist",
+	}
+}
+
+func (s Session) GetUUID() string {
+	return s.uid
 }
 
 func (m *Provider) SessionRemove(sessionId string) {

@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS users (
     lastName TEXT NOT NULL,
     aboutMe TEXT,
     dateOfBirth INTEGER NOT NULL,
-    isPublic TEXT NOT NULL
+    isPublic INTEGER DEFAULT 0
 );
