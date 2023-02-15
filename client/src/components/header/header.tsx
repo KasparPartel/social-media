@@ -16,7 +16,9 @@ export default function Navigation() {
                 type="button"
                 className="navigation__button navigation__button_red"
                 value="Logout"
-                onClick={() => { Logout(navigate) }}
+                onClick={() => {
+                    Logout(navigate)
+                }}
             />
         </header>
     )

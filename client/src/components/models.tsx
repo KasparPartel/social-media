@@ -1,4 +1,5 @@
 import { createContext } from "react"
+import { NavigateFunction } from "react-router-dom"
 
 export interface LoginFormFields {
     login: string
@@ -23,12 +24,12 @@ export interface RequestProps {
     e: React.FormEvent<HTMLFormElement>
     setErrorArr?: (errs: ErrorResponse[]) => void
     setId?: (id: number) => void
-    navigate: (path: string) => void
+    navigate: NavigateFunction
     image?: Blob
     id?: number
 }
 
-export interface Response {
+export interface serverResponse {
     data: null | User
     errors: ErrorResponse[]
 }
@@ -58,7 +59,9 @@ export interface UserIdContext {
 
 export const defaultId: UserIdContext = {
     id: 0,
-    setId: () => { return },
+    setId: () => {
+        return
+    },
 }
 
 export const IdContext = createContext(defaultId)
