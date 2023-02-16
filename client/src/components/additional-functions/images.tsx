@@ -16,6 +16,7 @@ export async function updateImage(formFields: AdditionalInfoFormFields, image: B
     await toBase64(image).then((r) => {
         formFields.avatar = r
     })
+    // TODO: handle reject needed
 }
 
 async function toBase64(file: Blob): Promise<string> {

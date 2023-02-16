@@ -29,7 +29,7 @@ export interface RequestProps {
     id?: number
 }
 
-export interface serverResponse {
+export interface ServerResponse {
     data: null | User
     errors: ErrorResponse[]
 }

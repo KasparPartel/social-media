@@ -36,7 +36,9 @@ export function RegistrationRequest({ e, setErrorArr, setId, navigate }: Request
     formFields.dateOfBirth = new Date(formFields.dateOfBirth).getTime()
 
     fetchHandler(`http://localhost:8080/register`, "POST", formFields)
-        .then((r) => formReturnHandler(r, { e, setErrorArr, setId, navigate }, "/additional-registration"))
+        .then((r) =>
+            formReturnHandler(r, { e, setErrorArr, setId, navigate }, "/additional-registration"),
+        )
         .catch(() => navigate("/internal-error"))
 }
 

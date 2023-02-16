@@ -169,7 +169,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	token, err := session.SessionProvider.GetToken(r)
 
-	if err != nil {
+	if err != nil && err != http.ErrNoCookie {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
