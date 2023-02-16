@@ -1,6 +1,5 @@
 .create-post {
     box-sizing: border-box;
-    gap: 1em;
     width: 100%;
     padding: 1em;
     background: var(--main-orange);
@@ -10,14 +9,30 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 1em;
-    height: 100%;
+    gap: 0.5em;
 }
 
 .create-post__text {
     width: 100%;
-    height: 100%;
+    min-height: 215px;
     padding: 0;
+    resize: none;
+}
+
+.create-post__attachment-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+}
+
+.create-post__attachment {
+    padding: 0.2em;
+    border-radius: 5px;
+
+    list-style-type: none;
+    background: whitesmoke;
 }
 
 .create-post__options {
@@ -31,15 +46,14 @@
     display: flex;
     align-items: center;
     gap: 1em;
-    width: 50%;
 }
 
 .create-post__settings__privacy {
     -webkit-appearance: none;
 
-    width: max(8em, 50%);
+    width: clamp(10vw, 10em, 25vw);
     padding: 0.5em 1em;
-    border-radius: 8px;
+    border-radius: 5px;
     
     background-color: var(--main-green);
     border: none;
@@ -53,7 +67,22 @@
     display: none;
 }
 
-.create-post__settings__attachment > img{
-    width: 30px;
-    height: 30px;
+.create-post__settings__attachment__label {
+    line-height: 0;
+}
+
+.create-post__settings__attachment__img {
+    width: 1.5em;
+}
+
+.create-post__add-users__img {
+    width: 1.5em;
+}
+
+.create-post__create-btn {
+    width: clamp(10vw, 5em, 25vw);
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    background-color: var(--main-green);
+    border: none;
 }

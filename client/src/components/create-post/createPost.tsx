@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import attachmentIcon from "../../assets/attachment_icon.svg"
+import privateAddIcon from "../../assets/private_add.svg"
 import "./createPost.css"
 
 export default function CreatePost() {
@@ -35,6 +36,7 @@ interface Post {
 function Modal({ toggleModal }: ModalProps) {
     // const [post, setPost] = useState<Post>()
     const [attachments, setAttachments] = useState<string[]>([])
+    const [privacy, setPrivacy] = useState("1")
 
     useEffect(() => {
         console.log(attachments)
@@ -76,16 +78,36 @@ function Modal({ toggleModal }: ModalProps) {
             {/*<button onClick={(e) => handleClose(e)}>close</button>*/}
             <form className="create-post__form" onSubmit={(e) => handleSubmit(e)}>
                 <textarea name="body" className="create-post__text"></textarea>
+
+                <ul className="create-post__attachment-list">
+                    {attachments &&
+                        attachments.map((file, i) => (
+                            <li className="create-post__attachment" key={i}>
+                                {file} -{" "}
+                                <span onClick={(e) => handleRemoveAttachment(e, i)}>
+                                            remove
+                                        </span>
+                            </li>
+                        ))}
+                </ul>
+
                 <div className="create-post__options">
                     <div className="create-post__settings">
-                        <select name="privacy" className="create-post__settings__privacy">
+                        <select name="privacy" value={privacy} onChange={(e) => setPrivacy(e.target.value)}
+                                className="create-post__settings__privacy">
                             <option value="0">Public</option>
                             <option value="1">Semi</option>
                             <option value="2">Private</option>
                         </select>
-                        <label htmlFor="attachment" className="create-post__settings__attachment">
-                            <img src={attachmentIcon} alt="attachment" />
+
+                        {privacy === "1" &&
+                            <img className="create-post__add-users__img" src={privateAddIcon} alt="add users" />}
+
+                        <label htmlFor="attachment" className="create-post__settings__attachment__label">
+                            <img className="create-post__settings__attachment__img" src={attachmentIcon}
+                                 alt="attachment" />
                         </label>
+
                         <input
                             onChange={(e) => handleAddAttachment(e)}
                             type="file"
@@ -95,19 +117,9 @@ function Modal({ toggleModal }: ModalProps) {
                             id="attachment"
                             hidden
                         />
-                        <div>
-                            {attachments &&
-                                attachments.map((file, i) => (
-                                    <p key={i}>
-                                        {file} -{" "}
-                                        <span onClick={(e) => handleRemoveAttachment(e, i)}>
-                                            remove
-                                        </span>
-                                    </p>
-                                ))}
-                        </div>
                     </div>
-                    <button>Create</button>
+
+                    <button className="create-post__create-btn">Create</button>
                 </div>
             </form>
         </div>

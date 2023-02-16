@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Route, Routes } from "react-router-dom"
 import Navigation from "./components/header/header"
 import CreatePost from "./components/create-post/createPost"
+import PostList from "./components/user-post/postList"
 
 // Shows the registration/login view, plus two buttons that lets you change between them
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
                     <Route path="/main" element={<h1>This is a main page</h1>} />
                 </Route>
                 <Route path="/" element={<CreatePost />} />
+                <Route path="/postlist" element={<PostList />} />
             </Routes>
         </IdContext.Provider>
     )
