@@ -13,75 +13,42 @@ type Group struct {
 	Requsts     []int  `json:"requsts"` // id of users who requested to group
 }
 
-// GET POST /user/:id/groups
-func GetUserGroupsHandler(w http.ResponseWriter, r *http.Request, id int) {
-	if r.Method != "GET" && r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+// GET /user/:id/groups
+func GetGroups(w http.ResponseWriter, r *http.Request) {
+	groupIdArray := []int{88, 544}
 
-	// get user list of group id
-	if r.Method == "GET" {
-		groupIdArray := []int{88, 544}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(groupIdArray)
-		return
-	}
-
-	if r.Method == "POST" {
-		// create group
-	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(groupIdArray)
 }
 
-// GET POST /groups/
-func GetGroupsHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" && r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+// POST /user/:id/groups
+func CreateGroup(w http.ResponseWriter, r *http.Request) {
 
-	// get list of group id
-	if r.Method == "GET" {
-		groupIdArray := []int{88, 544, 556, 13, 1}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(groupIdArray)
-		return
-	}
-
-	if r.Method == "POST" {
-		// create group
-	}
 }
 
-// GET PUT DELETE /group/:id
-func GroupHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" && r.Method != "DELETE" && r.Method != "PUT" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
+// GET /groups/
+func GetAllGroups(w http.ResponseWriter, r *http.Request) {
+	groupIdArray := []int{88, 544, 556, 13, 1}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(groupIdArray)
+}
+
+// GET /group/:id
+func GetGroup(w http.ResponseWriter, r *http.Request) {
+	testGroup := &Group{
+		Id:          1,
+		Title:       "test group",
+		Description: "test description",
+		Members:     []int{544, 54, 12},
+		Requsts:     []int{13, 4},
 	}
 
-	// get group info
-	if r.Method == "GET" {
-		testGroup := &Group{
-			Id:          1,
-			Title:       "test group",
-			Description: "test description",
-			Members:     []int{544, 54, 12},
-			Requsts:     []int{13, 4},
-		}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(testGroup)
+}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(testGroup)
-		return
-	}
+// PUT /group/:id
+func UpdateGroup(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == "PUT" {
-		// update group info
-	}
-
-	if r.Method == "DELETE" {
-		// delete group
-	}
 }

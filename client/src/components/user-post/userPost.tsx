@@ -24,9 +24,11 @@ export default function UserPost({ post }: UserPostProps) {
         setTextOpen(!textOpen)
     }
 
-    const refText = useRef<HTMLDivElement>(null);
-    const [height, setHeight] = useState<number>(215);
-    useEffect(() => { textOpen ? setHeight(refText.current.scrollHeight) : setHeight(215) }, [textOpen]);
+    const refText = useRef<HTMLDivElement>(null)
+    const [height, setHeight] = useState<number>(215)
+    useEffect(() => {
+        textOpen ? setHeight(refText.current.scrollHeight) : setHeight(215)
+    }, [textOpen])
 
     return (
         <article className="post">
@@ -35,7 +37,9 @@ export default function UserPost({ post }: UserPostProps) {
                     ref={refText}
                     className="post__text"
                     style={{ maxHeight: `${height}px` }}
-                    onClick={() => { togglePostText() }}
+                    onClick={() => {
+                        togglePostText()
+                    }}
                 >
                     {post.text}
                 </p>
@@ -56,8 +60,9 @@ export default function UserPost({ post }: UserPostProps) {
                     <p className="post__attachments-toggler" onClick={() => toggleAttachments()}>
                         {attachmentsOpen
                             ? "Show less"
-                            : `Show ${post.text ? attachmentsCount : attachmentsCount - 1
-                            } more attachment${attachmentsCount > 1 ? "s" : ""}`}
+                            : `Show ${
+                                  post.text ? attachmentsCount : attachmentsCount - 1
+                              } more attachment${attachmentsCount > 1 ? "s" : ""}`}
                     </p>
                 )}
 

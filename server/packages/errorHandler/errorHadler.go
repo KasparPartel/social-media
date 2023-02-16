@@ -18,6 +18,10 @@ const (
 	ErrUniqueEmail      = 10
 	ErrUniqueLogin      = 11
 	ErrIncorrectCred    = 12
+	ErrSessionExpired   = 13
+	ErrSessionNotExist  = 14
+	ErrPrivateProfile   = 15
+	ErrNotFound         = 16
 )
 
 type Response struct {
