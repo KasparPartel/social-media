@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 import attachmentIcon from "../../assets/attachment_icon.svg"
 import privateAddIcon from "../../assets/private_add.svg"
@@ -22,10 +22,6 @@ export default function CreatePost() {
     )
 }
 
-interface ModalProps {
-    toggleModal: () => void
-}
-
 interface Post {
     text: string
     attachments: string[]
@@ -33,10 +29,15 @@ interface Post {
     authorizedFollowers: number[]
 }
 
+interface ModalProps {
+    toggleModal: () => void
+}
+
 function Modal({ toggleModal }: ModalProps) {
     // const [post, setPost] = useState<Post>()
     const [attachments, setAttachments] = useState<string[]>([])
     const [privacy, setPrivacy] = useState("1")
+    const [overlayOpen, setOverlayOpen] = useState(false)
 
     useEffect(() => {
         console.log(attachments)
@@ -54,13 +55,6 @@ function Modal({ toggleModal }: ModalProps) {
         }
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const form = e.currentTarget
-        const formElements = form.elements
-        console.log(formElements)
-    }
-
     const handleRemoveAttachment = (
         e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
         i: number,
@@ -73,55 +67,80 @@ function Modal({ toggleModal }: ModalProps) {
         })
     }
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const form = e.currentTarget
+        const formElements = form.elements
+        console.log(formElements)
+    }
+
     return (
-        <div className="create-post">
-            {/*<button onClick={(e) => handleClose(e)}>close</button>*/}
-            <form className="create-post__form" onSubmit={(e) => handleSubmit(e)}>
-                <textarea name="body" className="create-post__text"></textarea>
+        <>
+            <button onClick={(e) => handleClose(e)}>close</button>
+            <div className="create-post">
+                <form className="create-post__form" onSubmit={(e) => handleSubmit(e)}>
+                    <textarea name="body" className="create-post__text"></textarea>
 
-                <ul className="create-post__attachment-list">
-                    {attachments &&
-                        attachments.map((file, i) => (
-                            <li className="create-post__attachment" key={i}>
-                                {file} -{" "}
-                                <span onClick={(e) => handleRemoveAttachment(e, i)}>
-                                            remove
-                                        </span>
-                            </li>
-                        ))}
-                </ul>
+                    <ul className="create-post__attachment-list">
+                        {attachments &&
+                            attachments.map((file, i) => (
+                                <li className="create-post__attachment" key={i}>
+                                    {file} -{" "}
+                                    <span onClick={(e) => handleRemoveAttachment(e, i)}>
+                                        remove
+                                    </span>
+                                </li>
+                            ))}
+                    </ul>
 
-                <div className="create-post__options">
-                    <div className="create-post__settings">
-                        <select name="privacy" value={privacy} onChange={(e) => setPrivacy(e.target.value)}
-                                className="create-post__settings__privacy">
-                            <option value="0">Public</option>
-                            <option value="1">Semi</option>
-                            <option value="2">Private</option>
-                        </select>
+                    <div className="create-post__options">
+                        <div className="create-post__settings">
+                            <select
+                                name="privacy"
+                                value={privacy}
+                                onChange={(e) => setPrivacy(e.target.value)}
+                                className="create-post__settings__privacy"
+                            >
+                                <option value="0">Public</option>
+                                <option value="1">Semi</option>
+                                <option value="2">Private</option>
+                            </select>
 
-                        {privacy === "1" &&
-                            <img className="create-post__add-users__img" src={privateAddIcon} alt="add users" />}
+                            {privacy === "1" && (
+                                <img
+                                    className="create-post__add-users__img"
+                                    src={privateAddIcon}
+                                    alt="add users"
+                                    onClick={() => setOverlayOpen(true)}
+                                />
+                            )}
 
-                        <label htmlFor="attachment" className="create-post__settings__attachment__label">
-                            <img className="create-post__settings__attachment__img" src={attachmentIcon}
-                                 alt="attachment" />
-                        </label>
+                            <label
+                                htmlFor="attachment"
+                                className="create-post__settings__attachment__label"
+                            >
+                                <img
+                                    className="create-post__settings__attachment__img"
+                                    src={attachmentIcon}
+                                    alt="attachment"
+                                />
+                            </label>
 
-                        <input
-                            onChange={(e) => handleAddAttachment(e)}
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            name="attachment"
-                            id="attachment"
-                            hidden
-                        />
+                            <input
+                                onChange={(e) => handleAddAttachment(e)}
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                name="attachment"
+                                id="attachment"
+                                hidden
+                            />
+                        </div>
+
+                        <button className="create-post__create-btn">Create</button>
                     </div>
-
-                    <button className="create-post__create-btn">Create</button>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </>
     )
 }

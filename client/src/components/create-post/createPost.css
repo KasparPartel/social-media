@@ -13,10 +13,12 @@
 }
 
 .create-post__text {
+    box-sizing: border-box;
     width: 100%;
     min-height: 215px;
-    padding: 0;
+    padding: 0.5em;
     resize: none;
+    border: 1px solid black;
 }
 
 .create-post__attachment-list {
@@ -56,7 +58,7 @@
     border-radius: 5px;
     
     background-color: var(--main-green);
-    border: none;
+    border: 1px solid black;
     background-image: url("../../assets/down_arrow.svg");
     background-repeat: no-repeat;
     background-position: right center;
@@ -84,5 +86,5 @@
     padding: 0.5em 1em;
     border-radius: 5px;
     background-color: var(--main-green);
-    border: none;
+    border: 1px solid black;
 }
