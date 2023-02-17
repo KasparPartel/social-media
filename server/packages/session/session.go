@@ -26,6 +26,7 @@ func (m *Provider) SetToken(newSessionId string, w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "TOKEN",
 		Value:    newSessionId,
+		Expires:  time.Now().Add(time.Hour * 8760), // 1 year
 		MaxAge:   31536000,
 		HttpOnly: true,
 		Path:     "/",

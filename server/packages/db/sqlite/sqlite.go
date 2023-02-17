@@ -25,7 +25,7 @@ type User struct {
 	Password    string  `json:"password"`
 	FirstName   string  `json:"firstName"`
 	LastName    string  `json:"lastName"`
-	AboutMe     *string `json:"aboutMe"`
+	AboutMe     string  `json:"aboutMe"`
 	DateOfBirth int     `json:"dateOfBirth"`
 	IsPublic    bool    `json:"isPublic"`
 }
@@ -154,7 +154,7 @@ func GetFollowings(id int) ([]int, error) {
 	q := `SELECT userId FROM followers WHERE followerId = ? AND isAccepted = 1`
 
 	rows, err := db.Query(q, id)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 
@@ -170,6 +170,17 @@ func GetFollowings(id int) ([]int, error) {
 	}
 
 	return arr, nil
+}
+
+func GetAvatar(avatarId int) (string, error) {
+	avatar := ""
+
+	err := db.QueryRow(`SELECT avatar FROM avatars WHERE id = ?`, avatarId).Scan(&avatar)
+	if err != nil && err != sql.ErrNoRows {
+		return "", err
+	}
+
+	return avatar, nil
 }
 
 func init() {

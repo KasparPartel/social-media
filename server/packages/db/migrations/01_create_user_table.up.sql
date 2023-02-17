@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     firstName TEXT NOT NULL,
     lastName TEXT NOT NULL,
-    aboutMe TEXT,
+    aboutMe TEXT DEFAULT "",
     dateOfBirth INTEGER NOT NULL,
     isPublic INTEGER DEFAULT 0
 );

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"social-network/packages/db/sqlite"
 	"social-network/packages/errorHandler"
+	"social-network/packages/models"
 	"social-network/packages/session"
 	"social-network/packages/validator"
 
@@ -16,22 +17,16 @@ import (
 
 // /register
 //
-// POST -> (email, login, password, firstName, lastName, dateOfBirth) --->>>
+// POST -> (email, password, firstName, lastName, dateOfBirth) --->>>
 //
-// --->>> (data: {id, email, login, firstName, lastName, dateOfBirth}, errors: [code, description])
+// --->>> (data: {id, email, firstName, lastName, dateOfBirth}, errors: [code, description])
 func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
-	if r.Method == "OPTIONS" {
-		return
-	}
-
 	var parsedUser sqlite.User
 
 	// get user info
 	err := json.NewDecoder(r.Body).Decode(&parsedUser)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -48,6 +43,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(parsedUser.Password), 10)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -66,18 +62,21 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		log.Printf("register functions error: %v", err.Error())
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// remove private data
-	parsedUser.UUID = ""
-	parsedUser.Password = ""
-
-	parsedUser.Id = id
-
-	response.Data = parsedUser
+	response.Data = models.GetUserResponse{
+		Id:          id,
+		Email:       parsedUser.Email,
+		Login:       parsedUser.Login,
+		FirstName:   parsedUser.FirstName,
+		LastName:    parsedUser.LastName,
+		AboutMe:     parsedUser.AboutMe,
+		DateOfBirth: parsedUser.DateOfBirth,
+		IsPublic:    parsedUser.IsPublic,
+	}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -85,21 +84,15 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	POST -> (login, password) --->>>
 //
-// --->>> (data: {id, avatarId, email, login, firstName, lastName, aboutMe dateOfBirth, isPublic}, errors: [code, description])
+// --->>> (data: {id, avatar, email, login, firstName, lastName, aboutMe dateOfBirth, isPublic}, errors: [code, description])
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
-	if r.Method == "OPTIONS" {
-		return
-	}
-
 	var parsedUser sqlite.User
 	response := &errorHandler.Response{}
 
 	// get user info
 	err := json.NewDecoder(r.Body).Decode(&parsedUser)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -127,6 +120,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -134,10 +128,24 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	token := session.SessionProvider.SessionAdd(u.UUID)
 	session.SessionProvider.SetToken(token, w)
 
-	u.Password = ""
-	u.UUID = ""
+	avatar, err := sqlite.GetAvatar(u.AvatarId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
-	response.Data = u
+	response.Data = models.GetUserResponse{
+		Id:          u.Id,
+		Avatar:      avatar,
+		Email:       u.Email,
+		Login:       u.Login,
+		FirstName:   u.FirstName,
+		LastName:    u.LastName,
+		AboutMe:     u.AboutMe,
+		DateOfBirth: u.DateOfBirth,
+		IsPublic:    u.IsPublic,
+	}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -156,8 +164,8 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := session.SessionProvider.GetToken(r)
-
-	if err != nil && err != http.ErrNoCookie {
+	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
