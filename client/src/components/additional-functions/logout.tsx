@@ -1,7 +1,7 @@
-import { fetchHandler } from "./fetchHandler"
+import { fetchHandlerNoBody } from "./fetchHandler"
 
 export function Logout(navigate: (path: string) => void) {
-    fetchHandler(`http://localhost:8080/logout`, "POST")
+    fetchHandlerNoBody(`http://localhost:8080/logout`, "POST")
         .then((r: Response) => {
             if (r.status === 200) {
                 navigate("/login")
