@@ -4,17 +4,23 @@ import (
 	"log"
 	"net/http"
 	"social-network/packages/controllers"
-	"social-network/packages/router"
+	"social-network/packages/httpRouting"
 )
 
 func main() {
-	r := router.Router{}
+	r := httpRouting.NewRouter()
+	c := httpRouting.CORS{
+		Origin:      "http://localhost:3000",
+		Headers:     []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token"},
+		Methods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+		Credentials: true,
+	}
 
 	r.NewRoute("POST", "/register", controllers.RegistrationHandler)
 	r.NewRoute("POST", "/login", controllers.LoginHandler)
 	r.NewRoute("POST", "/logout", controllers.LogoutHandler)
 
-	r.NewRoute("GET", `/user/(?P<id>\d+)`, controllers.GetProfile)
+	r.NewRoute("GET", `/user/(?P<id>\d+)`, controllers.GetUserInfo)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/posts`, controllers.GetPosts)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/chats`, controllers.GetChats)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/groups`, controllers.GetGroups)
@@ -41,7 +47,7 @@ func main() {
 	r.NewRoute("GET", `/group/(?P<id>\d+)`, controllers.GetGroup)
 	r.NewRoute("PUT", `/group/(?P<id>\d+)`, controllers.UpdateGroup)
 
-	http.HandleFunc("/", r.Serve)
+	http.HandleFunc("/", r.ServeWithCORS(c))
 
 	log.Println("Ctrl + Click on the link: http://localhost:8080")
 	log.Println("To stop the server press `Ctrl + C`")
