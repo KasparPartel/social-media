@@ -15,10 +15,7 @@ export async function fetchHandler(
     })
 }
 
-export async function fetchHandlerNoBody(
-    inputURL: string,
-    method: string,
-): Promise<Response> {
+export async function fetchHandlerNoBody(inputURL: string, method: string): Promise<Response> {
     return fetch(inputURL, {
         method,
         credentials: "include",

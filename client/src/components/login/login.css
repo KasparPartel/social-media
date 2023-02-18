@@ -29,13 +29,11 @@
 
 .form__button,
 .form__field {
-
     height: 6%;
     min-height: 54px;
     border-radius: 12px;
 
     padding: 12px 8px;
-
 }
 
 .form__field {

@@ -40,11 +40,11 @@ export interface ErrorResponse {
 }
 
 export interface User {
-    id: number
-    avatarId: number
+    id?: number
+    avatar: string
     email: string
     login: string
-    password: string
+    password?: string
     firstName: string
     lastName: string
     aboutMe: string

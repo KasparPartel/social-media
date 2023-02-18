@@ -38,7 +38,8 @@
     background-color: black;
 }
 
-.short-info__name {}
+.short-info__name {
+}
 
 .detailed-info {
     display: flex;
