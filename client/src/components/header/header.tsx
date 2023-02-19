@@ -1,5 +1,5 @@
 import "./header.css"
-import { Logout } from "../additional-functions/logout"
+import { Logout } from "../../additional-functions/logout"
 import { useNavigate } from "react-router-dom"
 export default function Navigation() {
     const navigate = useNavigate()

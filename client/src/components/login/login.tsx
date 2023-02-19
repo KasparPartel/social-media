@@ -1,7 +1,6 @@
 import "./login.css"
-import "../../constants.css"
 import { ErrorResponse, IdContext } from "../models"
-import { LoginRequest } from "../additional-functions/authorization"
+import { LoginRequest } from "../../additional-functions/authorization"
 import ErrorWindow from "../error-window/error-window"
 import { useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"

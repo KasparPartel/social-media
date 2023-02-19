@@ -1,7 +1,7 @@
 import "./userPost.css"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
 import { useState } from "react"
-import { useOpenText } from "../hooks/openText"
+import { useOpenText } from "../../hooks/openText"
 
 export interface Post {
     text: string | null

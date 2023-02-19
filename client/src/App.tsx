@@ -1,3 +1,5 @@
+import "./components/commonClasses.css"
+import "./constants.css"
 import { IdContext } from "./components/models"
 import Login from "./components/login/login"
 import { Registration, AdditionalInfo } from "./components/registration/registration"
@@ -17,12 +19,12 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/registration" element={<Registration />} />
                 <Route path="/additional-registration" element={<AdditionalInfo />} />
-                <Route path="/internal-error" element={<h1>Error 500</h1>} />
                 <Route element={<Navigation />}>
                     <Route path="/main" element={<h1>This is a main page</h1>} />
                 </Route>
                 <Route path="/user/:paramId" element={<UserInfo />} />
                 <Route path="/" element={<PostList />} />
+                <Route path="/internal-error" element={<h1>Error 500</h1>} />
                 <Route path="/*" element={<h1>Error 404</h1>} />
             </Routes>
         </IdContext.Provider>

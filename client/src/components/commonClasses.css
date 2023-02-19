@@ -1,0 +1,20 @@
+.button {
+    box-sizing: border-box;
+
+    padding: 10px;
+    border: 0;
+    border-radius: 12px;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    color: var(--black);
+    background-color: var(--main-green);
+}
+
+.label {
+    display: flex;
+    gap: 1em;
+
+    color: var(--black);
+}

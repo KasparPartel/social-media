@@ -1,4 +1,8 @@
-import { AdditionalInfoFormFields, LoginFormFields, RegistrationFormFields } from "../models"
+import {
+    AdditionalInfoFormFields,
+    LoginFormFields,
+    RegistrationFormFields,
+} from "../components/models"
 
 export async function fetchHandler(
     inputURL: string,

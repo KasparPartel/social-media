@@ -4,7 +4,7 @@ import {
     RegistrationFormFields,
     RequestProps,
     ServerResponse,
-} from "../models"
+} from "../components/models"
 
 export function formDataExtractor(
     formData: FormData,

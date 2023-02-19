@@ -44,7 +44,6 @@
 .detailed-info {
     display: flex;
     flex-direction: column;
-    /* top, right + left, bottom */
     gap: 40px;
     padding: 60px 20px 0;
 }
@@ -56,4 +55,5 @@
 
 .detailed-info__section {
     margin: 0;
+    color: var(--black);
 }

@@ -1,36 +1,17 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { useParams } from "react-router-dom"
-import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
-import { useOpenText } from "../hooks/openText"
-import { IdContext, ServerResponse, User } from "../models"
+import { useOpenText } from "../../hooks/openText"
+import useUserInfo from "../../hooks/userInfo"
+import { IdContext } from "../models"
 // import { User } from "../models";
 import "./user-information.css"
 
 export function UserInfo() {
-    const [user, setUser] = useState<User>({
-        avatar: "",
-        email: "",
-        login: "",
-        firstName: "",
-        lastName: "",
-        aboutMe: "",
-        dateOfBirth: 0,
-        isPublic: false,
-    })
-
     const { paramId } = useParams()
     const { id } = useContext(IdContext)
 
-    useEffect(() => {
-        fetchHandlerNoBody(`http://localhost:8080/user/${paramId}`, `GET`)
-            .then((r) => r.json())
-            .then((r: ServerResponse) => {
-                if (r.errors) return
-                setUser(r.data)
-            })
-    }, [paramId])
-
     const { height, style, refText, openText } = useOpenText(0)
+    const { user } = useUserInfo(paramId)
 
     return (
         <div className="test-container">
@@ -58,10 +39,29 @@ export function UserInfo() {
                 </div>
                 <div style={style} className="contaner">
                     <div ref={refText} className="detailed-info">
-                        <p className="detailed-info__section">{user.email}</p>
-                        <p className="detailed-info__section">{user.login}</p>
-                        <p className="detailed-info__section">{user.aboutMe}</p>
-                        <p className="detailed-info__section">{user.dateOfBirth}</p>
+                        {user.email ? (
+                            <label className="label">
+                                Email:<p className="detailed-info__section">{user.email}</p>
+                            </label>
+                        ) : null}
+                        {user.login ? (
+                            <label className="label">
+                                Username:<p className="detailed-info__section">{user.login}</p>
+                            </label>
+                        ) : null}
+                        {user.aboutMe ? (
+                            <label className="label">
+                                About me:<p className="detailed-info__section">{user.aboutMe}</p>
+                            </label>
+                        ) : null}
+                        {user.dateOfBirth ? (
+                            <label className="label">
+                                Birth date:
+                                <p className="detailed-info__section">
+                                    {new Date(user.dateOfBirth).toLocaleDateString("en-US")}
+                                </p>
+                            </label>
+                        ) : null}
                     </div>
                 </div>
             </div>

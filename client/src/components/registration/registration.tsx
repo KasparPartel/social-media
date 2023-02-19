@@ -1,11 +1,13 @@
 import "./registration.css"
-import "../../constants.css"
 import { ErrorResponse, IdContext } from "../models"
-import { RegistrationRequest, AdditionalInfoRequest } from "../additional-functions/authorization"
+import {
+    RegistrationRequest,
+    AdditionalInfoRequest,
+} from "../../additional-functions/authorization"
 import ErrorWindow from "../error-window/error-window"
 import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { ImageUpload } from "../additional-functions/images"
+import { ImageUpload } from "../../additional-functions/images"
 
 export function Registration() {
     const navigate = useNavigate()
