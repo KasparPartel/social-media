@@ -23,6 +23,7 @@ export default function App() {
                     <Route path="/main" element={<h1>This is a main page</h1>} />
                 </Route>
                 <Route path="/" element={<UserInfo isMyProfile={true} />} />
+                <Route path="/postlist" element={<PostList />} />
             </Routes>
         </IdContext.Provider>
     )

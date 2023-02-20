@@ -39,6 +39,18 @@ export interface ErrorResponse {
     description: string
 }
 
+export interface Post {
+    parentId: number
+    login: string
+    userId: number
+    postId: number
+    title: string
+    text: string
+    dateOfCreation: number
+    visibility: string
+    attachments: string[]
+}
+
 export interface User {
     id: number
     avatarId: number

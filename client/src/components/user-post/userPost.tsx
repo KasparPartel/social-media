@@ -1,34 +1,28 @@
 import "./userPost.css"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
 import { useEffect, useRef, useState } from "react"
+import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
+import { Post } from "../models"
+import Comments from "./comment"
 
-export interface Post {
-    id: number
-    userId: number
-    text: string
-    attachments: string[]
-}
-
-interface UserPostProps {
-    postId: number
-}
-
-export default function UserPost({ postId }: UserPostProps) {
-    const [post, setPost] = useState<Post>()
+export default function UserPost({ postId }: { postId: number }) {
+    const [post, setPost] = useState<Post | undefined>(undefined)
     const [err, setErr] = useState<Error | null>(null)
     const [isLoading, setIsLoading] = useState(true)
-    const [attachmentsOpen, setAttachmentsOpen] = useState(false)
     const [attachmentsCount, setAttachmentsCount] = useState(0)
     const [height, setHeight] = useState(215)
+
+    const [attachmentsOpen, setAttachmentsOpen] = useState(false)
+    const [commentsOpen, setCommentsOpen] = useState(false)
     const [textOpen, setTextOpen] = useState(false)
     const refText = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
         const getPost = async () => {
-            fetch(`http://localhost:8080/post/${postId}`)
+            fetchHandlerNoBody(`http://localhost:8080/post/${postId}`, "GET")
                 .then((res) => {
                     if (!res.ok) {
-                        throw new Error(`This is an HTTP error: The status is ${res.status}`)
+                        throw new Error(`HTTP error: status ${res.status}`)
                     }
                     return res.json()
                 })
@@ -49,7 +43,7 @@ export default function UserPost({ postId }: UserPostProps) {
 
     useEffect(() => {
         if (post) {
-            setAttachmentsCount(post.attachments.length)
+            setAttachmentsCount(post.attachments?.length)
         }
     }, [post])
 
@@ -103,8 +97,15 @@ export default function UserPost({ postId }: UserPostProps) {
                     </p>
                 )}
 
-                <img className="post__add-comment" src={icon} alt="comment icon" />
+                <img
+                    className="post__add-comment"
+                    src={icon}
+                    alt="comment icon"
+                    onClick={() => setCommentsOpen(!commentsOpen)}
+                />
             </div>
+
+            {commentsOpen && <Comments postId={postId} />}
         </article>
     )
 }
