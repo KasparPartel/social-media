@@ -1,13 +1,20 @@
 import "./header.css"
 import { Logout } from "../additional-functions/logout"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+
 export default function Navigation() {
     const navigate = useNavigate()
 
     return (
         <header className="header">
             <nav className="navigation-left">
-                <input type="button" className="button navigation__button" value="Profile" />
+                <Link to="/">
+                    <input 
+                        type="button" 
+                        className="button navigation__button" 
+                        value="Profile"
+                    />
+                </Link>
                 <input type="button" className="button navigation__button" value="Groups" />
                 <input type="button" className="button navigation__button" value="Users" />
                 <input type="button" className="button navigation__button" value="Notifications" />
