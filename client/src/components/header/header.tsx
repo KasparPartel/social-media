@@ -1,20 +1,24 @@
 import "./header.css"
 import { Logout } from "../additional-functions/logout"
-import { Link, useNavigate } from "react-router-dom"
-
+import { useNavigate } from "react-router-dom"
+import { useContext } from "react"
+import { IdContext } from "../models"
+import { GetUserInfo } from "../additional-functions/profile"
 export default function Navigation() {
     const navigate = useNavigate()
+    const { id } = useContext(IdContext)
 
     return (
         <header className="header">
             <nav className="navigation-left">
-                <Link to="/">
-                    <input 
-                        type="button" 
-                        className="button navigation__button" 
-                        value="Profile"
-                    />
-                </Link>
+                <input 
+                    type="button"
+                    className="button navigation__button" 
+                    value="Profile"
+                    onClick={() => {
+                        GetUserInfo(id, navigate)
+                    }}
+                />
                 <input type="button" className="button navigation__button" value="Groups" />
                 <input type="button" className="button navigation__button" value="Users" />
                 <input type="button" className="button navigation__button" value="Notifications" />

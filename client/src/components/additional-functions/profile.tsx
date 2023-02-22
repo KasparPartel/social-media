@@ -1,7 +1,7 @@
 import { User } from "../models"
 import { fetchHandlerNoBody } from "./fetchHandler"
 
-export function GetUserInfo(id) {
+export function GetUserInfo(id: number, navigate: (path: string) => void) {    
     const usr: User = {
         id: 0,
         avatarId: 0,
@@ -21,7 +21,8 @@ export function GetUserInfo(id) {
             response.json().then(res => {
                 for (const key in usr) {
                     usr[key] = res.data[key]
-                }                
+                }         
+                navigate(`profile/${id}`)       
             });
         }
     })
