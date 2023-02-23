@@ -36,7 +36,7 @@ export interface ServerResponse {
 
 export interface ErrorResponse {
     code: number
-    description: string
+    description?: string
 }
 
 export interface User {
@@ -52,12 +52,12 @@ export interface User {
     isPublic: boolean
 }
 
-export interface UserIdContext {
+interface UserIdContext {
     id: number
     setId: (id: number) => void
 }
 
-export const defaultId: UserIdContext = {
+const defaultId: UserIdContext = {
     id: 0,
     setId: () => {
         return

@@ -6,7 +6,7 @@ import {
 } from "../../additional-functions/authorization"
 import ErrorWindow from "../error-window/error-window"
 import { useContext, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ImageUpload } from "../../additional-functions/images"
 
 export function Registration() {
@@ -48,9 +48,7 @@ export function Registration() {
                     />
                     <ErrorWindow errorArr={errorArr} />
                     <input type="submit" className="button form__button" value="Register" />
-                    <Link to="/login">
-                        <input type="button" className="switch-button" value="Sign in" />
-                    </Link>
+                    <input type="button" className="switch-button" onClick={() => navigate("/login")} value="Sign in" />
                 </form>
             </div>
             <div className="cover"></div>
@@ -117,14 +115,12 @@ export function AdditionalInfo() {
                         className="form__field"
                     />
                     <div className="form__button-container">
-                        <Link to="/main">
-                            <input
-                                type="button"
-                                className="button form__button form__button_skip"
-                                value="Skip"
-                            />
-                        </Link>
-
+                        <input
+                            type="button"
+                            className="button form__button form__button_skip"
+                            onClick={() => navigate("/main")}
+                            value="Skip"
+                        />
                         <input type="submit" className="button form__button" value="Finish" />
                     </div>
                 </form>

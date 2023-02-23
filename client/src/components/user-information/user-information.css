@@ -14,7 +14,7 @@
     background-color: var(--main-blue);
 }
 
-.horizontal-container {
+.information__short-container {
     display: flex;
     justify-content: space-between;
 
@@ -38,22 +38,14 @@
     background-color: black;
 }
 
-.short-info__name {
-}
-
-.detailed-info {
+.information__detailed-info {
     display: flex;
     flex-direction: column;
     gap: 40px;
     padding: 60px 20px 0;
 }
 
-.contaner {
+.information__detailed-container {
     overflow: hidden;
     transition: max-height ease-in-out 0.9s;
-}
-
-.detailed-info__section {
-    margin: 0;
-    color: var(--black);
 }
