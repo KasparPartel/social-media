@@ -19,7 +19,7 @@ export function formDataExtractor(
 
 export async function formReturnHandler(
     r: Response,
-    { setErrorArr, setId, navigate }: RequestProps,
+    { setErrorArr, navigate }: RequestProps,
     navigatePath: string,
 ): Promise<ServerResponse> {
     if (r.headers.get("content-type") !== "application/json") {
@@ -32,7 +32,7 @@ export async function formReturnHandler(
             return
         }
         if (r.data != null) {
-            setId(r.data.id)
+            localStorage.setItem("id", r.data.id)
             navigate(navigatePath)
             return
         }

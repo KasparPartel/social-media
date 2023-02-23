@@ -23,10 +23,9 @@ export interface AdditionalInfoFormFields {
 export interface RequestProps {
     e: React.FormEvent<HTMLFormElement>
     setErrorArr?: (errs: ErrorResponse[]) => void
-    setId?: (id: number) => void
     navigate: NavigateFunction
     image?: Blob
-    id?: number
+    id?: string
 }
 
 export interface ServerResponse {
@@ -40,7 +39,7 @@ export interface ErrorResponse {
 }
 
 export interface User {
-    id?: number
+    id?: string
     avatar: string
     email: string
     login: string
@@ -51,17 +50,3 @@ export interface User {
     dateOfBirth: number
     isPublic: boolean
 }
-
-interface UserIdContext {
-    id: number
-    setId: (id: number) => void
-}
-
-const defaultId: UserIdContext = {
-    id: 0,
-    setId: () => {
-        return
-    },
-}
-
-export const IdContext = createContext(defaultId)

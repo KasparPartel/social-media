@@ -8,7 +8,7 @@ import { fetchHandler } from "./fetchHandler"
 import { formDataExtractor, formReturnHandler } from "./form"
 import { updateImage } from "./images"
 
-export function LoginRequest({ e, setErrorArr, setId, navigate }: RequestProps) {
+export function LoginRequest({ e, setErrorArr, navigate }: RequestProps) {
     e.preventDefault()
     const formFields: LoginFormFields = {
         login: "",
@@ -18,11 +18,11 @@ export function LoginRequest({ e, setErrorArr, setId, navigate }: RequestProps) 
     formDataExtractor(new FormData(e.currentTarget), formFields)
 
     fetchHandler(`http://localhost:8080/login`, "POST", formFields)
-        .then((r) => formReturnHandler(r, { e, setErrorArr, setId, navigate }, "/main"))
+        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }, "/main"))
         .catch(() => navigate("/internal-error"))
 }
 
-export function RegistrationRequest({ e, setErrorArr, setId, navigate }: RequestProps) {
+export function RegistrationRequest({ e, setErrorArr, navigate }: RequestProps) {
     e.preventDefault()
     const formFields: RegistrationFormFields = {
         email: "",
@@ -36,9 +36,7 @@ export function RegistrationRequest({ e, setErrorArr, setId, navigate }: Request
     formFields.dateOfBirth = new Date(formFields.dateOfBirth).getTime()
 
     fetchHandler(`http://localhost:8080/register`, "POST", formFields)
-        .then((r) =>
-            formReturnHandler(r, { e, setErrorArr, setId, navigate }, "/additional-registration"),
-        )
+        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }, "/additional-registration"))
         .catch(() => navigate("/internal-error"))
 }
 
