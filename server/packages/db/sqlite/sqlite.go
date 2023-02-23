@@ -183,6 +183,34 @@ func GetAvatar(avatarId int) (string, error) {
 	return avatar, nil
 }
 
+func UpdateAvatar(avatar string, id int) error {
+	sqlStmt, err := db.Prepare("UPDATE avatars SET avatar = ? WHERE id = (SELECT avatarId FROM users WHERE id = ?)")
+	if err != nil {
+		return err
+	}
+
+	_, err = sqlStmt.Exec(avatar, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateProfileColumn(columnName, value string, id int) error {
+	sqlStmt, err := db.Prepare(fmt.Sprintf(`UPDATE users SET %s = ? WHERE id = ?`, columnName))
+	if err != nil {
+		return err
+	}
+
+	_, err = sqlStmt.Exec(value, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func init() {
 	db = openDatabase()
 	makeMigration()

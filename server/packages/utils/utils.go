@@ -11,19 +11,20 @@ import (
 )
 
 func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, error) {
-	token, err := session.SessionProvider.GetToken(r)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	s, errs := session.SessionProvider.SessionGet(token)
-	if errs != nil {
-		return nil, errs, nil
+	s, errRes := session.SessionProvider.GetSession(r)
+	if errRes != nil {
+		return nil, errRes, nil
 	}
 
 	inputId, _ := httpRouting.GetField(r, "id")
 
 	parsedId, _ := strconv.Atoi(inputId)
+
+	id, err := sqlite.GetId(s.GetUUID())
+	if err != nil {
+		return nil, nil, err
+	}
+
 	u, err := sqlite.GetUserById(parsedId)
 	if err == sql.ErrNoRows {
 		return nil, &errorHandler.ErrorResponse{
@@ -31,11 +32,7 @@ func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, erro
 			Description: "wrong variable(s) in request",
 		}, nil
 	}
-	if err != nil {
-		return nil, nil, err
-	}
 
-	id, err := sqlite.GetId(s.GetUUID())
 	if err != nil {
 		return nil, nil, err
 	}
@@ -55,4 +52,27 @@ func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, erro
 	}
 
 	return u, nil, nil
+}
+
+func IsOwn(r *http.Request) (int, *errorHandler.ErrorResponse, error) {
+	s, errRes := session.SessionProvider.GetSession(r)
+	if errRes != nil {
+		return 0, errRes, nil
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	parsedId, _ := strconv.Atoi(inputId)
+	id, err := sqlite.GetId(s.GetUUID())
+	if err != nil {
+		return 0, nil, err
+	}
+
+	if parsedId != id {
+		return 0, &errorHandler.ErrorResponse{
+			Code:        errorHandler.ErrNoAccess,
+			Description: "no access to this action",
+		}, nil
+	}
+
+	return id, nil, nil
 }
