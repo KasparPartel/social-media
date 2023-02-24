@@ -33,7 +33,15 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := &errorHandler.Response{}
 	w.Header().Set("Content-Type", "application/json")
-	errs := validator.ValidateRegister(parsedUser.Email, parsedUser.Password, parsedUser.FirstName, parsedUser.LastName, parsedUser.Login)
+
+	v := validator.ValidationBuilder{}
+
+	v.ValidateEmail(parsedUser.Email).
+		ValidatePassword(parsedUser.Password).
+		ValidateFirstName(parsedUser.FirstName).
+		ValidateLastName(parsedUser.LastName)
+
+	errs := v.Validate()
 	// return all format errors
 	if len(errs) > 0 {
 		response.Errors = errs
@@ -125,7 +133,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := session.SessionProvider.SessionAdd(u.UUID)
+	token := session.SessionProvider.AddSession(u.UUID)
 	session.SessionProvider.SetToken(token, w)
 
 	avatar, err := sqlite.GetAvatar(u.AvatarId)
@@ -151,25 +159,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // /logout
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
-	if r.Method == "OPTIONS" {
-		return
-	}
-
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
-	token, err := session.SessionProvider.GetToken(r)
+	s, err := session.SessionProvider.GetSession(r)
 	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	session.SessionProvider.SessionRemove(token)
+	s.SessionRemove()
 	session.SessionProvider.RemoveToken(w)
 }

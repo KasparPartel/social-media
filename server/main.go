@@ -12,7 +12,7 @@ func main() {
 	c := httpRouting.CORS{
 		Origin:      "http://localhost:3000",
 		Headers:     []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token"},
-		Methods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+		Methods:     []string{"POST", "GET", "OPTIONS", "PUT"},
 		Credentials: true,
 	}
 
@@ -31,6 +31,7 @@ func main() {
 	r.NewRoute("POST", `/user/(?P<id>\d+)/chats`, controllers.CreateChat)
 	r.NewRoute("POST", `/user/(?P<id>\d+)/groups`, controllers.CreateGroup)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)/followers`, controllers.UpdateFollowers)
+	r.NewRoute("PUT", `/user/(?P<id>\d+)`, controllers.UpdateUserInfo)
 
 	r.NewRoute("GET", `/post/(?P<id>\d+)`, controllers.GetPost)
 	r.NewRoute("GET", `/post/(?P<id>\d+)/comments`, controllers.GetComments)
