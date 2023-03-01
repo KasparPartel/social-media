@@ -1,4 +1,4 @@
-import { AdditionalInfoFormFields } from "../models"
+import { AdditionalInfoFormFields } from "../components/models"
 
 export function ImageUpload(
     e: React.ChangeEvent<HTMLInputElement>,
