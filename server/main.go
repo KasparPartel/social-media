@@ -50,7 +50,7 @@ func main() {
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
 
-	log.Println("Ctrl + Click on the link: http://localhost:8080")
+	log.Println("The API is available at the link:: http://localhost:8080")
 	log.Println("To stop the server press `Ctrl + C`")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
