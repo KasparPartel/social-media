@@ -210,6 +210,34 @@ func UpdateProfileColumn(columnName, value string, id int) error {
 	return nil
 }
 
+// return true if requested
+func ChangeFollow(id, followerId int) (bool, error) {
+	exists := false
+
+	err := db.QueryRow(`SELECT count(1) FROM followers WHERE userId = ? AND followerId = ?`, id, followerId).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	var sqlStmt *sql.Stmt
+
+	if exists {
+		sqlStmt, err = db.Prepare(`DELETE FROM followers WHERE userId = ? AND followerId = ?`)
+	} else {
+		sqlStmt, err = db.Prepare(`INSERT INTO followers(userId, followerId) VALUES(?, ?)`)
+	}
+	if err != nil {
+		return false, err
+	}
+
+	_, err = sqlStmt.Exec(id, followerId)
+	if err != nil {
+		return false, err
+	}
+
+	return !exists, nil
+}
+
 func init() {
 	db = openDatabase()
 	makeMigration()

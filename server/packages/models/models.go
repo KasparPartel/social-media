@@ -11,3 +11,7 @@ type GetUserResponse struct {
 	DateOfBirth int     `json:"dateOfBirth"`
 	IsPublic    bool    `json:"isPublic"`
 }
+
+type UpdateFollowersResponse struct {
+	FollowStatus int `json:"followStatus"`
+}

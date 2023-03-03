@@ -7,7 +7,11 @@ import (
 	"net/http"
 	"social-network/packages/db/sqlite"
 	"social-network/packages/errorHandler"
+	"social-network/packages/httpRouting"
+	"social-network/packages/models"
+	"social-network/packages/session"
 	"social-network/packages/utils"
+	"strconv"
 )
 
 // GET /user/:id/followers
@@ -50,5 +54,42 @@ func GetFollowings(w http.ResponseWriter, r *http.Request) {
 
 // PUT /user/:id/followers
 func UpdateFollowers(w http.ResponseWriter, r *http.Request) {
+	response := &errorHandler.Response{}
+	w.Header().Set("Content-Type", "application/json")
 
+	s, sessionErr := session.SessionProvider.GetSession(r)
+	if sessionErr != nil {
+		response.Errors = []*errorHandler.ErrorResponse{sessionErr}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id") // id from url
+	parsedId, _ := strconv.Atoi(inputId)
+
+	id := s.GetUID() // id of user who requested
+
+	// same user
+	if id == parsedId {
+		return
+	}
+
+	isRequested, err := sqlite.ChangeFollow(parsedId, id)
+	if err != nil && err != sql.ErrNoRows {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = models.UpdateFollowersResponse{
+		FollowStatus: 1,
+	}
+
+	if isRequested {
+		response.Data = models.UpdateFollowersResponse{
+			FollowStatus: 2,
+		}
+	}
+
+	json.NewEncoder(w).Encode(response)
 }
