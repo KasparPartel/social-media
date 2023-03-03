@@ -11,7 +11,6 @@ import (
 	"social-network/packages/session"
 	"social-network/packages/validator"
 
-	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -56,7 +55,6 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parsedUser.UUID = uuid.NewV4().String()
 	parsedUser.Password = string(hashedPassword)
 
 	id, err := sqlite.CreateUser(parsedUser)
@@ -133,7 +131,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := session.SessionProvider.AddSession(u.UUID)
+	token := session.SessionProvider.AddSession(u.Id)
 	session.SessionProvider.SetToken(token, w)
 
 	avatar, err := sqlite.GetAvatar(u.AvatarId)

@@ -11,7 +11,7 @@ import (
 
 type Session struct {
 	token      string
-	uid        string        //user id
+	uid        int           //user id
 	expireTime time.Time     //time of session creation/update
 	lifeTime   time.Duration //time after which session dies
 }
@@ -53,7 +53,7 @@ func (m *Provider) RemoveToken(w http.ResponseWriter) {
 	})
 }
 
-func (m *Provider) AddSession(userId string) string {
+func (m *Provider) AddSession(userId int) string {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -96,7 +96,7 @@ func (m *Provider) GetSession(r *http.Request) (*Session, *errorHandler.ErrorRes
 	}
 }
 
-func (s Session) GetUUID() string {
+func (s Session) GetUID() int {
 	return s.uid
 }
 

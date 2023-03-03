@@ -20,10 +20,7 @@ func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, erro
 
 	parsedId, _ := strconv.Atoi(inputId)
 
-	id, err := sqlite.GetId(s.GetUUID())
-	if err != nil {
-		return nil, nil, err
-	}
+	id := s.GetUID()
 
 	u, err := sqlite.GetUserById(parsedId)
 	if err == sql.ErrNoRows {
@@ -62,10 +59,7 @@ func IsOwn(r *http.Request) (int, *errorHandler.ErrorResponse, error) {
 
 	inputId, _ := httpRouting.GetField(r, "id")
 	parsedId, _ := strconv.Atoi(inputId)
-	id, err := sqlite.GetId(s.GetUUID())
-	if err != nil {
-		return 0, nil, err
-	}
+	id := s.GetUID()
 
 	if parsedId != id {
 		return 0, &errorHandler.ErrorResponse{
