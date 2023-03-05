@@ -17,7 +17,6 @@ import (
 var db *sql.DB
 
 type User struct {
-	UUID        string
 	Id          int     `json:"id"`
 	AvatarId    int     `json:"avatarId"`
 	Email       string  `json:"email"`
@@ -63,13 +62,13 @@ func makeMigration() {
 }
 
 func CreateUser(user User) (int, error) {
-	sqlStmt, err := db.Prepare(`INSERT INTO users(uuid, email, password, firstName, lastName, aboutMe, dateOfBirth, isPublic)
-	VALUES(?, ?, ?, ?, ?, ?, ?, ?)`)
+	sqlStmt, err := db.Prepare(`INSERT INTO users(email, password, firstName, lastName, aboutMe, dateOfBirth, isPublic)
+	VALUES(?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return 0, err
 	}
 
-	ans, err := sqlStmt.Exec(user.UUID, user.Email, user.Password, user.FirstName, user.LastName, user.AboutMe, user.DateOfBirth, user.IsPublic)
+	ans, err := sqlStmt.Exec(user.Email, user.Password, user.FirstName, user.LastName, user.AboutMe, user.DateOfBirth, user.IsPublic)
 	if err != nil {
 		return 0, err
 	}
@@ -85,8 +84,8 @@ func CreateUser(user User) (int, error) {
 func AuthorizeUser(user User) (*User, error) {
 	u := User{}
 
-	err := db.QueryRow(`SELECT uuid, id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE login = ? OR email = ?`, user.Login, user.Login).
-		Scan(&u.UUID, &u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+	err := db.QueryRow(`SELECT id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE login = ? OR email = ?`, user.Login, user.Login).
+		Scan(&u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
 
 	if err != nil {
 		return nil, err
@@ -138,8 +137,8 @@ func GetId(uuid string) (int, error) {
 func GetUserById(id int) (*User, error) {
 	u := User{}
 
-	err := db.QueryRow(`SELECT uuid, id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
-		Scan(&u.UUID, &u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+	err := db.QueryRow(`SELECT id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
+		Scan(&u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
 
 	if err != nil {
 		return nil, err
@@ -181,6 +180,34 @@ func GetAvatar(avatarId int) (string, error) {
 	}
 
 	return avatar, nil
+}
+
+func UpdateAvatar(avatar string, id int) error {
+	sqlStmt, err := db.Prepare("UPDATE avatars SET avatar = ? WHERE id = (SELECT avatarId FROM users WHERE id = ?)")
+	if err != nil {
+		return err
+	}
+
+	_, err = sqlStmt.Exec(avatar, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateProfileColumn(columnName, value string, id int) error {
+	sqlStmt, err := db.Prepare(fmt.Sprintf(`UPDATE users SET %s = ? WHERE id = ?`, columnName))
+	if err != nil {
+		return err
+	}
+
+	_, err = sqlStmt.Exec(value, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func init() {
