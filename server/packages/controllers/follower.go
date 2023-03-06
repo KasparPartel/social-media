@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -16,10 +15,32 @@ import (
 
 // GET /user/:id/followers
 func GetFollowers(w http.ResponseWriter, r *http.Request) {
-	followerdIdArray := []int{12, 24, 11, 155}
-
+	response := &errorHandler.Response{}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(followerdIdArray)
+
+	u, errRes, err := utils.HasAccess(r)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if errRes != nil {
+		response.Errors = []*errorHandler.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	followersArr, err := sqlite.GetUserFollowers(u.Id)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = followersArr
+
+	json.NewEncoder(w).Encode(response)
 }
 
 // GET /user/:id/followings
@@ -40,8 +61,8 @@ func GetFollowings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	followingsArr, err := sqlite.GetFollowings(u.Id)
-	if err != nil && err != sql.ErrNoRows {
+	followingsArr, err := sqlite.GetUserFollowings(u.Id)
+	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
