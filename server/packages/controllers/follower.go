@@ -74,21 +74,24 @@ func UpdateFollowers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isRequested, err := sqlite.ChangeFollow(parsedId, id)
-	if err != nil && err != sql.ErrNoRows {
+	followStatus, err := sqlite.ChangeFollow(parsedId, id)
+	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	response.Data = models.UpdateFollowersResponse{
-		FollowStatus: 1,
+	if followStatus == 0 {
+		response.Errors = append(response.Errors, &errorHandler.ErrorResponse{
+			Code:        errorHandler.ErrNotFound,
+			Description: "wrong variable(s) in request",
+		})
+		json.NewEncoder(w).Encode(response)
+		return
 	}
 
-	if isRequested {
-		response.Data = models.UpdateFollowersResponse{
-			FollowStatus: 2,
-		}
+	response.Data = models.UpdateFollowersResponse{
+		FollowStatus: followStatus,
 	}
 
 	json.NewEncoder(w).Encode(response)

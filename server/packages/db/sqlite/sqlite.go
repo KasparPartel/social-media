@@ -211,12 +211,13 @@ func UpdateProfileColumn(columnName, value string, id int) error {
 }
 
 // return true if requested
-func ChangeFollow(id, followerId int) (bool, error) {
+func ChangeFollow(id, followerId int) (int, error) {
 	exists := false
+	var isPublic *bool
 
-	err := db.QueryRow(`SELECT count(1) FROM followers WHERE userId = ? AND followerId = ?`, id, followerId).Scan(&exists)
-	if err != nil {
-		return false, err
+	err := db.QueryRow(`SELECT count(1), (SELECT isPublic FROM users WHERE id = ?) FROM followers WHERE userId = ? AND followerId = ?`, id, id, followerId).Scan(&exists, &isPublic)
+	if err != nil || isPublic == nil {
+		return 0, err
 	}
 
 	var sqlStmt *sql.Stmt
@@ -224,18 +225,30 @@ func ChangeFollow(id, followerId int) (bool, error) {
 	if exists {
 		sqlStmt, err = db.Prepare(`DELETE FROM followers WHERE userId = ? AND followerId = ?`)
 	} else {
-		sqlStmt, err = db.Prepare(`INSERT INTO followers(userId, followerId) VALUES(?, ?)`)
+		sqlStmt, err = db.Prepare(`INSERT INTO followers(userId, followerId, isAccepted) VALUES(?, ?, ?)`)
 	}
 	if err != nil {
-		return false, err
+		return 0, err
 	}
 
-	_, err = sqlStmt.Exec(id, followerId)
+	if exists {
+		_, err = sqlStmt.Exec(id, followerId)
+	} else {
+		_, err = sqlStmt.Exec(id, followerId, isPublic)
+	}
 	if err != nil {
-		return false, err
+		return 0, err
 	}
 
-	return !exists, nil
+	if !exists {
+		if *isPublic {
+			return 3, nil
+		}
+
+		return 2, nil
+	}
+
+	return 1, nil
 }
 
 func init() {
