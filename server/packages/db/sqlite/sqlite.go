@@ -147,10 +147,34 @@ func GetUserById(id int) (*User, error) {
 	return &u, nil
 }
 
-func GetFollowings(id int) ([]int, error) {
+func GetUserFollowings(id int) ([]int, error) {
 	arr := make([]int, 0)
 
 	q := `SELECT userId FROM followers WHERE followerId = ? AND isAccepted = 1`
+
+	rows, err := db.Query(q, id)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	for rows.Next() {
+		tempRow := followersTable{}
+		err := rows.Scan(&tempRow.userId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		arr = append(arr, tempRow.userId)
+	}
+
+	return arr, nil
+}
+
+func GetUserFollowers(id int) ([]int, error) {
+	arr := make([]int, 0)
+
+	q := `SELECT followerId FROM followers WHERE userId = ? AND isAccepted = 1`
 
 	rows, err := db.Query(q, id)
 	if err != nil && err != sql.ErrNoRows {
