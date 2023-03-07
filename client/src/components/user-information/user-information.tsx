@@ -13,7 +13,7 @@ export function UserInfo() {
 
     if (!user) return noSuchUser()
 
-    if (!myProfile && !user.isPublic) return userProfilePrivate()
+    if (!myProfile && !user.isPublic) return userProfilePrivate(paramId)
 
     return userProfile({ user, myProfile, height, style, refText, openText })
 }

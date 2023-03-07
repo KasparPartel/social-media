@@ -1,3 +1,4 @@
+import { followRequest } from "../../additional-functions/follow"
 import { User } from "../models"
 
 interface publicUserProps {
@@ -40,7 +41,9 @@ export function userProfile({
                     {myProfile ? (
                         <button className="button">Create post</button>
                     ) : (
-                        <button className="button">Follow</button>
+                        <button onClick={() => followRequest(user.id)} className="button">
+                            Follow
+                        </button>
                     )}
                 </div>
                 <div style={style} className="information__detailed-container">
@@ -75,7 +78,7 @@ export function userProfile({
     )
 }
 
-export function userProfilePrivate() {
+export function userProfilePrivate(id: string) {
     return (
         <div className="test-container">
             <div className="information">
@@ -83,7 +86,7 @@ export function userProfilePrivate() {
                     <div className="short-info">
                         <div className="short-info__name">{`This profile is private`}</div>
                     </div>
-                    <button className="button">Follow</button>
+                    <button onClick={() => followRequest(id)} className="button">Follow</button>
                 </div>
             </div>
         </div>
