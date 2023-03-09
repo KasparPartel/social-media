@@ -67,7 +67,8 @@
     gap: 0.25em;
 }
 
-.comment__user__link, .comment__text {
+.comment__user__link,
+.comment__text {
     margin: 0;
     padding: 0;
     color: var(--black);
@@ -92,4 +93,32 @@
 
 .comment__timestamp {
     font-size: 0.9em;
+}
+
+.comment__form {
+    display: flex;
+}
+
+.comment__input {
+    flex: 1;
+    background: var(--white);
+    border: none;
+    line-height: 1em;
+    border-radius: 8px 0 0 8px;
+    padding: 0.7em;
+}
+
+.comment__btn {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.7em;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    line-height: 1em;
+    background: var(--white);
+}
+
+.comment__img {
+    width: 2em;
+    aspect-ratio: 1;
 }

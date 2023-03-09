@@ -1,0 +1,35 @@
+.loading-state {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 0.3em 1em;
+    position: relative;
+}
+
+@keyframes ldio-vgcwde2jx2k {
+    0% {
+        transform: rotate(0deg)
+    }
+    50% {
+        transform: rotate(180deg)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+.ldio-vgcwde2jx2k div {
+    position: relative;
+    animation: ldio-vgcwde2jx2k 1s linear infinite;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    /*box-shadow: 0 2px 0 0 #cf0000;*/
+    box-shadow: 0 2px 0 0 var(--blue);
+    transform-origin: 0.75em 0.75em;
+}
+
+.loadingio-spinner-eclipse-bvgaz5ygb9e {
+    display: inline-block;
+    /*overflow: hidden;*/
+}

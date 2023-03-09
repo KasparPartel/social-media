@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
 import { Post } from "../models"
 import Comments from "./comment"
+import Loading from "./render-states/loading"
 
 export default function UserPost({ postId }: { postId: number }) {
     const [post, setPost] = useState<Post | undefined>(undefined)
@@ -60,7 +61,7 @@ export default function UserPost({ postId }: { postId: number }) {
     }
 
     if (err) return <div>{err.message}</div>
-    if (isLoading) return <div>🌀 Loading post...</div>
+    if (isLoading) return <Loading color="orange" />
     return (
         <article className="post">
             {post.text ? (
