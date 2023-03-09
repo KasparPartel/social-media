@@ -1,4 +1,8 @@
-import { AdditionalInfoFormFields, LoginFormFields, RegistrationFormFields } from "../models"
+import {
+    AdditionalInfoFormFields,
+    LoginFormFields,
+    RegistrationFormFields,
+} from "../components/models"
 
 export async function fetchHandler(
     inputURL: string,
@@ -15,10 +19,7 @@ export async function fetchHandler(
     })
 }
 
-export async function fetchHandlerNoBody(
-    inputURL: string,
-    method: string,
-): Promise<Response> {
+export async function fetchHandlerNoBody(inputURL: string, method: string): Promise<Response> {
     return fetch(inputURL, {
         method,
         credentials: "include",

@@ -1,10 +1,11 @@
-import "./userPost.css"
+import { useEffect, useState } from "react"
+import { fetchHandlerNoBody } from "../../additional-functions/fetchHandler"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
-import { useEffect, useRef, useState } from "react"
-import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
+import { useOpenText } from "../../hooks/openText"
 import { Post } from "../models"
 import Comments from "./comment"
 import Loading from "./render-states/loading"
+import "./userPost.css"
 
 export default function UserPost({ postId }: { postId: number }) {
     const [post, setPost] = useState<Post | undefined>(undefined)
@@ -16,7 +17,7 @@ export default function UserPost({ postId }: { postId: number }) {
     const [attachmentsOpen, setAttachmentsOpen] = useState(false)
     const [commentsOpen, setCommentsOpen] = useState(false)
     const [textOpen, setTextOpen] = useState(false)
-    const refText = useRef<HTMLDivElement | null>(null)
+    const { style, refText, openText } = useOpenText(215)
 
     useEffect(() => {
         const getPost = async () => {
@@ -62,15 +63,16 @@ export default function UserPost({ postId }: { postId: number }) {
 
     if (err) return <div>{err.message}</div>
     if (isLoading) return <Loading color="orange" />
+
     return (
         <article className="post">
             {post.text ? (
                 <p
                     ref={refText}
                     className="post__text"
-                    style={{ maxHeight: `${height}px` }}
+                    style={style}
                     onClick={() => {
-                        togglePostText()
+                        openText()
                     }}
                 >
                     {post.text}
@@ -106,7 +108,7 @@ export default function UserPost({ postId }: { postId: number }) {
                 />
             </div>
 
-            {commentsOpen && <Comments postId={postId} />}
+            {/* {commentsOpen && <Comments postId={postId} />} */}
         </article>
     )
 }

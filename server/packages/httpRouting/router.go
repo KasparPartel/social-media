@@ -100,6 +100,7 @@ func (r *router) serve(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 	}
+	w.WriteHeader(http.StatusNotFound)
 }
 
 // Gets key value pairs from matched URL variables

@@ -6,22 +6,23 @@ import (
 )
 
 const (
-	ErrEmailFormat      = 1
-	ErrPasswordTooShort = 2
-	ErrPasswordTooLong  = 3
-	ErrPasswordFormat   = 4
-	ErrLoginTooShort    = 5
-	ErrLoginTooLong     = 6
-	ErrLoginFormat      = 7
-	ErrFirstNameFormat  = 8
-	ErrLastNameFormat   = 9
-	ErrUniqueEmail      = 10
-	ErrUniqueLogin      = 11
-	ErrIncorrectCred    = 12
-	ErrSessionExpired   = 13
-	ErrSessionNotExist  = 14
-	ErrPrivateProfile   = 15
-	ErrNotFound         = 16
+	ErrEmailFormat = iota + 1
+	ErrPasswordTooShort
+	ErrPasswordTooLong
+	ErrPasswordFormat
+	ErrLoginTooShort
+	ErrLoginTooLong
+	ErrLoginFormat
+	ErrFirstNameFormat
+	ErrLastNameFormat
+	ErrUniqueEmail
+	ErrUniqueLogin
+	ErrIncorrectCred
+	ErrSessionExpired
+	ErrSessionNotExist
+	ErrPrivateProfile
+	ErrNotFound
+	ErrNoAccess
 )
 
 type Response struct {

@@ -17,7 +17,6 @@ import (
 var db *sql.DB
 
 type User struct {
-	UUID        string
 	Id          int     `json:"id"`
 	AvatarId    int     `json:"avatarId"`
 	Email       string  `json:"email"`
@@ -63,13 +62,13 @@ func makeMigration() {
 }
 
 func CreateUser(user User) (int, error) {
-	sqlStmt, err := db.Prepare(`INSERT INTO users(uuid, email, password, firstName, lastName, aboutMe, dateOfBirth, isPublic)
-	VALUES(?, ?, ?, ?, ?, ?, ?, ?)`)
+	sqlStmt, err := db.Prepare(`INSERT INTO users(email, password, firstName, lastName, aboutMe, dateOfBirth, isPublic)
+	VALUES(?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return 0, err
 	}
 
-	ans, err := sqlStmt.Exec(user.UUID, user.Email, user.Password, user.FirstName, user.LastName, user.AboutMe, user.DateOfBirth, user.IsPublic)
+	ans, err := sqlStmt.Exec(user.Email, user.Password, user.FirstName, user.LastName, user.AboutMe, user.DateOfBirth, user.IsPublic)
 	if err != nil {
 		return 0, err
 	}
@@ -85,8 +84,8 @@ func CreateUser(user User) (int, error) {
 func AuthorizeUser(user User) (*User, error) {
 	u := User{}
 
-	err := db.QueryRow(`SELECT uuid, id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE login = ? OR email = ?`, user.Login, user.Login).
-		Scan(&u.UUID, &u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+	err := db.QueryRow(`SELECT id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE login = ? OR email = ?`, user.Login, user.Login).
+		Scan(&u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
 
 	if err != nil {
 		return nil, err
@@ -138,8 +137,8 @@ func GetId(uuid string) (int, error) {
 func GetUserById(id int) (*User, error) {
 	u := User{}
 
-	err := db.QueryRow(`SELECT uuid, id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
-		Scan(&u.UUID, &u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+	err := db.QueryRow(`SELECT id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
+		Scan(&u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
 
 	if err != nil {
 		return nil, err
@@ -148,10 +147,34 @@ func GetUserById(id int) (*User, error) {
 	return &u, nil
 }
 
-func GetFollowings(id int) ([]int, error) {
+func GetUserFollowings(id int) ([]int, error) {
 	arr := make([]int, 0)
 
 	q := `SELECT userId FROM followers WHERE followerId = ? AND isAccepted = 1`
+
+	rows, err := db.Query(q, id)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	for rows.Next() {
+		tempRow := followersTable{}
+		err := rows.Scan(&tempRow.userId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		arr = append(arr, tempRow.userId)
+	}
+
+	return arr, nil
+}
+
+func GetUserFollowers(id int) ([]int, error) {
+	arr := make([]int, 0)
+
+	q := `SELECT followerId FROM followers WHERE userId = ? AND isAccepted = 1`
 
 	rows, err := db.Query(q, id)
 	if err != nil && err != sql.ErrNoRows {
@@ -181,6 +204,75 @@ func GetAvatar(avatarId int) (string, error) {
 	}
 
 	return avatar, nil
+}
+
+func UpdateAvatar(avatar string, id int) error {
+	sqlStmt, err := db.Prepare("UPDATE avatars SET avatar = ? WHERE id = (SELECT avatarId FROM users WHERE id = ?)")
+	if err != nil {
+		return err
+	}
+
+	_, err = sqlStmt.Exec(avatar, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateProfileColumn(columnName, value string, id int) error {
+	sqlStmt, err := db.Prepare(fmt.Sprintf(`UPDATE users SET %s = ? WHERE id = ?`, columnName))
+	if err != nil {
+		return err
+	}
+
+	_, err = sqlStmt.Exec(value, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// return true if requested
+func ChangeFollow(id, followerId int) (int, error) {
+	exists := false
+	var isPublic *bool
+
+	err := db.QueryRow(`SELECT count(1), (SELECT isPublic FROM users WHERE id = ?) FROM followers WHERE userId = ? AND followerId = ?`, id, id, followerId).Scan(&exists, &isPublic)
+	if err != nil || isPublic == nil {
+		return 0, err
+	}
+
+	var sqlStmt *sql.Stmt
+
+	if exists {
+		sqlStmt, err = db.Prepare(`DELETE FROM followers WHERE userId = ? AND followerId = ?`)
+	} else {
+		sqlStmt, err = db.Prepare(`INSERT INTO followers(userId, followerId, isAccepted) VALUES(?, ?, ?)`)
+	}
+	if err != nil {
+		return 0, err
+	}
+
+	if exists {
+		_, err = sqlStmt.Exec(id, followerId)
+	} else {
+		_, err = sqlStmt.Exec(id, followerId, isPublic)
+	}
+	if err != nil {
+		return 0, err
+	}
+
+	if !exists {
+		if *isPublic {
+			return 3, nil
+		}
+
+		return 2, nil
+	}
+
+	return 1, nil
 }
 
 func init() {

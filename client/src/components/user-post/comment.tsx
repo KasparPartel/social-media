@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import sendIcon from "../../assets/send-outline.svg"
-import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
+import { fetchHandlerNoBody } from "../../additional-functions/fetchHandler"
 import { IdContext } from "../models"
 import Loading from "./render-states/loading"
 import "./userPost.css"

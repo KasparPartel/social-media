@@ -1,15 +1,16 @@
 import "./registration.css"
-import "../../constants.css"
-import { ErrorResponse, IdContext } from "../models"
-import { RegistrationRequest, AdditionalInfoRequest } from "../additional-functions/authorization"
+import { ErrorResponse } from "../models"
+import {
+    RegistrationRequest,
+    AdditionalInfoRequest,
+} from "../../additional-functions/authorization"
 import ErrorWindow from "../error-window/error-window"
-import { useContext, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { ImageUpload } from "../additional-functions/images"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { ImageUpload } from "../../additional-functions/images"
 
 export function Registration() {
     const navigate = useNavigate()
-    const { setId } = useContext(IdContext)
     const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     return (
@@ -17,7 +18,7 @@ export function Registration() {
             <div className="registration">
                 <form
                     className="form"
-                    onSubmit={(e) => RegistrationRequest({ e, setErrorArr, setId, navigate })}
+                    onSubmit={(e) => RegistrationRequest({ e, setErrorArr, navigate })}
                 >
                     <input name="email" placeholder="Email" type="email" className="form__field" />
                     <input
@@ -46,24 +47,30 @@ export function Registration() {
                     />
                     <ErrorWindow errorArr={errorArr} />
                     <input type="submit" className="button form__button" value="Register" />
-                    <Link to="/login">
-                        <input type="button" className="switch-button" value="Sign in" />
-                    </Link>
+                    <input
+                        type="button"
+                        className="switch-button"
+                        onClick={() => navigate("/login")}
+                        value="Sign in"
+                    />
                 </form>
             </div>
-            <div className="cover"></div>
+            <div className="cover" />
         </div>
     )
 }
 
 export function AdditionalInfo() {
     const navigate = useNavigate()
-    const { id } = useContext(IdContext)
-    const [image, setImage] = useState<Blob>(null)
+    const [id, setId] = useState<string>()
 
     useEffect(() => {
-        if (id === 0) navigate("/login")
-    }, [id])
+        const id = localStorage.getItem("id")
+        if (id) {
+            setId(id)
+        }
+    }, [])
+    const [image, setImage] = useState<Blob>(null)
 
     return (
         <div className="additional-info-page">
@@ -115,14 +122,12 @@ export function AdditionalInfo() {
                         className="form__field"
                     />
                     <div className="form__button-container">
-                        <Link to="/main">
-                            <input
-                                type="button"
-                                className="button form__button form__button_skip"
-                                value="Skip"
-                            />
-                        </Link>
-
+                        <input
+                            type="button"
+                            className="button form__button form__button_skip"
+                            onClick={() => navigate("/main")}
+                            value="Skip"
+                        />
                         <input type="submit" className="button form__button" value="Finish" />
                     </div>
                 </form>
