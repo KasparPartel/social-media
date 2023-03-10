@@ -23,6 +23,10 @@ const (
 	ErrPrivateProfile
 	ErrNotFound
 	ErrNoAccess
+	ErrWrongPrivacy
+	ErrEmptyInput
+	ErrImageFormat
+	ErrWrongUserId
 )
 
 type Response struct {
