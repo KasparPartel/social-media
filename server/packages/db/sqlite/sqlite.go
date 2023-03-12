@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"social-network/packages/errorHandler"
+	"social-network/packages/models"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
@@ -107,7 +108,7 @@ type followersTable struct {
 }
 
 func IsFollower(userId, followerId int) (bool, error) {
-	q := `SELECT userId, followerId FROM followers WHERE userId = ? AND followerId = ?`
+	q := `SELECT userId, followerId FROM followers WHERE userId = ? AND followerId = ? AND isAccepted = 1`
 
 	tempRow := followersTable{}
 	err := db.QueryRow(q, userId, followerId).Scan(&tempRow.userId, &tempRow.followerId)
@@ -120,18 +121,6 @@ func IsFollower(userId, followerId int) (bool, error) {
 	}
 
 	return true, nil
-}
-
-func GetId(uuid string) (int, error) {
-	id := 0
-	q := `SELECT id FROM users WHERE uuid = ?`
-
-	err := db.QueryRow(q, uuid).Scan(&id)
-	if err != nil {
-		return 0, err
-	}
-
-	return id, nil
 }
 
 func GetUserById(id int) (*User, error) {
@@ -273,6 +262,47 @@ func ChangeFollow(id, followerId int) (int, error) {
 	}
 
 	return 1, nil
+}
+
+func CreateUserPost(userId int, post models.CreatePostRequest) (int, error) {
+	sqlStmt, err := db.Prepare(`INSERT INTO posts(userId, text, privacy) VALUES(?, ?, ?)`)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := sqlStmt.Exec(userId, post.Text, post.Privacy)
+	if err != nil {
+		return 0, err
+	}
+
+	postId, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	sqlStmt, err = db.Prepare(`INSERT INTO postAllows(postId, userId) VALUES(?, ?)`)
+	if err != nil {
+		return 0, err
+	}
+	for _, id := range post.AuthorizedFollowers {
+		_, err := sqlStmt.Exec(postId, id)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	sqlStmt, err = db.Prepare(`INSERT INTO postImages(postId, path) VALUES(?, ?)`)
+	if err != nil {
+		return 0, err
+	}
+	for _, image := range post.Attachments {
+		_, err := sqlStmt.Exec(postId, image)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	return int(postId), nil
 }
 
 func init() {

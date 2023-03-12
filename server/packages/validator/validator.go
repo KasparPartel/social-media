@@ -2,6 +2,7 @@ package validator
 
 import (
 	"regexp"
+	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
 	"strings"
 )
@@ -102,6 +103,59 @@ func (v *ValidationBuilder) ValidateLastName(name string) *ValidationBuilder {
 	}
 
 	return nil
+}
+
+func (v *ValidationBuilder) ValidatePrivacyOption(privacy int) *ValidationBuilder {
+	if privacy != 1 && privacy != 2 && privacy != 3 {
+		v.errs = append(v.errs, &eh.ErrorResponse{
+			Code:        eh.ErrWrongPrivacy,
+			Description: "wrong privacy setting",
+		})
+	}
+
+	return v
+}
+
+func (v *ValidationBuilder) ValidatePostInput(text string, attachments []string) *ValidationBuilder {
+	if len(attachments) == 0 && text == "" {
+		v.errs = append(v.errs, &eh.ErrorResponse{
+			Code:        eh.ErrEmptyInput,
+			Description: "no input provided",
+		})
+	}
+
+	return v
+}
+
+func (v *ValidationBuilder) ValidateImages(attachments ...string) *ValidationBuilder {
+	reg := regexp.MustCompile(`^data:image\/(?P<type>jpeg|gif|png);base64,(?P<value>[\S]+)$`)
+	for _, image := range attachments {
+		match := reg.MatchString(strings.TrimSpace(image))
+
+		if !match {
+			v.errs = append(v.errs, &eh.ErrorResponse{
+				Code:        eh.ErrImageFormat,
+				Description: "wrong image filetype/format",
+			})
+			return v
+		}
+	}
+
+	return v
+}
+
+func (v *ValidationBuilder) ValidateUserExists(userIds ...int) *ValidationBuilder {
+	for _, id := range userIds {
+		u, _ := sqlite.GetUserById(id)
+		if u == nil {
+			v.errs = append(v.errs, &eh.ErrorResponse{
+				Code:        eh.ErrWrongUserId,
+				Description: "wrong user id provided",
+			})
+			return v
+		}
+	}
+	return v
 }
 
 func (v ValidationBuilder) Validate() []*eh.ErrorResponse {

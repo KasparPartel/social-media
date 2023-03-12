@@ -94,9 +94,9 @@ func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 	if login, e := fields["login"]; e {
 		v := validator.ValidationBuilder{}
 
-		errRes = v.ValidateLogin(login).Validate()[0]
-		if errRes != nil {
-			response.Errors = []*errorHandler.ErrorResponse{errRes}
+		errArr := v.ValidateLogin(login).Validate()
+		if len(errArr) > 0 {
+			response.Errors = errArr
 			json.NewEncoder(w).Encode(response)
 			return
 		}
