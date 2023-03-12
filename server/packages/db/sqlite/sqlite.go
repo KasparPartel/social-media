@@ -108,7 +108,7 @@ type followersTable struct {
 }
 
 func IsFollower(userId, followerId int) (bool, error) {
-	q := `SELECT userId, followerId FROM followers WHERE userId = ? AND followerId = ?`
+	q := `SELECT userId, followerId FROM followers WHERE userId = ? AND followerId = ? AND isAccepted = 1`
 
 	tempRow := followersTable{}
 	err := db.QueryRow(q, userId, followerId).Scan(&tempRow.userId, &tempRow.followerId)
