@@ -6,9 +6,9 @@ import { useEffect, useState } from "react"
 export default function useUserId(paramId: string): boolean {
     const [id, setId] = useState<string>()
     useEffect(() => {
-        const id = localStorage.getItem("id")
-        if (id) {
-            setId(id)
+        const storedId = localStorage.getItem("id")
+        if (storedId) {
+            setId(storedId)
         }
     }, [id])
     return id === paramId

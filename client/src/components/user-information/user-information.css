@@ -49,3 +49,19 @@
     overflow: hidden;
     transition: max-height ease-in-out 0.9s;
 }
+
+.deafult {
+    background-color: grey;
+}
+
+.follow {
+    background-color: var(--main-green);
+}
+
+.requested {
+    background-color: var(--main-purple);
+}
+
+.unfollow {
+    background-color: var(--main-red);
+}
