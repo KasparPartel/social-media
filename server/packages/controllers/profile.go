@@ -23,7 +23,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if errRes != nil {
+	if errRes != nil && errRes.Code != errorHandler.ErrPrivateProfile {
 		response.Errors = []*errorHandler.ErrorResponse{errRes}
 		json.NewEncoder(w).Encode(response)
 		return
@@ -36,17 +36,23 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.Data = models.GetUserResponse{
-		Id:          u.Id,
-		Avatar:      avatar,
-		Email:       u.Email,
-		Login:       u.Login,
-		FirstName:   u.FirstName,
-		LastName:    u.LastName,
-		AboutMe:     u.AboutMe,
-		DateOfBirth: u.DateOfBirth,
-		IsPublic:    u.IsPublic,
+	temp := models.GetUserResponse{
+		Id:           u.Id,
+		Avatar:       avatar,
+		FirstName:    u.FirstName,
+		LastName:     u.LastName,
+		FollowStatus: u.FollowStatus,
+		IsPublic:     u.IsPublic,
 	}
+
+	if u.IsPublic {
+		temp.Email = u.Email
+		temp.Login = u.Login
+		temp.AboutMe = u.AboutMe
+		temp.DateOfBirth = u.DateOfBirth
+	}
+
+	response.Data = temp
 
 	json.NewEncoder(w).Encode(response)
 }

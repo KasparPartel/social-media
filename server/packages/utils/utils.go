@@ -18,11 +18,11 @@ func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, erro
 
 	inputId, _ := httpRouting.GetField(r, "id")
 
-	parsedId, _ := strconv.Atoi(inputId)
+	requestedId, _ := strconv.Atoi(inputId)
 
-	id := s.GetUID()
+	responseId := s.GetUID()
 
-	u, err := sqlite.GetUserById(parsedId)
+	u, err := sqlite.GetUserById(requestedId)
 	if err == sql.ErrNoRows {
 		return nil, &errorHandler.ErrorResponse{
 			Code:        errorHandler.ErrNotFound,
@@ -34,14 +34,14 @@ func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, erro
 		return nil, nil, err
 	}
 
-	if parsedId != id {
-		followed, err := sqlite.IsFollower(parsedId, id)
+	if requestedId != responseId {
+		u.FollowStatus, err = sqlite.GetFollowStatus(requestedId, responseId)
 		if err != nil {
 			return nil, nil, err
 		}
 
-		if !u.IsPublic && !followed {
-			return nil, &errorHandler.ErrorResponse{
+		if !u.IsPublic && u.FollowStatus != 3 {
+			return u, &errorHandler.ErrorResponse{
 				Code:        errorHandler.ErrPrivateProfile,
 				Description: "profile is private",
 			}, nil
