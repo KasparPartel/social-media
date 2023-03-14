@@ -18,16 +18,17 @@ import (
 var db *sql.DB
 
 type User struct {
-	Id          int     `json:"id"`
-	AvatarId    int     `json:"avatarId"`
-	Email       string  `json:"email"`
-	Login       *string `json:"login"`
-	Password    string  `json:"password"`
-	FirstName   string  `json:"firstName"`
-	LastName    string  `json:"lastName"`
-	AboutMe     string  `json:"aboutMe"`
-	DateOfBirth int     `json:"dateOfBirth"`
-	IsPublic    bool    `json:"isPublic"`
+	Id           int     `json:"id"`
+	AvatarId     int     `json:"avatarId"`
+	Email        string  `json:"email"`
+	Login        *string `json:"login"`
+	Password     string  `json:"password"`
+	FirstName    string  `json:"firstName"`
+	LastName     string  `json:"lastName"`
+	AboutMe      string  `json:"aboutMe"`
+	DateOfBirth  int     `json:"dateOfBirth"`
+	FollowStatus int     `json:"followStatus"`
+	IsPublic     bool    `json:"isPublic"`
 }
 
 func openDatabase() *sql.DB {
@@ -104,30 +105,31 @@ func AuthorizeUser(user User) (*User, error) {
 type followersTable struct {
 	userId     int
 	followerId int
-	isAccepted bool
+	isAccepted int
 }
 
-func IsFollower(userId, followerId int) (bool, error) {
-	q := `SELECT userId, followerId FROM followers WHERE userId = ? AND followerId = ? AND isAccepted = 1`
+// if isAccepted == true, then func returns 3(followed), else 2(requested)
+func GetFollowStatus(userId, followerId int) (int, error) {
+	q := `SELECT userId, followerId, isAccepted FROM followers WHERE userId = ? AND followerId = ?`
 
 	tempRow := followersTable{}
-	err := db.QueryRow(q, userId, followerId).Scan(&tempRow.userId, &tempRow.followerId)
+	err := db.QueryRow(q, userId, followerId).Scan(&tempRow.userId, &tempRow.followerId, &tempRow.isAccepted)
 	if err == sql.ErrNoRows {
-		return false, nil
+		return 1, nil
 	}
 
 	if err != nil {
-		return false, err
+		return 0, err
 	}
 
-	return true, nil
+	return tempRow.isAccepted + 2, nil
 }
 
 func GetUserById(id int) (*User, error) {
 	u := User{}
 
-	err := db.QueryRow(`SELECT id, avatarId, email, login, password, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
-		Scan(&u.Id, &u.AvatarId, &u.Email, &u.Login, &u.Password, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
+	err := db.QueryRow(`SELECT id, avatarId, email, login, firstName, lastName, aboutMe, dateOfBirth, isPublic FROM users WHERE id = ?`, id).
+		Scan(&u.Id, &u.AvatarId, &u.Email, &u.Login, &u.FirstName, &u.LastName, &u.AboutMe, &u.DateOfBirth, &u.IsPublic)
 
 	if err != nil {
 		return nil, err
