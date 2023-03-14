@@ -186,6 +186,31 @@ func GetUserFollowers(id int) ([]int, error) {
 	return arr, nil
 }
 
+func GetUserPosts(u *User, followerId int) ([]int, error) {
+	postIds := make([]int, 0)
+
+	q := `SELECT id, privacy, 
+			(SELECT 1 
+			FROM postAllows 
+			WHERE postAllows.id = posts.id AND postAllows.userId = ?) 
+		FROM posts WHERE userId = ?`
+
+	rows, err := db.Query(q, followerId, u.Id)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	for rows.Next() {
+		id, privacy, allowed := 0, 0, false
+
+		rows.Scan(id, privacy, allowed)
+		if (privacy == 3 && u.FollowStatus == 3) || (privacy == 2 && allowed) {
+			postIds = append(postIds, id)
+		}
+	}
+	return postIds, nil
+}
+
 func GetAvatar(avatarId int) (string, error) {
 	avatar := ""
 

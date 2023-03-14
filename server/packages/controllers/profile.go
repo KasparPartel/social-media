@@ -16,7 +16,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	response := &errorHandler.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
-	u, errRes, err := utils.HasAccess(r)
+	u, _, errRes, err := utils.HasAccess(r)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

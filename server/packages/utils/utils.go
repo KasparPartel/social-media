@@ -10,10 +10,10 @@ import (
 	"strconv"
 )
 
-func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, error) {
+func HasAccess(r *http.Request) (*sqlite.User, int, *errorHandler.ErrorResponse, error) {
 	s, errRes := session.SessionProvider.GetSession(r)
 	if errRes != nil {
-		return nil, errRes, nil
+		return nil, 0, errRes, nil
 	}
 
 	inputId, _ := httpRouting.GetField(r, "id")
@@ -24,31 +24,31 @@ func HasAccess(r *http.Request) (*sqlite.User, *errorHandler.ErrorResponse, erro
 
 	u, err := sqlite.GetUserById(requestedId)
 	if err == sql.ErrNoRows {
-		return nil, &errorHandler.ErrorResponse{
+		return nil, 0, &errorHandler.ErrorResponse{
 			Code:        errorHandler.ErrNotFound,
 			Description: "wrong variable(s) in request",
 		}, nil
 	}
 
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, nil, err
 	}
 
 	if requestedId != responseId {
 		u.FollowStatus, err = sqlite.GetFollowStatus(requestedId, responseId)
 		if err != nil {
-			return nil, nil, err
+			return nil, 0, nil, err
 		}
 
 		if !u.IsPublic && u.FollowStatus != 3 {
-			return u, &errorHandler.ErrorResponse{
+			return nil, responseId, &errorHandler.ErrorResponse{
 				Code:        errorHandler.ErrPrivateProfile,
 				Description: "profile is private",
 			}, nil
 		}
 	}
 
-	return u, nil, nil
+	return u, 0, nil, nil
 }
 
 func IsOwn(r *http.Request) (int, *errorHandler.ErrorResponse, error) {
