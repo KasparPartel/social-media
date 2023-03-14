@@ -7,7 +7,10 @@ import { ErrorResponse, ServerResponse, User } from "../components/models"
  * Tries to find a user with the inputted id.
  * @returns either the user or null if the user does not exist
  */
-export default function useUserInfo(paramId: string): User | null {
+export default function useUserInfo(
+    paramId: string,
+    setLoading: (arg: boolean) => void,
+): User | null {
     const navigate = useNavigate()
     const [user, setUser] = useState<User>(null)
 
@@ -16,6 +19,7 @@ export default function useUserInfo(paramId: string): User | null {
             .then((r) => r.json())
             .then((r: ServerResponse) => {
                 r.errors ? fetchErrorChecker(r.errors, navigate) : setUser(r.data)
+                setLoading(false)
             })
             .catch(() => fetchErrorChecker([], navigate))
     }, [paramId])
