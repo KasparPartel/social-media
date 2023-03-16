@@ -192,7 +192,7 @@ func GetUserPosts(u *User, followerId int) ([]int, error) {
 	q := `SELECT id, privacy, 
 			(SELECT 1 
 			FROM postAllows 
-			WHERE postAllows.id = posts.id AND postAllows.userId = ?) 
+			WHERE id = posts.id AND userId = ?) 
 		FROM posts WHERE userId = ?`
 
 	rows, err := db.Query(q, followerId, u.Id)
@@ -203,8 +203,8 @@ func GetUserPosts(u *User, followerId int) ([]int, error) {
 	for rows.Next() {
 		id, privacy, allowed := 0, 0, false
 
-		rows.Scan(id, privacy, allowed)
-		if (privacy == 3 && u.FollowStatus == 3) || (privacy == 2 && allowed) {
+		rows.Scan(&id, &privacy, &allowed)
+		if (u.Id == followerId) || (privacy == 3 && u.FollowStatus == 3) || (privacy == 2 && allowed) {
 			postIds = append(postIds, id)
 		}
 	}

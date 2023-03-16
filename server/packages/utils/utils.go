@@ -48,7 +48,7 @@ func HasAccess(r *http.Request) (*sqlite.User, int, *errorHandler.ErrorResponse,
 		}
 	}
 
-	return u, 0, nil, nil
+	return u, responseId, nil, nil
 }
 
 func IsOwn(r *http.Request) (int, *errorHandler.ErrorResponse, error) {
