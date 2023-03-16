@@ -1,25 +1,35 @@
+import altAvatar from "../../assets/default-avatar.png"
+
 interface shortInfoProps {
     firstName: string
     lastName: string
+    avatar: string
     isPublic: boolean
     isMyProfile: boolean
     openText: () => void
     height: number
+    followStatus: number
 }
 
 export default function ShortInfo({
     firstName,
     lastName,
+    avatar,
     isPublic,
     isMyProfile,
     openText,
     height,
+    followStatus,
 }: shortInfoProps) {
     return (
         <div className="short-info">
-            <div className="short-info__avatar" />
+            <img
+                className="short-info__avatar"
+                src={avatar !== "" ? avatar : altAvatar}
+                alt="avatar"
+            />
             <div className="short-info__name">{`${firstName} ${lastName}`}</div>
-            {isPublic || isMyProfile ? (
+            {isPublic || isMyProfile || followStatus == 3 ? (
                 <button
                     className="button"
                     onClick={() => {
@@ -28,7 +38,9 @@ export default function ShortInfo({
                 >
                     {height > 0 ? "Less information ↑" : "More information ↓"}
                 </button>
-            ) : null}
+            ) : (
+                <div className="short-info__privacy">Private profile</div>
+            )}
         </div>
     )
 }

@@ -37,10 +37,12 @@ export function UserProfile() {
                                 {...{
                                     firstName: user.firstName,
                                     lastName: user.lastName,
+                                    avatar: user.avatar,
                                     isPublic: user.isPublic,
                                     isMyProfile,
                                     openText,
                                     height,
+                                    followStatus: user.followStatus,
                                 }}
                             />
                             {!isMyProfile ? (
