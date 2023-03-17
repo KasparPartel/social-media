@@ -19,22 +19,22 @@ export function followStatusHandler(status: number): followProps {
     switch (status) {
         case 1:
             return {
-                followClass: "follow",
+                followClass: "button_follow-status_not-following",
                 followText: "Follow",
             }
         case 2:
             return {
-                followClass: "requested",
+                followClass: "button_follow-status_requested",
                 followText: "Requested",
             }
         case 3:
             return {
-                followClass: "unfollow",
+                followClass: "button_follow-status_following",
                 followText: "Unfollow",
             }
         default:
             return {
-                followClass: "deafult",
+                followClass: "button_follow-status_unknown",
                 followText: "Unknown status",
             }
     }

@@ -56,18 +56,18 @@
     transition: max-height ease-in-out 0.9s;
 }
 
-.deafult {
+.button_follow-status_unknown {
     background-color: grey;
 }
 
-.follow {
+.button_follow-status_not-following {
     background-color: var(--main-green);
 }
 
-.requested {
+.button_follow-status_requested {
     background-color: var(--main-purple);
 }
 
-.unfollow {
+.button_follow-status_following {
     background-color: var(--main-red);
 }
