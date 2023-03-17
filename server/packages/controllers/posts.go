@@ -15,10 +15,32 @@ import (
 
 // GET /user/:id/posts
 func GetPosts(w http.ResponseWriter, r *http.Request) {
-	postIdArray := []int{12, 24, 11, 155}
-
+	response := &errorHandler.Response{}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(postIdArray)
+
+	u, followerId, errRes, err := utils.HasAccess(r)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if errRes != nil {
+		response.Errors = []*errorHandler.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	postIds, err := sqlite.GetUserPosts(u, followerId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = postIds
+
+	json.NewEncoder(w).Encode(response)
 }
 
 // POST /user/:id/posts
