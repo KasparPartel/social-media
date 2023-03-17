@@ -32,7 +32,7 @@ export async function formReturnHandler(
             return
         }
         if (r.data != null) {
-            localStorage.setItem("id", r.data.id)
+            localStorage.setItem("id", String(r.data.id))
             navigate(navigatePath)
             return
         }

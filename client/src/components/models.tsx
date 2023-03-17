@@ -39,7 +39,7 @@ export interface ErrorResponse {
 }
 
 export interface User {
-    id?: string
+    id?: number
     avatar: string
     email: string
     login: string
@@ -49,4 +49,5 @@ export interface User {
     aboutMe: string
     dateOfBirth: number
     isPublic: boolean
+    followStatus?: number
 }
