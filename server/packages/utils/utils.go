@@ -41,7 +41,7 @@ func HasAccess(r *http.Request) (*sqlite.User, int, *errorHandler.ErrorResponse,
 		}
 
 		if !u.IsPublic && u.FollowStatus != 3 {
-			return nil, responseId, &errorHandler.ErrorResponse{
+			return u, responseId, &errorHandler.ErrorResponse{
 				Code:        errorHandler.ErrPrivateProfile,
 				Description: "profile is private",
 			}, nil

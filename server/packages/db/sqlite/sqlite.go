@@ -202,9 +202,9 @@ func GetUserPosts(u *User, followerId int) ([]int, error) {
 
 	for rows.Next() {
 		id, privacy, allowed := 0, 0, false
-
 		rows.Scan(&id, &privacy, &allowed)
-		if (u.Id == followerId) || (privacy == 3 && u.FollowStatus == 3) || (privacy == 2 && allowed) {
+		if (u.Id == followerId) || (u.IsPublic && privacy == 1) ||
+			(u.FollowStatus == 3 && (privacy == 1 || privacy == 2 || (privacy == 3 && allowed))) {
 			postIds = append(postIds, id)
 		}
 	}
