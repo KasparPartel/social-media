@@ -16,7 +16,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	response := &errorHandler.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
-	u, _, errRes, err := utils.HasAccess(r)
+	u, followerId, errRes, err := utils.HasAccess(r)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -45,7 +45,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		IsPublic:     u.IsPublic,
 	}
 
-	if u.IsPublic {
+	if u.IsPublic || u.Id == followerId {
 		temp.Email = u.Email
 		temp.Login = u.Login
 		temp.AboutMe = u.AboutMe

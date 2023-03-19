@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom"
 import Navigation from "./components/header/header"
 import PostList from "./components/user-post/postList"
 import { UserProfile } from "./components/user-information/user-information"
+import FollowingFollowers from "./components/followers-following/following-followers"
 
 // Shows the registration/login view, plus two buttons that lets you change between them
 export default function App() {
@@ -18,7 +19,7 @@ export default function App() {
                 <Route path="/main" element={<h1>This is a main page</h1>} />
             </Route>
             <Route path="/user/:paramId" element={<UserProfile />} />
-            <Route path="/" element={<PostList />} />
+            <Route path="/" element={<FollowingFollowers />} />
             <Route path="/internal-error" element={<h1>Error 500</h1>} />
             <Route path="/*" element={<h1>Error 404</h1>} />
         </Routes>

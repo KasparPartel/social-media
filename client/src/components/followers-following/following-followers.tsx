@@ -1,46 +1,12 @@
+import { useState } from "react"
+import { getFollowers } from "../../additional-functions/getFollowers"
+import { User } from "../models"
 import "./followers-following.css"
 
-interface User {
-    firstName: string
-    lastName: string
-}
-
-const userList: User[] = [
-    {
-        firstName: "Waldo",
-        lastName: "West",
-    },
-    {
-        firstName: "Olympia",
-        lastName: "MacDuff",
-    },
-    {
-        firstName: "Simin",
-        lastName: "Fishman",
-    },
-    {
-        firstName: "Zelig",
-        lastName: "Apostolov",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-]
-
 export default function FollowingFollowers() {
+    const [userList, setUserList] = useState<User[]>([])
+    getFollowers(2, setUserList)
+
     return (
         <div className="test-container">
             <FollowingFollowersContainer header="Following" userList={userList} />
@@ -55,23 +21,13 @@ interface FollowingFollowersContainerProps {
 }
 
 function FollowingFollowersContainer({ header, userList }: FollowingFollowersContainerProps) {
-    const generateColor = () => {
-        const randNum = Math.floor(Math.random() * 3)
-        const colors = ["5CDC97", "65C8FF", "9673ff"]
-
-        return colors[randNum]
-    }
-
     return (
         <div className="following-followers">
             <div className="following-followers__header">{header}</div>
             <div className="list">
                 {userList.map((user, i) => (
                     <div className="user-card" key={i}>
-                        <div
-                            className="user-card__avatar"
-                            style={{ backgroundColor: `#${generateColor()}` }}
-                        ></div>
+                        <img className="user-card__avatar" src={user.avatar} alt="beb" />
                         {`${user.firstName} ${user.lastName}`}
                     </div>
                 ))}
