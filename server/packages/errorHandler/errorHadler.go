@@ -1,6 +1,7 @@
 package errorHandler
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
@@ -37,6 +38,17 @@ type Response struct {
 type ErrorResponse struct {
 	Code        uint   `json:"code"`
 	Description string `json:"description"`
+}
+
+func NewErrorResponse(code uint, desctiption string) *ErrorResponse {
+	return &ErrorResponse{
+		Code:        code,
+		Description: desctiption,
+	}
+}
+
+func (er *ErrorResponse) Error() string {
+	return fmt.Sprintf("%T, code: %d, description: %s", er, er.Code, er.Description)
 }
 
 func LogErrorFatal(err error, messages ...any) {

@@ -16,6 +16,8 @@ func main() {
 		Credentials: true,
 	}
 
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
 	r.NewRoute("POST", "/register", controllers.RegistrationHandler)
 	r.NewRoute("POST", "/login", controllers.LoginHandler)
 	r.NewRoute("POST", "/logout", controllers.LogoutHandler)
@@ -50,7 +52,7 @@ func main() {
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
 
-	log.Println("The API is available at the link:: http://localhost:8080")
+	log.Println("The API is available at the link: http://localhost:8080")
 	log.Println("To stop the server press `Ctrl + C`")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

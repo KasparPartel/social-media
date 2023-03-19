@@ -74,7 +74,7 @@ func (m *Provider) AddSession(userId int) string {
 	return newSessionId
 }
 
-func (m *Provider) GetSession(r *http.Request) (*Session, *errorHandler.ErrorResponse) {
+func (m *Provider) GetSession(r *http.Request) (*Session, error) {
 	sessionId, err := SessionProvider.getToken(r)
 
 	if userSession, exists := m.sessionsMap[sessionId]; exists && err == nil {
@@ -84,16 +84,10 @@ func (m *Provider) GetSession(r *http.Request) (*Session, *errorHandler.ErrorRes
 		}
 		userSession.SessionRemove()
 
-		return nil, &errorHandler.ErrorResponse{
-			Code:        errorHandler.ErrSessionExpired,
-			Description: "session expired",
-		}
+		return nil, errorHandler.NewErrorResponse(errorHandler.ErrSessionExpired, "session expired")
 	}
 
-	return nil, &errorHandler.ErrorResponse{
-		Code:        errorHandler.ErrSessionNotExist,
-		Description: "session doesn't exist",
-	}
+	return nil, errorHandler.NewErrorResponse(errorHandler.ErrSessionNotExist, "session doesn't exist")
 }
 
 func (s Session) GetUID() int {

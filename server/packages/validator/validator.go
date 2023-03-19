@@ -16,10 +16,7 @@ func (v *ValidationBuilder) ValidateEmail(email string) *ValidationBuilder {
 
 	a := r.MatchString(email)
 	if !a {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrEmailFormat,
-			Description: "invalid email format",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrEmailFormat, "invalid email format"))
 	}
 
 	return v
@@ -28,23 +25,14 @@ func (v *ValidationBuilder) ValidateEmail(email string) *ValidationBuilder {
 func (v *ValidationBuilder) ValidatePassword(password string) *ValidationBuilder {
 	length := len(password)
 	if length < 8 {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrPasswordTooShort,
-			Description: "password length must be longer than 8 characters",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrPasswordTooShort, "password length must be longer than 8 characters"))
 	} else if length > 32 {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrPasswordTooLong,
-			Description: "password length must be shorter than 32 characters",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrPasswordTooLong, "password length must be shorter than 32 characters"))
 	} else {
 		r := regexp.MustCompile(`^[A-Za-z0-9~\x60!@#$%^&*()_\-+={\[}\]|\\:;"'<,>.?/]{8,32}$`)
 		a := r.MatchString(password)
 		if !a {
-			v.errs = append(v.errs, &eh.ErrorResponse{
-				Code:        eh.ErrPasswordFormat,
-				Description: "password contains restricted symbols",
-			})
+			v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrPasswordFormat, "password contains restricted symbols"))
 		}
 	}
 
@@ -54,23 +42,14 @@ func (v *ValidationBuilder) ValidatePassword(password string) *ValidationBuilder
 func (v *ValidationBuilder) ValidateLogin(login string) *ValidationBuilder {
 	length := len(login)
 	if length < 4 {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrLoginTooShort,
-			Description: "login length must be longer than 4 characters",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrLoginTooShort, "login length must be longer than 4 characters"))
 	} else if length > 24 {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrLoginTooLong,
-			Description: "login length must be shorter than 24 characters",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrLoginTooLong, "login length must be shorter than 24 characters"))
 	} else {
 		r := regexp.MustCompile(`^[A-Za-z0-9_]{4,24}$`)
 		a := r.MatchString(login)
 		if !a {
-			v.errs = append(v.errs, &eh.ErrorResponse{
-				Code:        eh.ErrLoginFormat,
-				Description: "login contains restricted symbols",
-			})
+			v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrLoginFormat, "login contains restricted symbols"))
 		}
 	}
 
@@ -82,10 +61,7 @@ func (v *ValidationBuilder) ValidateFirstName(name string) *ValidationBuilder {
 
 	a := r.MatchString(name)
 	if !a {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrFirstNameFormat,
-			Description: "invalid first name format",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrFirstNameFormat, "invalid first name format"))
 	}
 
 	return v
@@ -96,10 +72,7 @@ func (v *ValidationBuilder) ValidateLastName(name string) *ValidationBuilder {
 
 	a := r.MatchString(name)
 	if !a {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrLastNameFormat,
-			Description: "invalid last name format",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrLastNameFormat, "invalid last name format"))
 	}
 
 	return nil
@@ -107,10 +80,7 @@ func (v *ValidationBuilder) ValidateLastName(name string) *ValidationBuilder {
 
 func (v *ValidationBuilder) ValidatePrivacyOption(privacy int) *ValidationBuilder {
 	if privacy != 1 && privacy != 2 && privacy != 3 {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrWrongPrivacy,
-			Description: "wrong privacy setting",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrWrongPrivacy, "wrong privacy setting"))
 	}
 
 	return v
@@ -118,10 +88,7 @@ func (v *ValidationBuilder) ValidatePrivacyOption(privacy int) *ValidationBuilde
 
 func (v *ValidationBuilder) ValidatePostInput(text string, attachments []string) *ValidationBuilder {
 	if len(attachments) == 0 && text == "" {
-		v.errs = append(v.errs, &eh.ErrorResponse{
-			Code:        eh.ErrEmptyInput,
-			Description: "no input provided",
-		})
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrEmptyInput, "no input provided"))
 	}
 
 	return v
@@ -133,10 +100,7 @@ func (v *ValidationBuilder) ValidateImages(attachments ...string) *ValidationBui
 		match := reg.MatchString(strings.TrimSpace(image))
 
 		if !match {
-			v.errs = append(v.errs, &eh.ErrorResponse{
-				Code:        eh.ErrImageFormat,
-				Description: "wrong image filetype/format",
-			})
+			v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrImageFormat, "wrong image filetype/format"))
 			return v
 		}
 	}
@@ -148,10 +112,7 @@ func (v *ValidationBuilder) ValidateUserExists(userIds ...int) *ValidationBuilde
 	for _, id := range userIds {
 		u, _ := sqlite.GetUserById(id)
 		if u == nil {
-			v.errs = append(v.errs, &eh.ErrorResponse{
-				Code:        eh.ErrWrongUserId,
-				Description: "wrong user id provided",
-			})
+			v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrWrongUserId, "wrong user id provided"))
 			return v
 		}
 	}
