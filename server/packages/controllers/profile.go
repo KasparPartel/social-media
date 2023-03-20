@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"social-network/packages/db/sqlite"
-	"social-network/packages/errorHandler"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
 	"social-network/packages/utils"
 	"social-network/packages/validator"
@@ -13,19 +13,19 @@ import (
 
 // GET /user/:id
 func GetUserInfo(w http.ResponseWriter, r *http.Request) {
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
-	u, _, errRes, err := utils.HasAccess(r)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+	u, _, err := utils.HasAccess(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok && errRes.Code != eh.ErrPrivateProfile {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	if errRes != nil && errRes.Code != errorHandler.ErrPrivateProfile {
-		response.Errors = []*errorHandler.ErrorResponse{errRes}
-		json.NewEncoder(w).Encode(response)
+	if _, ok := err.(*eh.ErrorResponse); !ok && err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -61,7 +61,7 @@ var WHITE_LIST = [...]string{"login", "aboutMe", "isPublic"}
 
 // PUT /user/:id
 func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
 	fields := make(map[string]string)
@@ -74,16 +74,16 @@ func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, errRes, err := utils.IsOwn(r)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+	id, err := utils.IsOwn(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	if errRes != nil {
-		response.Errors = []*errorHandler.ErrorResponse{errRes}
-		json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
