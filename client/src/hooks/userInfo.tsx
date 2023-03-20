@@ -7,34 +7,19 @@ import { ErrorResponse, ServerResponse, User } from "../components/models"
  * Tries to find a user with the inputted id.
  * @returns either the user or null if the user does not exist
  */
-export default function useUserInfo(paramId: string): User | null {
+export default function useUserInfo(
+    paramId: string,
+    setLoading: (arg: boolean) => void,
+): User | null {
     const navigate = useNavigate()
-    const [user, setUser] = useState<User>({
-        avatar: "",
-        email: "",
-        login: "",
-        firstName: "",
-        lastName: "",
-        aboutMe: "",
-        dateOfBirth: 0,
-        isPublic: false,
-    })
+    const [user, setUser] = useState<User>(null)
 
     useEffect(() => {
         fetchHandlerNoBody(`http://localhost:8080/user/${paramId}`, `GET`)
             .then((r) => r.json())
             .then((r: ServerResponse) => {
-                if (r.errors) {
-                    const errArr = fetchErrorChecker(r.errors, navigate)
-                    if (errArr) {
-                        errArr.forEach((err) => {
-                            if (err.code === 16) setUser(null)
-                        })
-                    }
-                    return
-                }
-                setUser(r.data)
-                user.isPublic = true
+                r.errors ? fetchErrorChecker(r.errors, navigate) : setUser(r.data)
+                setLoading(false)
             })
             .catch(() => fetchErrorChecker([], navigate))
     }, [paramId])
@@ -50,7 +35,7 @@ function fetchErrorChecker(
         navigate("/login", {
             state: {
                 type: 0,
-                data: [{ code: 0, description: "something went horribly wrong, please relogin" }],
+                data: [{ code: 0, description: "something went wrong, please relogin" }],
             },
         })
         return
@@ -58,10 +43,8 @@ function fetchErrorChecker(
 
     let check = false
     const resErrs = errArr.map((err) => {
-        if (err.code >= 13 || err.code <= 16) {
-            if (err.code === 13 || err.code === 14) check = true
-            return err
-        }
+        if (err.code === 13 || err.code === 14) check = true
+        return err
     })
 
     if (check) navigate("/login", { state: { type: 0, data: resErrs } })
