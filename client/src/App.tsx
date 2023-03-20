@@ -19,7 +19,7 @@ export default function App() {
                 <Route path="/main" element={<h1>This is a main page</h1>} />
             </Route>
             <Route path="/user/:paramId" element={<UserProfile />} />
-            <Route path="/" element={<FollowingFollowers id={2} />} />
+            <Route path="/test" element={<FollowingFollowers id={2} />} />
             <Route path="/internal-error" element={<h1>Error 500</h1>} />
             <Route path="/*" element={<h1>Error 404</h1>} />
         </Routes>

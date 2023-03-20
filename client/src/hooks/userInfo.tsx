@@ -41,12 +41,10 @@ export function fetchErrorChecker(
         return
     }
 
-    let check = false
-    const resErrs = errArr.map((err) => {
-        if (err.code === 13 || err.code === 14) check = true
-        return err
+    const resErrs = errArr.filter((err) => {
+        if (err.code === 13 || err.code === 14) return err
     })
 
-    if (check) navigate("/login", { state: { type: 0, data: resErrs } })
-    return resErrs
+    if (resErrs.length > 0) navigate("/login", { state: { type: 0, data: resErrs } })
+    return errArr
 }

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getFollowers } from "../../additional-functions/getFollowers"
 import { User } from "../models"
+import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
 
 interface idProp {
@@ -38,7 +39,11 @@ function FollowingFollowersContainer({ header, userList }: FollowingFollowersCon
             <div className="list">
                 {userList.map((user, i) => (
                     <div className="user-card" key={i}>
-                        <img className="user-card__avatar" src={user.avatar} alt="beb" />
+                        <img
+                            className="user-card__avatar"
+                            src={user.avatar !== "" ? user.avatar : altAvatar}
+                            alt="beb"
+                        />
                         {`${user.firstName} ${user.lastName}`}
                     </div>
                 ))}
