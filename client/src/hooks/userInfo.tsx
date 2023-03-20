@@ -27,7 +27,7 @@ export default function useUserInfo(
     return user
 }
 
-function fetchErrorChecker(
+export function fetchErrorChecker(
     errArr: ErrorResponse[],
     navigate: NavigateFunction,
 ): ErrorResponse[] | void {

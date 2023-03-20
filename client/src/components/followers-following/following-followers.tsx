@@ -1,17 +1,28 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { getFollowers } from "../../additional-functions/getFollowers"
 import { User } from "../models"
 import "./followers-following.css"
 
-export default function FollowingFollowers() {
+interface idProp {
+    id: number
+}
+
+export default function FollowingFollowers({ id }: idProp) {
     const [userList, setUserList] = useState<User[]>([])
-    getFollowers(2, setUserList)
+    const [res, setRes] = useState<boolean>(null)
+    const navigate = useNavigate()
+    getFollowers({ id, setUserList, setRes, navigate })
 
     return (
-        <div className="test-container">
-            <FollowingFollowersContainer header="Following" userList={userList} />
-            <FollowingFollowersContainer header="Followers" userList={userList} />
-        </div>
+        <>
+            {res === null ? null : res ? (
+                <div className="test-container">
+                    <FollowingFollowersContainer header="Following" userList={userList} />
+                    <FollowingFollowersContainer header="Followers" userList={userList} />
+                </div>
+            ) : null}
+        </>
     )
 }
 

@@ -1,15 +1,23 @@
 import { useEffect } from "react"
-import { ServerResponse, User } from "../components/models"
+import { NavigateFunction } from "react-router-dom"
+import { ErrorResponse, ServerResponse, User } from "../components/models"
+import { fetchErrorChecker } from "../hooks/userInfo"
 import { fetchHandlerNoBody } from "./fetchHandler"
 
-export function getFollowers(id: number, setUserList: (userArr: User[]) => void): void {
+interface followersProps {
+    id: number
+    setUserList: (userArr: User[]) => void
+    setRes: (res: boolean) => void
+    navigate: NavigateFunction
+}
+
+export function getFollowers({ id, setUserList, setRes, navigate }: followersProps): void {
     useEffect(() => {
         fetchHandlerNoBody(`http://localhost:8080/user/${id}/followers`, "GET")
             .then((r) => r.json())
             .then((r) => {
                 if (r.errors) {
-                    console.log(r)
-                    throw new Error("error")
+                    throw r.errors
                 }
 
                 const promiseArr: Promise<User>[] = []
@@ -30,8 +38,12 @@ export function getFollowers(id: number, setUserList: (userArr: User[]) => void)
                 Promise.all(promiseArr).then((userArr) => {
                     userArr.filter((user) => user !== null)
                     setUserList(userArr)
+                    setRes(true)
                 })
             })
-            .catch((r) => console.log(r))
+            .catch((errArr: ErrorResponse[]) => {
+                fetchErrorChecker(errArr, navigate)
+                setRes(false)
+            })
     }, [id])
 }
