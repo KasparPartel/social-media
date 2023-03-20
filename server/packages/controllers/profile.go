@@ -23,7 +23,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err != nil {
+	if _, ok := err.(*eh.ErrorResponse); !ok && err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
