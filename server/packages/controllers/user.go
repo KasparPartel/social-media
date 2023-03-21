@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"social-network/packages/db/sqlite"
-	"social-network/packages/errorHandler"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
 	"social-network/packages/session"
 	"social-network/packages/validator"
@@ -30,7 +30,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
 	v := validator.ValidationBuilder{}
@@ -59,10 +59,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	id, err := sqlite.CreateUser(parsedUser)
 	if !validator.IsUnique("email", err) {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrUniqueEmail,
-			Description: "email is already taken",
-		}}
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrUniqueEmail, "email is already taken"))
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -93,7 +90,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 // --->>> (data: {id, avatar, email, login, firstName, lastName, aboutMe dateOfBirth, isPublic}, errors: [code, description])
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var parsedUser sqlite.User
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 
 	// get user info
 	err := json.NewDecoder(r.Body).Decode(&parsedUser)
@@ -106,10 +103,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if len(parsedUser.Password) < 1 {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrIncorrectCred,
-			Description: "incorrect login or password",
-		}}
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrIncorrectCred, "incorrect login or password"))
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -117,10 +111,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	u, err := sqlite.AuthorizeUser(parsedUser)
 
 	if err == bcrypt.ErrMismatchedHashAndPassword || err == sql.ErrNoRows {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrIncorrectCred,
-			Description: "incorrect login or password",
-		}}
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrIncorrectCred, "incorrect login or password"))
 		json.NewEncoder(w).Encode(response)
 		return
 	}

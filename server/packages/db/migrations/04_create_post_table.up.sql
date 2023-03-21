@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS posts (
     groupId INTEGER DEFAULT 0,
     userId INTEGER NOT NULL,
     text TEXT DEFAULT "",
+    creationDate INTEGER NOT NULL,
     privacy INTEGER DEFAULT 1
 );

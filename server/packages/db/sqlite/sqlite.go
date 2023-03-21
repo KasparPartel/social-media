@@ -6,8 +6,9 @@ import (
 	"io/fs"
 	"log"
 	"os"
-	"social-network/packages/errorHandler"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
@@ -35,11 +36,11 @@ func openDatabase() *sql.DB {
 	fmt.Println("open db")
 	if _, err := os.Stat("./packages/db/database"); os.IsNotExist(err) {
 		err := os.Mkdir("./packages/db/database", fs.ModeDir|0755)
-		errorHandler.LogErrorFatal(err)
+		eh.LogErrorFatal(err)
 	}
 
 	db, err := sql.Open("sqlite3", "./packages/db/database/social-network.db")
-	errorHandler.LogErrorFatal(err, "Failed to open database")
+	eh.LogErrorFatal(err, "Failed to open database")
 
 	db.SetMaxOpenConns(1)
 
@@ -49,13 +50,13 @@ func openDatabase() *sql.DB {
 func makeMigration() {
 	fmt.Println("start migration up")
 	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
-	errorHandler.LogErrorFatal(err)
+	eh.LogErrorFatal(err)
 
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://packages/db/migrations",
 		"sqlite3", driver)
 
-	errorHandler.LogErrorFatal(err)
+	eh.LogErrorFatal(err)
 
 	err = m.Up()
 	if err != migrate.ErrNoChange && err != nil {
@@ -189,11 +190,16 @@ func GetUserFollowers(id int) ([]int, error) {
 func GetUserPosts(u *User, followerId int) ([]int, error) {
 	postIds := make([]int, 0)
 
-	q := `SELECT id, privacy, 
-			(SELECT 1 
-			FROM postAllows 
-			WHERE id = posts.id AND userId = ?) 
-		FROM posts WHERE userId = ?`
+	q := `SELECT id,
+			privacy,
+			(
+				SELECT count(1)
+				FROM postAllows
+				WHERE postId = posts.id
+					AND userId = ?
+			)
+		FROM posts
+		WHERE userId = ?`
 
 	rows, err := db.Query(q, followerId, u.Id)
 	if err != nil && err != sql.ErrNoRows {
@@ -291,45 +297,119 @@ func ChangeFollow(id, followerId int) (int, error) {
 	return 1, nil
 }
 
-func CreateUserPost(userId int, post models.CreatePostRequest) (int, error) {
-	sqlStmt, err := db.Prepare(`INSERT INTO posts(userId, text, privacy) VALUES(?, ?, ?)`)
+func CreateUserPost(userId int, post models.CreatePostRequest) (int, int, error) {
+	sqlStmt, err := db.Prepare(`INSERT INTO posts(userId, text, creationDate, privacy) VALUES(?, ?, ?, ?)`)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
-	result, err := sqlStmt.Exec(userId, post.Text, post.Privacy)
+	creationDate := time.Now().UnixMilli()
+
+	result, err := sqlStmt.Exec(userId, post.Text, creationDate, post.Privacy)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
 	postId, err := result.LastInsertId()
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
 	sqlStmt, err = db.Prepare(`INSERT INTO postAllows(postId, userId) VALUES(?, ?)`)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	for _, id := range post.AuthorizedFollowers {
 		_, err := sqlStmt.Exec(postId, id)
 		if err != nil {
-			return 0, err
+			return 0, 0, err
 		}
 	}
 
 	sqlStmt, err = db.Prepare(`INSERT INTO postImages(postId, path) VALUES(?, ?)`)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	for _, image := range post.Attachments {
 		_, err := sqlStmt.Exec(postId, image)
 		if err != nil {
-			return 0, err
+			return 0, 0, err
 		}
 	}
 
-	return int(postId), nil
+	return int(postId), int(creationDate), nil
+}
+
+func GetPostById(postId, followerId int) (*models.GetPostResponse, error) {
+	post := models.GetPostResponse{}
+	privacy := 0
+	allowed := false
+
+	q := `SELECT id,
+			userId,
+			text,
+			creationDate,
+			privacy,
+			(
+				SELECT count(1)
+				FROM postAllows
+				WHERE postId = posts.id
+					AND userId = ?
+			)
+		FROM posts
+		WHERE id = ?;`
+
+	err := db.QueryRow(q, followerId, postId).Scan(&post.Id, &post.UserId, &post.Text, &post.CreationDate, &privacy, &allowed)
+	if err == sql.ErrNoRows {
+		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := GetUserById(post.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	u.FollowStatus, err = GetFollowStatus(u.Id, followerId)
+	if err != nil {
+		return nil, err
+	}
+
+	if (u.Id != followerId) && (!u.IsPublic || privacy != 1) &&
+		(u.FollowStatus != 3 || (privacy != 1 && privacy != 2 && (privacy != 3 || !allowed))) {
+		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
+	}
+
+	post.Attachments, err = GetAttachments(post.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &post, nil
+}
+
+func GetAttachments(postId int) ([]string, error) {
+	attachments := make([]string, 0)
+
+	q := `SELECT path
+		FROM postImages
+		where postId = ?`
+
+	rows, err := db.Query(q, postId)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	for rows.Next() {
+		temp := ""
+		rows.Scan(&temp)
+		attachments = append(attachments, temp)
+	}
+
+	return attachments, nil
 }
 
 func init() {
