@@ -1,98 +1,84 @@
 import "./header.css"
 import { Logout } from "../../additional-functions/logout"
-import { Outlet, useNavigate} from "react-router-dom"
-import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom"
+import { useState } from "react"
 
-export default function Navigation() {
-    const navigate = useNavigate();
-    const id = localStorage.getItem("id")
-    const [button, setButton] = useState<boolean[]>([false, false, false, false])
+interface entryButton {
+    id?: number
+}
 
+export default function Header({ id }: entryButton) {
+    const navigate = useNavigate()
+    const userId = localStorage.getItem("id")
+    const deafultState = [false, false, false, false]
+    deafultState[id] = true
+    const [buttonState, setButtonState] = useState<boolean[]>(deafultState)
+
+    const customButtonInfo = [
+        { name: "Profile", path: `/user/${userId}` },
+        { name: "Groups", path: `/` },
+        { name: "Users", path: `/` },
+        { name: "Notifications", path: `/` },
+    ]
 
     return (
         <>
-        <header className="header">
-            <nav className="navigation-left">
-              {Button(
-                {
-                    name: "profile",
-                    disabled: button[0],
-                    navigate,
-                    setButton,
-                    buttonId: 0,
-                    path: `/user/${id}`
-                })}
-              {Button(
-                {
-                    name: "groups",
-                    disabled: button[1],
-                    navigate,
-                    setButton,
-                    buttonId: 1,
-                    path: `/`
-                    
-                })}
-                {Button(
-                {
-                    name: "users",
-                    disabled: button[2],
-                    navigate,
-                    setButton,
-                    buttonId: 2,
-                    path: `/`
-
-                })}
-                {Button(
-                {
-                    name: "notifications",
-                    disabled: button[3],
-                    navigate,
-                    setButton,
-                    buttonId: 3,
-                    path: `/`
-                })}
-
-            </nav>
-            <input
-                type="button"
-                className="button navigation__button navigation__button_red"
-                value="Logout"
-                onClick={() => {
-                    Logout(navigate)
-                }}
-            />
-        </header>
-        <Outlet/>
+            <header className="header">
+                <nav className="navigation-left">
+                    {customButtonInfo.map(({ name, path }, i) => {
+                        return (
+                            <Button key={i}
+                                {...{
+                                    name,
+                                    path,
+                                    isDisabled: buttonState[i],
+                                    buttonId: i,
+                                    navigate,
+                                    setButtonState,
+                                }}
+                            />
+                        )
+                    })}
+                </nav>
+                <input
+                    type="button"
+                    className="button navigation__button navigation__button_red"
+                    value="Logout"
+                    onClick={() => {
+                        Logout(navigate)
+                    }}
+                />
+            </header>
+            <Outlet />
         </>
     )
 }
 
 interface buttonProps {
-    name: string, 
-    disabled: boolean, 
-    navigate: (str: string) => void, 
-    setButton: (arr: boolean[]) => void, 
-    buttonId: number,
-    path: string,
+    name: string
+    path: string
+    isDisabled: boolean
+    buttonId: number
+    navigate: (str: string) => void
+    setButtonState: (arr: boolean[]) => void
 }
 
-function Button({name, disabled, navigate, setButton, buttonId, path} : buttonProps) {
-    const buttonClass = disabled ? "button_disabled" : "button_active"
+function Button({ name, path, isDisabled, buttonId, navigate, setButtonState }: buttonProps) {
+    const buttonClass = isDisabled ? "button_disabled" : ""
 
-
-    return(
-    <input
-        type="button"
-        className={"button navigation__button " + buttonClass}
-        value={name}
-        onClick={() => {
-            if (disabled) return
-            const newBtns = [false, false, false, false]
-            newBtns[buttonId] = true
-            setButton(newBtns)
-            navigate(path);
-            }
-        }
+    return (
+        <input
+            type="button"
+            className={"button navigation__button " + buttonClass}
+            value={name}
+            onClick={() => {
+                if (!isDisabled) {
+                    const newBtns = [false, false, false, false]
+                    newBtns[buttonId] = true
+                    setButtonState(newBtns)
+                    navigate(path)
+                }
+            }}
         />
     )
 }
