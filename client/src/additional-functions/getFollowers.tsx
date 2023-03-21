@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
-import { fetchErrorChecker } from "../hooks/userInfo"
+import { fetchErrorChecker } from "../additional-functions/fetchErr"
 import { fetchHandlerNoBody } from "./fetchHandler"
 
 interface followersProps {
