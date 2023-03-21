@@ -62,7 +62,7 @@ export function UserProfile() {
                                 <LabeledParagraph labelText="About me" insideText={user.aboutMe} />
                                 <LabeledParagraph
                                     labelText="Birth date"
-                                    insideText={moment.unix(user.dateOfBirth).format("YYYY-MM-DD")}
+                                    insideText={moment(user.dateOfBirth).format("YYYY-MM-DD")}
                                 />
                             </div>
                         </div>

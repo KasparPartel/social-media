@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { NavigateFunction, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { fetchErrorChecker } from "../additional-functions/fetchErr"
 import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
-import { ErrorResponse, ServerResponse, User } from "../components/models"
+import { ServerResponse, User } from "../components/models"
 
 /**
  * Tries to find a user with the inputted id.
@@ -27,26 +28,3 @@ export default function useUserInfo(
     return user
 }
 
-function fetchErrorChecker(
-    errArr: ErrorResponse[],
-    navigate: NavigateFunction,
-): ErrorResponse[] | void {
-    if (errArr.length < 1) {
-        navigate("/login", {
-            state: {
-                type: 0,
-                data: [{ code: 0, description: "something went wrong, please relogin" }],
-            },
-        })
-        return
-    }
-
-    let check = false
-    const resErrs = errArr.map((err) => {
-        if (err.code === 13 || err.code === 14) check = true
-        return err
-    })
-
-    if (check) navigate("/login", { state: { type: 0, data: resErrs } })
-    return resErrs
-}
