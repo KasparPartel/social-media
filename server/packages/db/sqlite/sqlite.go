@@ -228,13 +228,32 @@ func GetAvatar(avatarId int) (string, error) {
 	return avatar, nil
 }
 
-func UpdateAvatar(avatar string, id int) error {
-	sqlStmt, err := db.Prepare("UPDATE avatars SET avatar = ? WHERE id = (SELECT avatarId FROM users WHERE id = ?)")
+func UpdateAvatar(avatar string, userId int) error {
+	avatarId := 0
+	err := db.QueryRow(`SELECT avatarId FROM users WHERE id = ?`, userId).Scan(&avatarId)
 	if err != nil {
 		return err
 	}
 
-	_, err = sqlStmt.Exec(avatar, id)
+	if avatarId != 0 {
+		_, err = db.Exec("UPDATE avatars SET avatar = ? WHERE id = (SELECT avatarId FROM users WHERE id = ?)", avatar, userId)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	res, err := db.Exec("INSERT INTO avatars (avatar) VALUES(?)", avatar)
+	if err != nil {
+		return err
+	}
+
+	temp, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("UPDATE users SET avatarId = ? WHERE id = ?", temp, userId)
 	if err != nil {
 		return err
 	}
