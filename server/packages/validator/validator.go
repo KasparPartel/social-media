@@ -75,7 +75,7 @@ func (v *ValidationBuilder) ValidateLastName(name string) *ValidationBuilder {
 		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrLastNameFormat, "invalid last name format"))
 	}
 
-	return nil
+	return v
 }
 
 func (v *ValidationBuilder) ValidatePrivacyOption(privacy int) *ValidationBuilder {
@@ -119,14 +119,14 @@ func (v *ValidationBuilder) ValidateUserExists(userIds ...int) *ValidationBuilde
 	return v
 }
 
-func (v ValidationBuilder) Validate() []*eh.ErrorResponse {
-	return v.errs
-}
-
-func IsUnique(tableName string, err error) bool {
+func (v *ValidationBuilder) IsUnique(tableName string, err error) *ValidationBuilder {
 	if err != nil && strings.Contains(err.Error(), "UNIQUE") && strings.Contains(err.Error(), tableName) {
-		return false
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrUniqueEmail, tableName+" is already taken"))
 	}
 
-	return true
+	return v
+}
+
+func (v ValidationBuilder) Validate() []*eh.ErrorResponse {
+	return v.errs
 }
