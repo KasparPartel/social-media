@@ -97,8 +97,8 @@ func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	v := validator.ValidationBuilder{}
 	if login, e := fields["login"]; e {
-		v := validator.ValidationBuilder{}
 
 		errArr := v.ValidateLogin(login).Validate()
 		if len(errArr) > 0 {
@@ -111,6 +111,13 @@ func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 	for _, tableName := range WHITE_LIST {
 		if value, e := fields[tableName]; e {
 			err = sqlite.UpdateProfileColumn(tableName, value, id)
+
+			errArr := v.ValidateIsUnique("login", err).Validate()
+			if len(errArr) > 0 {
+				response.Errors = errArr
+				json.NewEncoder(w).Encode(response)
+				return
+			}
 
 			if err != nil {
 				log.Println(err)

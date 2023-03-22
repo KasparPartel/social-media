@@ -58,7 +58,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	u.Password = string(hashedPassword)
 
 	id, err := sqlite.CreateUser(u)
-	errs = v.IsUnique("email", err).Validate()
+	errs = v.ValidateIsUnique("email", err).Validate()
 	if len(errs) > 0 {
 		response.Errors = errs
 		json.NewEncoder(w).Encode(response)
