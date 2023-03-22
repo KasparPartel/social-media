@@ -19,6 +19,13 @@ export interface AdditionalInfoFormFields {
     aboutMe: string
 }
 
+export interface PostFormFields {
+    privacy: string
+    body: string
+    attachments: string[]
+    authorizedFollowers?: number[]
+}
+
 export interface RequestProps {
     e: React.FormEvent<HTMLFormElement>
     setErrorArr?: (errs: ErrorResponse[]) => void
@@ -58,7 +65,9 @@ export interface UserIdContext {
 
 export const defaultId: UserIdContext = {
     id: 0,
-    setId: () => { return },
+    setId: () => {
+        return
+    },
 }
 
 export const IdContext = createContext(defaultId)

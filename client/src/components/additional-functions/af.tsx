@@ -4,6 +4,7 @@ import {
     AdditionalInfoFormFields,
     Response,
     RequestProps,
+    PostFormFields,
 } from "../models"
 
 export function ImageUpload(e: React.ChangeEvent<HTMLInputElement>, setImage: React.Dispatch<any>) {
@@ -13,11 +14,23 @@ export function ImageUpload(e: React.ChangeEvent<HTMLInputElement>, setImage: Re
 
 export function formDataExtractor(
     formData: FormData,
-    formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields,
+    formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields | PostFormFields,
+    attachments?: { name: string; value: string }[] | string,
 ) {
     formData.forEach((value, key) => {
         if (key in formFields) {
-            formFields[key] = value
+            switch (key) {
+                case "avatar":
+                    if (typeof attachments === "string") formFields[key] = attachments
+                    break
+                case "attachments":
+                    if (Array.isArray(attachments))
+                        formFields[key] = attachments.map((attachment) => attachment.value)
+                    break
+                default:
+                    formFields[key] = value
+                    break
+            }
         }
     })
 }
@@ -77,16 +90,6 @@ export function RegistrationRequest({ e, setErrorArr, setId, navigate }: Request
     )
 }
 
-const updateImage = async (formFields, image) => {
-    if (image === null) {
-        formFields.avatar = ""
-        return
-    }
-    await toBase64(image).then((r) => {
-        formFields.avatar = r
-    })
-}
-
 export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) {
     e.preventDefault()
     const formFields: AdditionalInfoFormFields = {
@@ -95,9 +98,8 @@ export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) 
         aboutMe: "",
     }
 
-    formDataExtractor(new FormData(e.currentTarget), formFields)
-
-    updateImage(formFields, image).then(() => {
+    toBase64(image).then((r) => {
+        formDataExtractor(new FormData(e.currentTarget), formFields, r)
         formFetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields)
             .then((response) => {
                 if (response === null) navigate("/main")
@@ -106,7 +108,7 @@ export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) 
     })
 }
 
-async function toBase64(file: Blob): Promise<string> {
+export async function toBase64(file: Blob): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
