@@ -1,8 +1,8 @@
 package session
 
 import (
-	"fmt"
 	"net/http"
+	"social-network/packages/errorHandler"
 	"sync"
 	"time"
 
@@ -10,7 +10,8 @@ import (
 )
 
 type Session struct {
-	uid        string        //user id
+	token      string
+	uid        int           //user id
 	expireTime time.Time     //time of session creation/update
 	lifeTime   time.Duration //time after which session dies
 }
@@ -26,13 +27,14 @@ func (m *Provider) SetToken(newSessionId string, w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "TOKEN",
 		Value:    newSessionId,
+		Expires:  time.Now().Add(time.Hour * 8760), // 1 year
 		MaxAge:   31536000,
 		HttpOnly: true,
 		Path:     "/",
 	})
 }
 
-func (m *Provider) GetToken(r *http.Request) (string, error) {
+func (m *Provider) getToken(r *http.Request) (string, error) {
 	cookie, err := r.Cookie("TOKEN")
 	if err != nil {
 		return "", err
@@ -51,7 +53,7 @@ func (m *Provider) RemoveToken(w http.ResponseWriter) {
 	})
 }
 
-func (m *Provider) SessionAdd(userId string) string {
+func (m *Provider) AddSession(userId int) string {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -63,6 +65,7 @@ func (m *Provider) SessionAdd(userId string) string {
 
 	newSessionId := uuid.NewV4().String()
 	m.sessionsMap[newSessionId] = &Session{
+		token:      newSessionId,
 		uid:        userId,
 		expireTime: time.Now(),
 		lifeTime:   time.Second * 300,
@@ -71,32 +74,40 @@ func (m *Provider) SessionAdd(userId string) string {
 	return newSessionId
 }
 
-func (m *Provider) SessionGet(sessionId string) (*Session, error) {
-	if userSession, exists := m.sessionsMap[sessionId]; exists {
+func (m *Provider) GetSession(r *http.Request) (*Session, error) {
+	sessionId, err := SessionProvider.getToken(r)
+
+	if userSession, exists := m.sessionsMap[sessionId]; exists && err == nil {
 		if time.Since(userSession.expireTime) < userSession.lifeTime {
 			userSession.expireTime = time.Now()
 			return userSession, nil
 		}
-		m.SessionRemove(sessionId)
-		return nil, fmt.Errorf("session expired")
+		userSession.SessionRemove()
+
+		return nil, errorHandler.NewErrorResponse(errorHandler.ErrSessionExpired, "session expired")
 	}
-	return nil, fmt.Errorf("session doesn't exist")
+
+	return nil, errorHandler.NewErrorResponse(errorHandler.ErrSessionNotExist, "session doesn't exist")
 }
 
-func (m *Provider) SessionRemove(sessionId string) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
+func (s Session) GetUID() int {
+	return s.uid
+}
 
-	delete(SessionProvider.sessionsMap, sessionId)
+func (s *Session) SessionRemove() {
+	SessionProvider.mu.Lock()
+	defer SessionProvider.mu.Unlock()
+
+	delete(SessionProvider.sessionsMap, s.token)
 }
 
 func (m *Provider) checkExpires() {
 	for {
 		time.Sleep(time.Second * 60)
 
-		for token, session := range SessionProvider.sessionsMap {
+		for _, session := range SessionProvider.sessionsMap {
 			if time.Since(session.expireTime) >= session.lifeTime {
-				m.SessionRemove(token)
+				session.SessionRemove()
 			}
 		}
 	}

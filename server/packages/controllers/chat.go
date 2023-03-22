@@ -21,63 +21,72 @@ type Message struct {
 	Text      string `json:"text"`
 }
 
-// GET POST user/:id/chats/
-func GetChatsHandler(w http.ResponseWriter, r *http.Request, id int) {
-	if r.Method != "GET" && r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
-	// get list of chats id
-	if r.Method == "GET" {
-		chatsArray := []int{56, 666, 23, 45, 66}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(chatsArray)
-		return
-	}
-
-	if r.Method == "POST" {
-		// create new chat
-	}
+// GET user/:id/chats
+func GetChats(w http.ResponseWriter, r *http.Request) {
+	chatsArray := []int{56, 666, 23, 45, 66}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(chatsArray)
 }
 
-// GET POST chat/:id/
-func ChatHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" && r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+// POST user/:id/chats
+func CreateChat(w http.ResponseWriter, r *http.Request) {
+	chatsArray := []int{56, 666, 23, 45, 66}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(chatsArray)
+}
 
-	// get list of messages in chat
-	if r.Method == "GET" {
-		testChat := &Chat{
-			ChatId:       1,
-			FirstUserId:  12,
-			SecondUserId: 54,
-			Messages: []Message{
-				{
-					MessageId: 334,
-					UserId:    12,
-					Login:     "first",
-					FirstName: "John",
-					Text:      "Hello!",
-				},
-				{
-					MessageId: 335,
-					UserId:    54,
-					Login:     "second",
-					FirstName: "notJohn",
-					Text:      "Hello!:)",
-				},
+// GET chat/:id/
+func GetChat(w http.ResponseWriter, r *http.Request) {
+	testChat := &Chat{
+		ChatId:       1,
+		FirstUserId:  12,
+		SecondUserId: 54,
+		Messages: []Message{
+			{
+				MessageId: 334,
+				UserId:    12,
+				Login:     "first",
+				FirstName: "John",
+				Text:      "Hello!",
 			},
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(testChat)
-		return
+			{
+				MessageId: 335,
+				UserId:    54,
+				Login:     "second",
+				FirstName: "notJohn",
+				Text:      "Hello!:)",
+			},
+		},
 	}
 
-	if r.Method == "POST" {
-		// create new message
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(testChat)
+}
+
+// POST chat/:id/
+func CreateMessage(w http.ResponseWriter, r *http.Request) {
+	testChat := &Chat{
+		ChatId:       1,
+		FirstUserId:  12,
+		SecondUserId: 54,
+		Messages: []Message{
+			{
+				MessageId: 334,
+				UserId:    12,
+				Login:     "first",
+				FirstName: "John",
+				Text:      "Hello!",
+			},
+			{
+				MessageId: 335,
+				UserId:    54,
+				Login:     "second",
+				FirstName: "notJohn",
+				Text:      "Hello!:)",
+			},
+		},
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(testChat)
 }

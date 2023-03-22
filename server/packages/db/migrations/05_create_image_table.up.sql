@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS postImages (
+    postId INTEGER NOT NULL,
+    path TEXT NOT NULL
+);

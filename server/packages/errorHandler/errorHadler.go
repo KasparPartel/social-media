@@ -1,23 +1,33 @@
 package errorHandler
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
 
 const (
-	ErrEmailFormat      = 1
-	ErrPasswordTooShort = 2
-	ErrPasswordTooLong  = 3
-	ErrPasswordFormat   = 4
-	ErrLoginTooShort    = 5
-	ErrLoginTooLong     = 6
-	ErrLoginFormat      = 7
-	ErrFirstNameFormat  = 8
-	ErrLastNameFormat   = 9
-	ErrUniqueEmail      = 10
-	ErrUniqueLogin      = 11
-	ErrIncorrectCred    = 12
+	ErrEmailFormat = iota + 1
+	ErrPasswordTooShort
+	ErrPasswordTooLong
+	ErrPasswordFormat
+	ErrLoginTooShort
+	ErrLoginTooLong
+	ErrLoginFormat
+	ErrFirstNameFormat
+	ErrLastNameFormat
+	ErrUniqueEmail
+	ErrUniqueLogin
+	ErrIncorrectCred
+	ErrSessionExpired
+	ErrSessionNotExist
+	ErrPrivateProfile
+	ErrNotFound
+	ErrNoAccess
+	ErrWrongPrivacy
+	ErrEmptyInput
+	ErrImageFormat
+	ErrWrongUserId
 )
 
 type Response struct {
@@ -28,6 +38,17 @@ type Response struct {
 type ErrorResponse struct {
 	Code        uint   `json:"code"`
 	Description string `json:"description"`
+}
+
+func NewErrorResponse(code uint, desctiption string) *ErrorResponse {
+	return &ErrorResponse{
+		Code:        code,
+		Description: desctiption,
+	}
+}
+
+func (er *ErrorResponse) Error() string {
+	return fmt.Sprintf("%T, code: %d, description: %s", er, er.Code, er.Description)
 }
 
 func LogErrorFatal(err error, messages ...any) {

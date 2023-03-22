@@ -1,6 +1,7 @@
 import "./userPost.css"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
+import { useOpenText } from "../../hooks/openText"
 
 export interface Post {
     text: string | null
@@ -14,12 +15,12 @@ interface UserPostProps {
 export default function UserPost({ post }: UserPostProps) {
     const [attachmentsOpen, setAttachmentsOpen] = useState<boolean>(false)
     const attachmentsCount = post.attachments.length
-    const [textOpen, setTextOpen] = useState<boolean>(false)
 
     const toggleAttachments = () => {
         setAttachmentsOpen(!attachmentsOpen)
     }
 
+<<<<<<< HEAD
     const togglePostText = () => {
         setTextOpen(!textOpen)
     }
@@ -29,6 +30,9 @@ export default function UserPost({ post }: UserPostProps) {
     useEffect(() => {
         textOpen ? setHeight(refText.current.scrollHeight) : setHeight(215)
     }, [textOpen])
+=======
+    const { style, refText, openText } = useOpenText(215)
+>>>>>>> develop
 
     return (
         <article className="post">
@@ -36,9 +40,15 @@ export default function UserPost({ post }: UserPostProps) {
                 <p
                     ref={refText}
                     className="post__text"
+<<<<<<< HEAD
                     style={{ maxHeight: `${height}px` }}
                     onClick={() => {
                         togglePostText()
+=======
+                    style={style}
+                    onClick={() => {
+                        openText()
+>>>>>>> develop
                     }}
                 >
                     {post.text}

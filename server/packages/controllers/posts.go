@@ -2,102 +2,153 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
-	"regexp"
+	"social-network/packages/db/sqlite"
+	eh "social-network/packages/errorHandler"
+	"social-network/packages/httpRouting"
+	"social-network/packages/models"
+	"social-network/packages/session"
+	"social-network/packages/utils"
+	"social-network/packages/validator"
 	"strconv"
+	"strings"
 )
 
-type Post struct {
-	ParentId       int    `json:"parentId"` // group id if created inside group
-	Login          string `json:"login"`
-	UserId         int    `json:"userId"`
-	PostId         int    `json:"postId"`
-	Title          string `json:"title"`
-	Text           string `json:"text"`
-	DateOfCreation int    `json:"dateOfCreation"`
-	Visibility     string `json:"visibility"`
-}
+// GET /user/:id/posts
+func GetPosts(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
 
-// GET POST /user/:id/posts
-func GetPostsHandler(w http.ResponseWriter, r *http.Request, id int) {
-	if r.Method != "POST" && r.Method != "GET" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+	u, followerId, err := utils.HasAccess(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	// get list of posts id
-	if r.Method == "GET" {
-		postIdArray := []int{12, 24, 11, 155}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(postIdArray)
-		return
-	}
-
-	if r.Method == "POST" {
-		// create post
-	}
-}
-
-// /post/...
-func PostHandler(w http.ResponseWriter, r *http.Request) {
-	reg := regexp.MustCompile(`/post/(?:(?P<id>[0-9]{1,16})(?:/(?P<path>[a-z]{1,32}))?)?`)
-	match := reg.FindStringSubmatch(r.URL.Path)
-
-	id := match[1]
-	path := match[2]
-
-	if id == "" {
-		fmt.Println("must provide id")
-		return
-	}
-
-	parsedId, err := strconv.Atoi(id)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	switch path {
-	case "":
-		PostManage(w, r, parsedId)
-	case "comments":
-		GetCommentsHandler(w, r, parsedId)
-	default:
-		w.WriteHeader(http.StatusNotFound)
+	postIds, err := sqlite.GetUserPosts(u, followerId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
+	response.Data = postIds
+
+	json.NewEncoder(w).Encode(response)
 }
 
-// GET PUT DELETE /post/:id
-func PostManage(w http.ResponseWriter, r *http.Request, id int) {
-	if r.Method != "GET" && r.Method != "DELETE" && r.Method != "PUT" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+// POST /user/:id/posts
+func CreatePost(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	post := models.CreatePostRequest{}
+
+	// get user info
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// get post info
-	if r.Method == "GET" {
-		postInfo := &Post{
-			ParentId:       34,
-			Login:          "testUser",
-			UserId:         28,
-			PostId:         2003,
-			Title:          "test title for post",
-			Text:           "test text for post",
-			DateOfCreation: 1672251842,
-			Visibility:     "group",
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(postInfo)
+	userId, err := utils.IsOwn(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	if r.Method == "PUT" {
-		// update post info
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	if r.Method == "DELETE" {
-		// delete post
+	post.Text = strings.TrimSpace(post.Text)
+
+	v := validator.ValidationBuilder{}
+	errArr := v.
+		ValidatePostInput(post.Text, post.Attachments).
+		ValidateImages(post.Attachments...).
+		ValidateUserExists(post.AuthorizedFollowers...).
+		ValidatePrivacyOption(post.Privacy).
+		Validate()
+
+	if len(errArr) > 0 {
+		response.Errors = errArr
+		json.NewEncoder(w).Encode(response)
+		return
 	}
+
+	postId, creationDate, err := sqlite.CreateUserPost(userId, post)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = models.GetPostResponse{
+		Id:           postId,
+		UserId:       userId,
+		Text:         post.Text,
+		Attachments:  post.Attachments,
+		CreationDate: creationDate,
+	}
+
+	json.NewEncoder(w).Encode(response)
+}
+
+// GET /post/:id
+func GetPost(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+
+	postId, _ := strconv.Atoi(inputId)
+	responseId := s.GetUID()
+
+	post, err := sqlite.GetPostById(postId, responseId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = post
+
+	json.NewEncoder(w).Encode(response)
+}
+
+// PUT /post/:id
+func UpdatePost(w http.ResponseWriter, r *http.Request) {
+	postInfo := &models.CreatePostRequest{
+		Text:    "test text for post",
+		Privacy: 1,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(postInfo)
 }

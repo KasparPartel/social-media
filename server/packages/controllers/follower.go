@@ -2,30 +2,116 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"social-network/packages/db/sqlite"
+	eh "social-network/packages/errorHandler"
+	"social-network/packages/httpRouting"
+	"social-network/packages/models"
+	"social-network/packages/session"
+	"social-network/packages/utils"
+	"strconv"
 )
 
-// GET PUT DELETE /user/:id/followers
-func FollowersHandler(w http.ResponseWriter, r *http.Request, id int) {
-	if r.Method != "PUT" && r.Method != "GET" && r.Method != "DELETE" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+// GET /user/:id/followers
+func GetFollowers(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	u, _, err := utils.HasAccess(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	// get id list of followers if autorized ??? or not id but all users info
-	if r.Method == "GET" {
-		followerdIdArray := []int{12, 24, 11, 155}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(followerdIdArray)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if r.Method == "PUT" {
-		// update list of followers if autorized
+	followersArr, err := sqlite.GetUserFollowers(u.Id)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	if r.Method == "DELETE" {
-		// delete follower from list of followers if autorized
+	response.Data = followersArr
+
+	json.NewEncoder(w).Encode(response)
+}
+
+// GET /user/:id/followings
+func GetFollowings(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	u, _, err := utils.HasAccess(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
 	}
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	followingsArr, err := sqlite.GetUserFollowings(u.Id)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = followingsArr
+
+	json.NewEncoder(w).Encode(response)
+}
+
+// PUT /user/:id/followers
+func UpdateFollowers(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id") // id from url
+	parsedId, _ := strconv.Atoi(inputId)
+
+	id := s.GetUID() // id of user who requested
+
+	// same user
+	if id == parsedId {
+		return
+	}
+
+	followStatus, err := sqlite.ChangeFollow(parsedId, id)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if followStatus == 0 {
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request"))
+
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	response.Data = models.UpdateFollowersResponse{
+		FollowStatus: followStatus,
+	}
+
+	json.NewEncoder(w).Encode(response)
 }
