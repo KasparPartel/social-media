@@ -24,25 +24,24 @@ export default function Header({ id }: entryButton) {
     return (
         <>
             <header className="header">
-                <nav className="navigation-left">
-                    {customButtonInfo.map(({ name, path }, i) => {
-                        return (
-                            <Button key={i}
-                                {...{
-                                    name,
-                                    path,
-                                    isDisabled: buttonState[i],
-                                    buttonId: i,
-                                    navigate,
-                                    setButtonState,
-                                }}
-                            />
-                        )
-                    })}
-                </nav>
+                {customButtonInfo.map(({ name, path }, i) => {
+                    return (
+                        <Button
+                            key={i}
+                            {...{
+                                name,
+                                path,
+                                isDisabled: buttonState[i],
+                                buttonId: i,
+                                navigate,
+                                setButtonState,
+                            }}
+                        />
+                    )
+                })}
                 <input
                     type="button"
-                    className="button navigation__button navigation__button_red"
+                    className="button header__button header__button_red header__button_right-side"
                     value="Logout"
                     onClick={() => {
                         Logout(navigate)
@@ -69,7 +68,7 @@ function Button({ name, path, isDisabled, buttonId, navigate, setButtonState }: 
     return (
         <input
             type="button"
-            className={"button navigation__button " + buttonClass}
+            className={"button header__button " + buttonClass}
             value={name}
             onClick={() => {
                 if (!isDisabled) {
