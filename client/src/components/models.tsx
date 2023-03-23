@@ -1,5 +1,10 @@
-import { createContext } from "react"
 import { NavigateFunction } from "react-router-dom"
+
+export type FormFields =
+    | LoginFormFields
+    | RegistrationFormFields
+    | AdditionalInfoFormFields
+    | PostFormFields
 
 export interface LoginFormFields {
     login: string
@@ -22,7 +27,7 @@ export interface AdditionalInfoFormFields {
 
 export interface PostFormFields {
     privacy: string
-    body: string
+    text: string
     attachments: string[]
     authorizedFollowers?: number[]
 }
@@ -58,20 +63,3 @@ export interface User {
     isPublic: boolean
     followStatus?: number
 }
-<<<<<<< HEAD
-
-export interface UserIdContext {
-    id: number
-    setId: (id: number) => void
-}
-
-export const defaultId: UserIdContext = {
-    id: 0,
-    setId: () => {
-        return
-    },
-}
-
-export const IdContext = createContext(defaultId)
-=======
->>>>>>> develop

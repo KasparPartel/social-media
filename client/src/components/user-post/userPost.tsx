@@ -20,19 +20,7 @@ export default function UserPost({ post }: UserPostProps) {
         setAttachmentsOpen(!attachmentsOpen)
     }
 
-<<<<<<< HEAD
-    const togglePostText = () => {
-        setTextOpen(!textOpen)
-    }
-
-    const refText = useRef<HTMLDivElement>(null)
-    const [height, setHeight] = useState<number>(215)
-    useEffect(() => {
-        textOpen ? setHeight(refText.current.scrollHeight) : setHeight(215)
-    }, [textOpen])
-=======
     const { style, refText, openText } = useOpenText(215)
->>>>>>> develop
 
     return (
         <article className="post">
@@ -40,15 +28,9 @@ export default function UserPost({ post }: UserPostProps) {
                 <p
                     ref={refText}
                     className="post__text"
-<<<<<<< HEAD
-                    style={{ maxHeight: `${height}px` }}
-                    onClick={() => {
-                        togglePostText()
-=======
                     style={style}
                     onClick={() => {
                         openText()
->>>>>>> develop
                     }}
                 >
                     {post.text}
