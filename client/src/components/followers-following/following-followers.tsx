@@ -4,6 +4,7 @@ import { getFollowers } from "../../additional-functions/getFollowers"
 import { User } from "../models"
 import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
+import { getFollowing } from "../../additional-functions/getFollowing"
 
 interface idProp {
     id: number
@@ -11,15 +12,16 @@ interface idProp {
 
 export default function FollowingFollowers({ id }: idProp) {
     const [userList, setUserList] = useState<User[]>([])
+    const [followingList, setFollowingList] = useState<User[]>([])
     const [res, setRes] = useState<boolean>(null)
     const navigate = useNavigate()
-    getFollowers({ id, setUserList, setRes, navigate })
-
+    getFollowers({id, setUserList, setRes, navigate})
+    getFollowing({id, setFollowingList})
     return (
         <>
             {res === null ? null : res ? (
                 <div className="test-container">
-                    <FollowingFollowersContainer header="Following" userList={userList} />
+                    <FollowingFollowersContainer header="Following" userList={followingList} />
                     <FollowingFollowersContainer header="Followers" userList={userList} />
                 </div>
             ) : null}
