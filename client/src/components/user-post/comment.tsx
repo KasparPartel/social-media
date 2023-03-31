@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import sendIcon from "../../assets/send-outline.svg"
 import { fetchHandlerNoBody } from "../../additional-functions/fetchHandler"
-import { IdContext } from "../models"
+import sendIcon from "../../assets/send-outline.svg"
+import useUserInfo from "../../hooks/userInfo"
 import Loading from "./render-states/loading"
 import "./userPost.css"
 
@@ -11,7 +11,7 @@ interface PostComment {
     login: string
     parentId: number
     text: string
-    userId: number
+    userId: string
 }
 
 const getComments = async (postId: number) => {
@@ -19,59 +19,58 @@ const getComments = async (postId: number) => {
         `http://localhost:8080/post/${postId}/comments`,
         "GET",
     )
-    const data = await response.json()
-    return data
+    return await response.json()
 }
 
-export default function Comments({ postId }: { postId: number }) {
+export default function CommentList({ postId }: { postId: number }) {
     const [commentsIdList, setCommentsIdList] = useState<number[]>([])
-    const userId = useContext(IdContext)
-    const [comment, setComment] = useState<PostComment>({
-        dateOfCreation: 0,
-        login: "test",
-        parentId: 0,
-        text: "",
-        userId: userId.id,
-    })
+    // const { paramId } = useParams()
+    // const user = useUserInfo(paramId)
+    const myUser = useUserInfo(localStorage.getItem("id"))
+    const [inputText, setInputText] = useState("")
 
     useEffect(() => {
         getComments(postId).then((data) => setCommentsIdList(data))
     }, [])
 
-    useEffect(() => {
-        console.log(comment)
-    }, [comment])
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        setComment((prevState) => {
-            const clone = { ...prevState }
-            clone.text = (
-                e.currentTarget.elements.namedItem("addComment") as HTMLInputElement
-            ).value
-            clone.dateOfCreation = Date.now()
-            return clone
-        })
-
-        if (comment.text === "") {
-            console.log("Text cannot be empty")
+        if (inputText === "") {
             return
         }
 
-        console.log("submitted")
+        const comment: PostComment = {
+            dateOfCreation: Date.now(),
+            login: myUser.login ?? "",
+            parentId: 0,
+            text: inputText,
+            userId: myUser.id,
+        }
 
-        // const postComment = () => {
-        //     fetch(`http://localhost:8080/post/${postId}/comments`, {
-        //         method: "POST",
-        //         credentials: "include",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(comment),
-        //     })
-        // }
-        // setComment()
+        console.log(comment)
+
+        const postComment = () => {
+            fetch(`http://localhost:8080/post/${postId}/comments`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(comment),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`Error posting to api: ${res.status} status code`)
+                    }
+                    console.log("submitted")
+
+                    getComments(postId).then((data) => setCommentsIdList(data))
+                })
+                .catch((err) => console.log(err.message))
+        }
+
+        postComment()
     }
 
     return (
@@ -79,19 +78,21 @@ export default function Comments({ postId }: { postId: number }) {
             {commentsIdList.map((id, i) => (
                 <Comment id={id} key={i} />
             ))}
-            {/* {userId.id !== 1 && ( */}
-            <form className="comment__form" onSubmit={(e) => handleSubmit(e)}>
-                <input
-                    type="text"
-                    name="addComment"
-                    className="comment__input"
-                    placeholder="Add a comment"
-                />
-                <button type="submit" className="comment__btn">
-                    <img src={sendIcon} alt="send" className="comment__img" />
-                </button>
-            </form>
-            {/* )} */}
+            {myUser && (
+                <form className="comment__form" onSubmit={(e) => handleSubmit(e)}>
+                    <input
+                        type="text"
+                        name="addComment"
+                        className="comment__input"
+                        placeholder="Add a comment"
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                    />
+                    <button type="submit" className="comment__btn">
+                        <img src={sendIcon} alt="send" className="comment__img" />
+                    </button>
+                </form>
+            )}
         </section>
     )
 }
@@ -135,7 +136,7 @@ function Comment({ id }: { id: number }) {
     return (
         <div className="post__comment">
             <div className="comment__user">
-                <Link to={`#`} className="comment__user__link">
+                <Link to={`/user/${comment.userId}`} className="comment__user__link">
                     {comment.login}
                 </Link>
                 <span className="comment__timestamp">{convertTimeToString()}</span>

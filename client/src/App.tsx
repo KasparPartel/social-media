@@ -18,7 +18,7 @@ export default function App() {
                 <Route path="/main" element={<h1>This is a main page</h1>} />
             </Route>
             <Route path="/user/:paramId" element={<UserInfo />} />
-            <Route path="/" element={<PostList />} />
+            <Route path="/user/:paramId/posts" element={<PostList />} />
             <Route path="/internal-error" element={<h1>Error 500</h1>} />
             <Route path="/*" element={<h1>Error 404</h1>} />
         </Routes>

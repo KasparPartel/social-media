@@ -3,7 +3,7 @@ import { fetchHandlerNoBody } from "../../additional-functions/fetchHandler"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
 import { useOpenText } from "../../hooks/openText"
 import { Post } from "../models"
-import Comments from "./comment"
+import CommentList from "./comment"
 import Loading from "./render-states/loading"
 import "./userPost.css"
 
@@ -57,10 +57,6 @@ export default function UserPost({ postId }: { postId: number }) {
         setAttachmentsOpen(!attachmentsOpen)
     }
 
-    const togglePostText = () => {
-        setTextOpen(!textOpen)
-    }
-
     if (err) return <div>{err.message}</div>
     if (isLoading) return <Loading color="orange" />
 
@@ -108,7 +104,7 @@ export default function UserPost({ postId }: { postId: number }) {
                 />
             </div>
 
-            {/* {commentsOpen && <Comments postId={postId} />} */}
+            {commentsOpen && <CommentList postId={postId} />}
         </article>
     )
 }
