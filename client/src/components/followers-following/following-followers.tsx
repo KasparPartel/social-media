@@ -18,10 +18,10 @@ export default function FollowingFollowers({ id }: idProp) {
     return (
         <>
             {res === null ? null : res ? (
-                <div className="test-container">
+                <>
                     <FollowingFollowersContainer header="Following" userList={userList} />
                     <FollowingFollowersContainer header="Followers" userList={userList} />
-                </div>
+                </>
             ) : null}
         </>
     )
