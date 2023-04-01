@@ -16,10 +16,9 @@ export interface followProps {
 }
 
 export function UserProfile() {
-    const [isLoading, setLoading] = useState(true)
     const { paramId } = useParams()
     const isMyProfile = useUserId(paramId)
-    const user = useUserInfo(paramId, setLoading)
+    const { user, isLoading } = useUserInfo(paramId)
     const { height, style, refText, openText } = useOpenText(0)
     const [followPorps, setFollowPorps] = useState<followProps>(followStatusHandler(0))
 

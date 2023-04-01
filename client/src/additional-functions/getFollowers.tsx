@@ -1,19 +1,19 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
 import { fetchErrorChecker } from "../additional-functions/fetchErr"
 import { fetchHandlerNoBody } from "./fetchHandler"
 
 interface followersProps {
-    id: number
-    setUserList: (userArr: User[]) => void
-    setRes: (res: boolean) => void
+    userId: number
     navigate: NavigateFunction
 }
 
-export function getFollowers({ id, setUserList, setRes, navigate }: followersProps): void {
+export function getFollowers({ userId, navigate }: followersProps): User[] {
+    const [userList, setUserList] = useState<User[]>([])
+
     useEffect(() => {
-        fetchHandlerNoBody(`http://localhost:8080/user/${id}/followers`, "GET")
+        fetchHandlerNoBody(`http://localhost:8080/user/${userId}/followers`, "GET")
             .then((r) => r.json())
             .then((r) => {
                 if (r.errors) {
@@ -21,9 +21,9 @@ export function getFollowers({ id, setUserList, setRes, navigate }: followersPro
                 }
 
                 const promiseArr: Promise<User>[] = []
-                r.data.forEach((userId: number) => {
+                r.data.forEach((followerId: number) => {
                     const user: Promise<User> = fetchHandlerNoBody(
-                        `http://localhost:8080/user/${userId}`,
+                        `http://localhost:8080/user/${followerId}`,
                         "GET",
                     )
                         .then((r) => r.json())
@@ -38,12 +38,12 @@ export function getFollowers({ id, setUserList, setRes, navigate }: followersPro
                 Promise.all(promiseArr).then((userArr) => {
                     userArr.filter((user) => user !== null)
                     setUserList(userArr)
-                    setRes(true)
                 })
             })
             .catch((errArr: ErrorResponse[]) => {
                 fetchErrorChecker(errArr, navigate)
-                setRes(false)
             })
-    }, [id])
+    }, [userId])
+
+    return userList
 }

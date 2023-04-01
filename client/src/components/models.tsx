@@ -26,7 +26,7 @@ export interface AdditionalInfoFormFields {
 }
 
 export interface PostFormFields {
-    privacy: string
+    privacy: number
     text: string
     attachments: string[]
     authorizedFollowers?: number[]

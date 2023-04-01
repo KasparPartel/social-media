@@ -1,16 +1,23 @@
-import { useState } from "react"
-import { formDataExtractor, toBase64 } from "../additional-functions/af"
+import "./createPost.css"
 import attachmentIcon from "../../assets/attachment_icon.svg"
 import privateAddIcon from "../../assets/private_add.svg"
-import "./createPost.css"
+import privateResetIcon from "../../assets/Reset.svg"
+import { useState } from "react"
 import { PostFormFields } from "../models"
+import { toBase64 } from "../../additional-functions/images"
+import { fetchHandler } from "../../additional-functions/fetchHandler"
+import toggleHook from "../../hooks/useToggle"
+import PrivacyOverlay from "./privacyOverlay"
 
-function toggleHook(initialState: boolean) {
-    const [toggle, setToggle] = useState(initialState)
-    const toggleChange = () => {
-        setToggle(!toggle)
-    }
-    return { toggle, toggleChange }
+const PrivacySettings = {
+    Public: "1",
+    Semi: "2",
+    Private: "3",
+}
+
+interface attachment {
+    name: string
+    value: string
 }
 
 export default function CreatePost() {
@@ -19,132 +26,181 @@ export default function CreatePost() {
     return (
         <>
             {modalOpen ? (
-                <Modal toggleModal={toggleModal} />
+                <>
+                    <button type="button" className="button" onClick={toggleModal}>
+                        Close
+                    </button>
+                    <Modal />
+                </>
             ) : (
-                <button onClick={toggleModal}>Create post</button>
+                <button type="button" className="button" onClick={toggleModal}>
+                    Create post
+                </button>
             )}
         </>
     )
 }
 
-interface ModalProps {
-    toggleModal: () => void
-}
-
-function Modal({ toggleModal }: ModalProps) {
-    const [attachments, setAttachments] = useState<{ name: string; value: string }[]>([])
-    const [privacy, setPrivacy] = useState("1")
+function Modal() {
+    const userId = Number(localStorage.getItem("id"))
+    const [postText, setText] = useState("")
+    const [postAttachments, setAttachments] = useState<attachment[]>([])
+    const [postPrivacy, setPrivacy] = useState(PrivacySettings.Public)
+    const [postAllowedUsers, setAllowedUsers] = useState<number[]>([])
     const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
 
-    const handleAddAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            const fileList = e.target.files
-            const i = e.target.files.length - 1
-            toBase64(fileList[i]).then((data) =>
-                setAttachments((prevState) => [
-                    ...prevState,
-                    { name: fileList[i].name, value: data },
-                ]),
-            )
-        }
-    }
-
-    const handleRemoveAttachment = (i: number) => {
-        setAttachments((prevState) => {
-            const arrCopy = [...prevState]
-            arrCopy.splice(i, 1)
-            return [...arrCopy]
-        })
-    }
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formFields: PostFormFields = {
-            privacy: "",
-            body: "",
-            attachments: [],
-        }
-        formDataExtractor(new FormData(e.currentTarget), formFields, attachments)
-        console.log(formFields)
-    }
-
     return (
-        <>
-            <button onClick={toggleModal}>close</button>
-            <div className="create-post">
-                <form className="create-post__form" onSubmit={(e) => handleSubmit(e)}>
-                    <textarea name="body" className="create-post__text"></textarea>
+        <div className="create-post-wrapper">
+            <form
+                className="post-form"
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    handleSubmit(
+                        postText,
+                        Number(postPrivacy),
+                        postAttachments,
+                        postAllowedUsers,
+                        userId,
+                    )
+                    setText("")
+                    setAttachments([])
+                    setPrivacy(PrivacySettings.Public)
+                    setAllowedUsers([])
+                }}
+            >
+                <textarea
+                    name="text"
+                    onChange={(e) => setText(e.currentTarget.value)}
+                    value={postText}
+                    className="post-form__text"
+                />
 
-                    <ul className="create-post__attachment-list">
-                        {attachments &&
-                            attachments.map((file, i) => (
-                                <li className="create-post__attachment" key={i}>
-                                    {file.name} - {" "}
-                                    <span onClick={() => handleRemoveAttachment(i)}>remove</span>
-                                </li>
-                            ))}
-                    </ul>
+                <ul className="post-form__attachment-list">
+                    {postAttachments &&
+                        postAttachments.map((file, i) => (
+                            <li className="post-form__attachment" key={i}>
+                                {file.name} -{" "}
+                                <span onClick={() => handleRemoveAttachment(i, setAttachments)}>
+                                    remove
+                                </span>
+                            </li>
+                        ))}
+                </ul>
 
-                    <div className="create-post__options">
-                        <div className="create-post__settings">
-                            <select
-                                name="privacy"
-                                value={privacy}
-                                onChange={(e) => setPrivacy(e.target.value)}
-                                className="create-post__settings__privacy"
-                            >
-                                <option value="1">Public</option>
-                                <option value="2">Semi</option>
-                                <option value="3">Private</option>
-                            </select>
+                <div className="post-form__bar">
+                    <div className="post-form__options">
+                        <select
+                            name="privacy"
+                            value={postPrivacy}
+                            onChange={(e) => setPrivacy(e.target.value)}
+                            className="post-form__privacy"
+                        >
+                            <option value={PrivacySettings.Public}>Public</option>
+                            <option value={PrivacySettings.Semi}>Semi</option>
+                            <option value={PrivacySettings.Private}>Private</option>
+                        </select>
 
-                            {privacy === "2" && (
-                                <>
-                                    <img
-                                        className="create-post__add-users__img"
-                                        src={privateAddIcon}
-                                        alt="add users"
-                                        onClick={toggleOverlay}
-                                    />
-                                    {overlayOpen ? (
-                                        <PrivacyOverlay toggleModal={toggleOverlay} />
-                                    ) : null}
-                                </>
-                            )}
-
-                            <label
-                                htmlFor="attachment"
-                                className="create-post__settings__attachment__label"
-                            >
+                        {postPrivacy === PrivacySettings.Semi && (
+                            <>
                                 <img
-                                    className="create-post__settings__attachment__img"
-                                    src={attachmentIcon}
-                                    alt="attachment"
+                                    className="post-form__add-users-img"
+                                    src={
+                                        postAllowedUsers.length > 0
+                                            ? privateResetIcon
+                                            : privateAddIcon
+                                    }
+                                    alt="add users"
+                                    onClick={toggleOverlay}
                                 />
-                                <input
-                                    onChange={(e) => handleAddAttachment(e)}
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    name="attachments"
-                                    id="attachment"
-                                    hidden
-                                />
-                            </label>
-                        </div>
+                                {postAllowedUsers.length > 0 ? (
+                                    <div className="post-form__add-users-info">
+                                        Added {postAllowedUsers.length}{" "}
+                                        {postAllowedUsers.length > 1 ? "users" : "user"}
+                                    </div>
+                                ) : null}
+                                {overlayOpen ? (
+                                    <PrivacyOverlay
+                                        {...{
+                                            toggleModal: toggleOverlay,
+                                            userId,
+                                            postAllowedUsers,
+                                            setAllowedUsers,
+                                        }}
+                                    />
+                                ) : null}
+                            </>
+                        )}
 
-                        <button className="create-post__create-btn">Create</button>
+                        <label
+                            className="post-form__attachment-label"
+                        >
+                            <img
+                                className="post-form__attachment-img"
+                                src={attachmentIcon}
+                                alt="attachment"
+                            />
+                            <input
+                                onChange={(e) => handleAddAttachment(e, setAttachments)}
+                                type="file"
+                                multiple
+                                accept="image/jpeg, image/png, image/gif"
+                                name="attachments"
+                                hidden
+                            />
+                        </label>
                     </div>
-                </form>
-            </div>
-        </>
+
+                    <button type="submit" className="button">
+                        Create
+                    </button>
+                </div>
+            </form>
+        </div>
     )
 }
 
-function PrivacyOverlay({ toggleModal }: ModalProps) {
-    return (
-        <div className="create-post__add-users">
-            <button onClick={toggleModal}>toggleModal</button>
-        </div>
-    )
+const handleAddAttachment = (e: React.ChangeEvent<HTMLInputElement>, setAttachments) => {
+    if (e.target.files) {
+        const fileList = e.target.files
+        const i = e.target.files.length - 1
+
+        toBase64(fileList[i]).then((data) =>
+            setAttachments((prevState: attachment[]) => [
+                ...prevState,
+                { name: fileList[i].name, value: data },
+            ]),
+        )
+    }
+}
+
+const handleRemoveAttachment = (i: number, setAttachments) => {
+    setAttachments((prevState: attachment[]) => {
+        const arrCopy = [...prevState]
+        arrCopy.splice(i, 1)
+        return [...arrCopy]
+    })
+}
+
+const handleSubmit = (
+    text: string,
+    privacy: number,
+    attachments: attachment[],
+    authorizedFollowers: number[],
+    userId: number,
+) => {
+    if (privacy >= 1 && privacy <= 3 && text) {
+        const formFields: PostFormFields = {
+            privacy,
+            text,
+            attachments: attachments.map((attachment) => attachment.value),
+            ...(privacy === 2 && { authorizedFollowers }),
+        }
+
+        fetchHandler(`http://localhost:8080/user/${userId}/posts`, "POST", formFields)
+            .then((r) => r.json())
+            .then(console.log)
+        //TODO: handle error and success in return
+        return
+    }
+    alert("Text is empty or privacy setting is wrong")
 }

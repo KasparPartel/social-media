@@ -1,19 +1,8 @@
-import {
-    AdditionalInfoFormFields,
-    LoginFormFields,
-    RegistrationFormFields,
-    RequestProps,
-    ServerResponse,
-} from "../components/models"
+import { FormFields, RequestProps, ServerResponse } from "../components/models"
 
-export function formDataExtractor(
-    formData: FormData,
-    formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields,
-) {
+export function formDataExtractor(formData: FormData, formFields: FormFields) {
     formData.forEach((value, key) => {
-        if (key in formFields) {
-            formFields[key] = value
-        }
+        if (key in formFields) formFields[key] = value
     })
 }
 

@@ -8,7 +8,6 @@ import CreatePost from "./components/create-post/createPost"
 import { UserProfile } from "./components/user-information/user-information"
 import FollowingFollowers from "./components/followers-following/following-followers"
 
-// Shows the registration/login view, plus two buttons that lets you change between them
 export default function App() {
     return (
         <Routes>
@@ -20,7 +19,7 @@ export default function App() {
                 <Route path="/post-test" element={<CreatePost />} />
             </Route>
             <Route path="/user/:paramId" element={<UserProfile />} />
-            <Route path="/test" element={<FollowingFollowers id={2} />} />
+            <Route path="/test" element={<FollowingFollowers />} />
             <Route path="/internal-error" element={<h1>Error 500</h1>} />
             <Route path="/*" element={<h1>Error 404</h1>} />
         </Routes>
