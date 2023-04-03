@@ -20,7 +20,6 @@ export function formDataExtractor(
 export async function formReturnHandler(
     r: Response,
     { setErrorArr, navigate }: RequestProps,
-    navigatePath: string,
 ): Promise<ServerResponse> {
     if (r.headers.get("content-type") !== "application/json") {
         return null
@@ -33,7 +32,7 @@ export async function formReturnHandler(
         }
         if (r.data != null) {
             localStorage.setItem("id", String(r.data.id))
-            navigate(navigatePath)
+            navigate(`/user/${r.data.id}`)
             return
         }
         throw new Error()
