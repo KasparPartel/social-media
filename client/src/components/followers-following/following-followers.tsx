@@ -14,8 +14,8 @@ export default function FollowingFollowers({ id }: idProp) {
     const [followingList, setFollowingList] = useState<User[]>([])
     const [res, setRes] = useState<boolean>(null)
     const navigate = useNavigate()
-    getUsersList({id, setUserList: setFollowersList, setRes, navigate, endpoint: "followers"})
-    getUsersList({id, setUserList: setFollowingList, setRes, navigate, endpoint: "followings"})
+    getUsersList({ id, setUserList: setFollowersList, setRes, navigate, endpoint: "followers" })
+    getUsersList({ id, setUserList: setFollowingList, setRes, navigate, endpoint: "followings" })
     return (
         <>
             {res === null ? null : res ? (
