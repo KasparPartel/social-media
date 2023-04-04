@@ -29,41 +29,39 @@ export function UserProfile() {
     return (
         <>
             {isLoading ? null : user ? (
-                <div className="test-container">
-                    <div className="information">
-                        <div className="information__short-container">
-                            <ShortInfo
-                                {...{
-                                    firstName: user.firstName,
-                                    lastName: user.lastName,
-                                    avatar: user.avatar,
-                                    isPublic: user.isPublic,
-                                    isMyProfile,
-                                    openText,
-                                    height,
-                                    followStatus: user.followStatus,
-                                }}
+                <div className="information">
+                    <div className="information__short-container">
+                        <ShortInfo
+                            {...{
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                avatar: user.avatar,
+                                isPublic: user.isPublic,
+                                isMyProfile,
+                                openText,
+                                height,
+                                followStatus: user.followStatus,
+                            }}
+                        />
+                        {!isMyProfile ? (
+                            <FollowButton
+                                id={user.id}
+                                followPorps={followPorps}
+                                setFollowPorps={setFollowPorps}
                             />
-                            {!isMyProfile ? (
-                                <FollowButton
-                                    id={user.id}
-                                    followPorps={followPorps}
-                                    setFollowPorps={setFollowPorps}
-                                />
-                            ) : (
-                                <button className="button">Create post</button>
-                            )}
-                        </div>
-                        <div style={style} className="information__detailed-container">
-                            <div ref={refText} className="information__detailed-info">
-                                <LabeledParagraph labelText="Email" insideText={user.email} />
-                                <LabeledParagraph labelText="Username" insideText={user.login} />
-                                <LabeledParagraph labelText="About me" insideText={user.aboutMe} />
-                                <LabeledParagraph
-                                    labelText="Birth date"
-                                    insideText={moment(user.dateOfBirth).format("YYYY-MM-DD")}
-                                />
-                            </div>
+                        ) : (
+                            <button className="button">Create post</button>
+                        )}
+                    </div>
+                    <div style={style} className="information__detailed-container">
+                        <div ref={refText} className="information__detailed-info">
+                            <LabeledParagraph labelText="Email" insideText={user.email} />
+                            <LabeledParagraph labelText="Username" insideText={user.login} />
+                            <LabeledParagraph labelText="About me" insideText={user.aboutMe} />
+                            <LabeledParagraph
+                                labelText="Birth date"
+                                insideText={moment(user.dateOfBirth).format("YYYY-MM-DD")}
+                            />
                         </div>
                     </div>
                 </div>

@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
-import { fetchErrorChecker } from "../additional-functions/fetchErr"
+import { fetchErrorChecker } from "./fetchErr"
 import { fetchHandlerNoBody } from "./fetchHandler"
 
 interface followersProps {
     userId: number
     navigate: NavigateFunction
+    endpoint: string
 }
 
-export function getFollowers({ userId, navigate }: followersProps): User[] {
+export function getUsersList({ userId: id, navigate, endpoint }: followersProps): User[] {
     const [userList, setUserList] = useState<User[]>([])
 
     useEffect(() => {
-        fetchHandlerNoBody(`http://localhost:8080/user/${userId}/followers`, "GET")
+        fetchHandlerNoBody(`http://localhost:8080/user/${id}/${endpoint}`, "GET")
             .then((r) => r.json())
             .then((r) => {
                 if (r.errors) {
@@ -43,7 +44,7 @@ export function getFollowers({ userId, navigate }: followersProps): User[] {
             .catch((errArr: ErrorResponse[]) => {
                 fetchErrorChecker(errArr, navigate)
             })
-    }, [userId])
+    }, [id])
 
     return userList
 }

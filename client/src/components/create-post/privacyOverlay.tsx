@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { getFollowers } from "../../additional-functions/getFollowers"
+import { getUsersList } from "../../additional-functions/getUsers"
 import privateUserList from "./privacyUserList"
 
 interface PrivacyOverlayProps {
@@ -15,7 +15,7 @@ export default function PrivacyOverlay({
     setAllowedUsers,
 }: PrivacyOverlayProps) {
     const navigate = useNavigate()
-    const userList = getFollowers({ userId, navigate })
+    const userList = getUsersList({ userId, navigate, endpoint: "followers" })
     const [indexList, setIndexList] = useState<number[]>([])
 
     return (

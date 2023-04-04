@@ -131,9 +131,7 @@ function Modal() {
                             </>
                         )}
 
-                        <label
-                            className="post-form__attachment-label"
-                        >
+                        <label className="post-form__attachment-label">
                             <img
                                 className="post-form__attachment-img"
                                 src={attachmentIcon}

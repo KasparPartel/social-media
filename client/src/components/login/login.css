@@ -33,22 +33,20 @@
     height: 6%;
     min-height: 54px;
     border-radius: 12px;
+    min-width: 130px;
 
     padding: 12px 8px;
 }
 
 .form__field {
     box-sizing: border-box;
-    border: 0;
     width: 100%;
-    min-width: 130px;
+    border: 0;
     color: var(--black);
     background: var(--main-white);
 }
 
 .form__button {
-    min-width: 130px;
-
     background: var(--main-green);
 
     cursor: pointer;

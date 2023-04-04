@@ -5,6 +5,6 @@
     color: var(--black);
 }
 
-.list {
+.error-window__list {
     margin: 0;
 }

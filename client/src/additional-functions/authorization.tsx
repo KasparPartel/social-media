@@ -18,7 +18,7 @@ export function LoginRequest({ e, setErrorArr, navigate }: RequestProps) {
     formDataExtractor(new FormData(e.currentTarget), formFields)
 
     fetchHandler(`http://localhost:8080/login`, "POST", formFields)
-        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }, "/main"))
+        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }))
         .catch(() => navigate("/internal-error"))
 }
 
@@ -36,7 +36,7 @@ export function RegistrationRequest({ e, setErrorArr, navigate }: RequestProps) 
     formFields.dateOfBirth = new Date(formFields.dateOfBirth).getTime()
 
     fetchHandler(`http://localhost:8080/register`, "POST", formFields)
-        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }, "/additional-registration"))
+        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }))
         .catch(() => navigate("/internal-error"))
 }
 
