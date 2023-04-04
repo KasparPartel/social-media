@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -22,7 +24,17 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 
 // POST post/:id/comments/
 func CreateComment(w http.ResponseWriter, r *http.Request) {
+	var comment Comment
 
+	err := json.NewDecoder(r.Body).Decode(&comment)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	fmt.Println(comment)
 }
 
 // GET comment/:id
