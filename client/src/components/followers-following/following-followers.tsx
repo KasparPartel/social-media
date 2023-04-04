@@ -1,30 +1,19 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
 import { User } from "../models"
 import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
 
-interface idProp {
-    id: number
-}
-
-export default function FollowingFollowers({ id }: idProp) {
-    const [followersList, setFollowersList] = useState<User[]>([])
-    const [followingList, setFollowingList] = useState<User[]>([])
-    const [res, setRes] = useState<boolean>(null)
+export default function FollowingFollowers() {
     const navigate = useNavigate()
-    getUsersList({id, setUserList: setFollowersList, setRes, navigate, endpoint: "followers"})
-    getUsersList({id, setUserList: setFollowingList, setRes, navigate, endpoint: "followings"})
+    const id = Number(localStorage.getItem('id'))
+    const followingList = getUsersList({ id, navigate, endpoint: "followings" })
+    const followersList = getUsersList({ id, navigate, endpoint: "followers" })
     return (
-        <>
-            {res === null ? null : res ? (
-                <div className="test-container">
-                    <FollowingFollowersContainer header="Following" userList={followingList} />
-                    <FollowingFollowersContainer header="Followers" userList={followersList} />
-                </div>
-            ) : null}
-        </>
+        <div className="test-container">
+            <FollowingFollowersContainer header="Following" userList={followingList} />
+            <FollowingFollowersContainer header="Followers" userList={followersList} />
+        </div>
     )
 }
 

@@ -5,36 +5,41 @@ import {
     RequestProps,
     ServerResponse,
 } from "../components/models"
+import { fetchErrorChecker } from "./fetchErr"
 
 export function formDataExtractor(
     formData: FormData,
     formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields,
 ) {
     formData.forEach((value, key) => {
-        if (key in formFields) {
+        if (key in formFields && value) {
             formFields[key] = value
+            return
         }
+        delete formFields[key]
     })
 }
 
-export async function formReturnHandler(
+export async function authReturnHandler(
     r: Response,
     { setErrorArr, navigate }: RequestProps,
-): Promise<ServerResponse> {
-    if (r.headers.get("content-type") !== "application/json") {
-        return null
+    isRegistration: boolean,
+) {
+    if (r.status === 200) {
+        await r
+            .json()
+            .then((r: ServerResponse) => {
+                if (r.errors && r.errors.length != 0) {
+                    const errArr = fetchErrorChecker(r.errors, navigate)
+                    if (errArr) setErrorArr(errArr)
+                    return
+                }
+                if (r.data && r.data.id) localStorage.setItem("id", String(r.data.id))
+                navigate(isRegistration ? `/additional-registration` : `/user/${localStorage.getItem("id")}`)
+            })
+            .catch(() => navigate(`/internal-error`))
+        return
     }
 
-    await r.json().then((r: ServerResponse) => {
-        if (r.errors && r.errors.length != 0) {
-            setErrorArr(r.errors)
-            return
-        }
-        if (r.data != null) {
-            localStorage.setItem("id", String(r.data.id))
-            navigate(`/user/${r.data.id}`)
-            return
-        }
-        throw new Error()
-    })
+    throw new Error()
 }

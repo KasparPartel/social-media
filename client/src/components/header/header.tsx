@@ -9,13 +9,12 @@ interface entryButton {
 
 export default function Header({ id }: entryButton) {
     const navigate = useNavigate()
-    const userId = localStorage.getItem("id")
     const deafultState = [false, false, false, false]
     deafultState[id] = true
     const [buttonState, setButtonState] = useState<boolean[]>(deafultState)
 
     const customButtonInfo = [
-        { name: "Profile", path: `/user/${userId}` },
+        { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
         { name: "Groups", path: `/` },
         { name: "Users", path: `/` },
         { name: "Notifications", path: `/` },

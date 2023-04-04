@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { followStatusHandler } from "../../additional-functions/follow"
 import { useOpenText } from "../../hooks/openText"
-import useUserId from "../../hooks/userId"
+import checkParamId from "../../additional-functions/userId"
 import useUserInfo from "../../hooks/userInfo"
 import FollowButton from "./followButton"
 import LabeledParagraph from "./label"
@@ -18,7 +18,7 @@ export interface followProps {
 export function UserProfile() {
     const [isLoading, setLoading] = useState(true)
     const { paramId } = useParams()
-    const isMyProfile = useUserId(paramId)
+    const isMyProfile = checkParamId(paramId)
     const user = useUserInfo(paramId, setLoading)
     const { height, style, refText, openText } = useOpenText(0)
     const [followPorps, setFollowPorps] = useState<followProps>(followStatusHandler(0))
