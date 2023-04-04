@@ -48,7 +48,8 @@
 }
 
 .user-card_pressed {
-    background-color: var(--grey);
+    background-color: var(--light-green);
+    box-shadow: inset -2px -2px 2px rgba(0, 0, 0, 0.25), inset 2px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 .user-card__avatar {
