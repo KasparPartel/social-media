@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
-import { fetchErrorChecker } from "../additional-functions/fetchErr"
+import { fetchErrorChecker } from "./fetchErr"
 import { fetchHandlerNoBody } from "./fetchHandler"
 
 interface followersProps {
@@ -9,11 +9,12 @@ interface followersProps {
     setUserList: (userArr: User[]) => void
     setRes: (res: boolean) => void
     navigate: NavigateFunction
+    endpoint: string
 }
 
-export function getFollowers({ id, setUserList, setRes, navigate }: followersProps): void {
+export function getUsersList({ id, setUserList, setRes, navigate, endpoint }: followersProps): void {
     useEffect(() => {
-        fetchHandlerNoBody(`http://localhost:8080/user/${id}/followers`, "GET")
+        fetchHandlerNoBody(`http://localhost:8080/user/${id}/${endpoint}`, "GET")
             .then((r) => r.json())
             .then((r) => {
                 if (r.errors) {
