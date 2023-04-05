@@ -5,7 +5,7 @@ import {
     RequestProps,
 } from "../components/models"
 import { fetchHandler } from "./fetchHandler"
-import { formDataExtractor, formReturnHandler } from "./form"
+import { formDataExtractor, authReturnHandler } from "./form"
 import { updateImage } from "./images"
 
 export function LoginRequest({ e, setErrorArr, navigate }: RequestProps) {
@@ -18,7 +18,7 @@ export function LoginRequest({ e, setErrorArr, navigate }: RequestProps) {
     formDataExtractor(new FormData(e.currentTarget), formFields)
 
     fetchHandler(`http://localhost:8080/login`, "POST", formFields)
-        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }))
+        .then((r) => authReturnHandler(r, { setErrorArr, navigate }, false))
         .catch(() => navigate("/internal-error"))
 }
 
@@ -36,11 +36,11 @@ export function RegistrationRequest({ e, setErrorArr, navigate }: RequestProps) 
     formFields.dateOfBirth = new Date(formFields.dateOfBirth).getTime()
 
     fetchHandler(`http://localhost:8080/register`, "POST", formFields)
-        .then((r) => formReturnHandler(r, { e, setErrorArr, navigate }))
+        .then((r) => authReturnHandler(r, { setErrorArr, navigate }, true))
         .catch(() => navigate("/internal-error"))
 }
 
-export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) {
+export function AdditionalInfoRequest({ e, id, setErrorArr, navigate, image }: RequestProps) {
     e.preventDefault()
     const formFields: AdditionalInfoFormFields = {
         avatar: "",
@@ -52,12 +52,6 @@ export function AdditionalInfoRequest({ e, id, navigate, image }: RequestProps) 
 
     updateImage(formFields, image)
         .then(() => fetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields))
-        .then((r: Response) => {
-            if (r.status === 200) {
-                navigate("/main")
-                return
-            }
-            throw new Error()
-        })
+        .then((r) => authReturnHandler(r, { setErrorArr, navigate }, false))
         .catch(() => navigate("/internal-error"))
 }

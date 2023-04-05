@@ -5,7 +5,7 @@ import {
     AdditionalInfoRequest,
 } from "../../additional-functions/authorization"
 import ErrorWindow from "../error-window/error-window"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImageUpload } from "../../additional-functions/images"
 
@@ -62,14 +62,8 @@ export function Registration() {
 
 export function AdditionalInfo() {
     const navigate = useNavigate()
-    const [id, setId] = useState<string>()
+    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
-    useEffect(() => {
-        const id = localStorage.getItem("id")
-        if (id) {
-            setId(id)
-        }
-    }, [])
     const [image, setImage] = useState<Blob>(null)
 
     return (
@@ -78,7 +72,13 @@ export function AdditionalInfo() {
                 <form
                     className="form"
                     onSubmit={(e) => {
-                        AdditionalInfoRequest({ e, id, navigate, image })
+                        AdditionalInfoRequest({
+                            e,
+                            id: localStorage.getItem("id"),
+                            setErrorArr,
+                            navigate,
+                            image,
+                        })
                     }}
                 >
                     {image && (
@@ -121,11 +121,12 @@ export function AdditionalInfo() {
                         type="text"
                         className="form__field"
                     />
+                    <ErrorWindow errorArr={errorArr} />
                     <div className="form__button-container">
                         <input
                             type="button"
                             className="button form__button form__button_skip"
-                            onClick={() => navigate("/main")}
+                            onClick={() => navigate(`/user/${localStorage.getItem("id")}`)}
                             value="Skip"
                         />
                         <input type="submit" className="button form__button" value="Finish" />

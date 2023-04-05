@@ -15,7 +15,7 @@ export default function App() {
             <Route path="/additional-registration" element={<AdditionalInfo />} />
             <Route element={<Header id={0} />}>
                 <Route path="/user/:paramId" element={<UserProfile />} />
-                <Route path="/test" element={<FollowingFollowers id={2} />} />
+                <Route path="/test" element={<FollowingFollowers />} />
             </Route>
             <Route path="/internal-error" element={<h1>Error 500</h1>} />
             <Route path="/*" element={<h1>Error 404</h1>} />
