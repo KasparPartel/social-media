@@ -1,9 +1,9 @@
 import { followProps } from "../components/user-information/user-information"
-import { fetchHandlerNoBody } from "./fetchHandler"
+import fetchHandler from "./fetchHandler"
 
 export function followRequest(id: number, set: (arg: followProps) => void) {
     // 1 - not followed, 2 - requested, 3 - followed
-    fetchHandlerNoBody(`http://localhost:8080/user/${id}/followers`, "PUT")
+    fetchHandler(`http://localhost:8080/user/${id}/followers`, "PUT")
         .then((r) => r.json())
         .then((r) => {
             if (!r.errors && r.data.followStatus) {

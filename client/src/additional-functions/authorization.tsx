@@ -4,7 +4,7 @@ import {
     AdditionalInfoFormFields,
     RequestProps,
 } from "../components/models"
-import { fetchHandler } from "./fetchHandler"
+import fetchHandler from "./fetchHandler"
 import { formDataExtractor, authReturnHandler } from "./form"
 import { updateImage } from "./images"
 
