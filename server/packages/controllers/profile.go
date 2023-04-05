@@ -87,19 +87,19 @@ func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	parsedField := make(map[string]string)
 	if avatar, e := fields["avatar"]; e {
 		err = sqlite.UpdateAvatar(avatar, id)
-
 		if err != nil {
 			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		parsedField["avatar"] = avatar
 	}
 
 	v := validator.ValidationBuilder{}
 	if login, e := fields["login"]; e {
-
 		errArr := v.ValidateLogin(login).Validate()
 		if len(errArr) > 0 {
 			response.Errors = errArr
@@ -124,6 +124,11 @@ func UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+
+			parsedField[tableName] = value
 		}
 	}
+
+	response.Data = parsedField
+	json.NewEncoder(w).Encode(response)
 }

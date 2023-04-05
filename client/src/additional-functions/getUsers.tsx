@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
 import { fetchErrorChecker } from "./fetchErr"
@@ -6,19 +6,17 @@ import fetchHandler from "./fetchHandler"
 
 interface followersProps {
     id: number
-    setUserList: (userArr: User[]) => void
-    setRes: (res: boolean) => void
     navigate: NavigateFunction
     endpoint: string
 }
 
 export function getUsersList({
     id,
-    setUserList,
-    setRes,
     navigate,
     endpoint,
-}: followersProps): void {
+}: followersProps): User[] {
+    const [userList, setUserList] = useState<User[]>([])
+
     useEffect(() => {
         fetchHandler(`http://localhost:8080/user/${id}/${endpoint}`, "GET")
             .then((r) => r.json())
@@ -45,12 +43,12 @@ export function getUsersList({
                 Promise.all(promiseArr).then((userArr) => {
                     userArr.filter((user) => user !== null)
                     setUserList(userArr)
-                    setRes(true)
                 })
             })
             .catch((errArr: ErrorResponse[]) => {
                 fetchErrorChecker(errArr, navigate)
-                setRes(false)
             })
     }, [id])
+
+    return userList
 }
