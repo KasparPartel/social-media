@@ -15,7 +15,7 @@ export default function PrivacyOverlay({
     setAllowedUsers,
 }: PrivacyOverlayProps) {
     const navigate = useNavigate()
-    const userList = getUsersList({ userId, navigate, endpoint: "followers" })
+    const userList = getUsersList({ id: userId, navigate, endpoint: "followers" })
     const [indexList, setIndexList] = useState<number[]>([])
 
     return (

@@ -5,7 +5,7 @@ import privateResetIcon from "../../assets/Reset.svg"
 import { useState } from "react"
 import { PostFormFields } from "../models"
 import { toBase64 } from "../../additional-functions/images"
-import { fetchHandler } from "../../additional-functions/fetchHandler"
+import fetchHandler from "../../additional-functions/fetchHandler"
 import toggleHook from "../../hooks/useToggle"
 import PrivacyOverlay from "./privacyOverlay"
 

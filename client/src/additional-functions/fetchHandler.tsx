@@ -1,26 +1,18 @@
 import { FormFields } from "../components/models"
 
-export async function fetchHandler(
+export default async function fetchHandler(
     inputURL: string,
     method: string,
-    formFields: FormFields,
+    formFields?: FormFields,
 ): Promise<Response> {
-    return fetch(inputURL, {
+    const request: RequestInit = {
         method,
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(formFields),
-    })
-}
+    }
+    if (formFields) request.body = JSON.stringify(formFields)
 
-export async function fetchHandlerNoBody(inputURL: string, method: string): Promise<Response> {
-    return fetch(inputURL, {
-        method,
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
+    return fetch(inputURL, request)
 }

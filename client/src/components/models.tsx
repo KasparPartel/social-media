@@ -33,7 +33,7 @@ export interface PostFormFields {
 }
 
 export interface RequestProps {
-    e: React.FormEvent<HTMLFormElement>
+    e?: React.FormEvent<HTMLFormElement>
     setErrorArr?: (errs: ErrorResponse[]) => void
     navigate: NavigateFunction
     image?: Blob

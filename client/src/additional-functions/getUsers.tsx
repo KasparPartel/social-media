@@ -2,19 +2,19 @@ import { useEffect, useState } from "react"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
 import { fetchErrorChecker } from "./fetchErr"
-import { fetchHandlerNoBody } from "./fetchHandler"
+import fetchHandler from "./fetchHandler"
 
 interface followersProps {
-    userId: number
+    id: number
     navigate: NavigateFunction
     endpoint: string
 }
 
-export function getUsersList({ userId: id, navigate, endpoint }: followersProps): User[] {
+export function getUsersList({ id, navigate, endpoint }: followersProps): User[] {
     const [userList, setUserList] = useState<User[]>([])
 
     useEffect(() => {
-        fetchHandlerNoBody(`http://localhost:8080/user/${id}/${endpoint}`, "GET")
+        fetchHandler(`http://localhost:8080/user/${id}/${endpoint}`, "GET")
             .then((r) => r.json())
             .then((r) => {
                 if (r.errors) {
@@ -22,9 +22,9 @@ export function getUsersList({ userId: id, navigate, endpoint }: followersProps)
                 }
 
                 const promiseArr: Promise<User>[] = []
-                r.data.forEach((followerId: number) => {
-                    const user: Promise<User> = fetchHandlerNoBody(
-                        `http://localhost:8080/user/${followerId}`,
+                r.data.forEach((userId: number) => {
+                    const user: Promise<User> = fetchHandler(
+                        `http://localhost:8080/user/${userId}`,
                         "GET",
                     )
                         .then((r) => r.json())

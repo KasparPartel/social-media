@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../additional-functions/fetchErr"
-import { fetchHandlerNoBody } from "../additional-functions/fetchHandler"
+import fetchHandler from "../additional-functions/fetchHandler"
 import { ServerResponse, User } from "../components/models"
 
 /**
@@ -14,7 +14,7 @@ export default function useUserInfo(paramId: string) {
     const [isLoading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchHandlerNoBody(`http://localhost:8080/user/${paramId}`, `GET`)
+        fetchHandler(`http://localhost:8080/user/${paramId}`, `GET`)
             .then((r) => r.json())
             .then((r: ServerResponse) => {
                 r.errors ? fetchErrorChecker(r.errors, navigate) : setUser(r.data)

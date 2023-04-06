@@ -4,14 +4,11 @@ import { User } from "../models"
 import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
 
-interface idProp {
-    id: number
-}
-
-export default function FollowingFollowers({ id }: idProp) {
+export default function FollowingFollowers() {
     const navigate = useNavigate()
-    const followersList = getUsersList({ userId: id, navigate, endpoint: "followers" })
-    const followingList = getUsersList({ userId: id, navigate, endpoint: "followings" })
+    const id = Number(localStorage.getItem("id"))
+    const followingList = getUsersList({ id, navigate, endpoint: "followings" })
+    const followersList = getUsersList({ id, navigate, endpoint: "followers" })
     return (
         <div className="test-container">
             <FollowingFollowersContainer header="Following" userList={followingList} />
