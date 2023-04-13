@@ -2,20 +2,20 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
 import privateUserList from "./privacyUserList"
+import { PostFormFields } from "../models"
 
 interface PrivacyOverlayProps {
     toggleModal: () => void
-    userId: number
-    setAllowedUsers: (arg: number[]) => void
+    setFormData: React.Dispatch<React.SetStateAction<PostFormFields>>
 }
 
-export default function PrivacyOverlay({
-    toggleModal,
-    userId,
-    setAllowedUsers,
-}: PrivacyOverlayProps) {
+export default function PrivacyOverlay({ toggleModal, setFormData }: PrivacyOverlayProps) {
     const navigate = useNavigate()
-    const userList = getUsersList({ id: userId, navigate, endpoint: "followers" })
+    const userList = getUsersList({
+        id: Number(localStorage.getItem("id")),
+        navigate,
+        endpoint: "followers",
+    })
     const [indexList, setIndexList] = useState<number[]>([])
 
     return (
@@ -32,11 +32,7 @@ export default function PrivacyOverlay({
                         className="button"
                         type="button"
                         onClick={() => {
-                            setAllowedUsers(
-                                userList
-                                    .filter((_, i) => indexList.includes(i))
-                                    .map((user) => user.id),
-                            )
+                            handleFollowersChange(indexList, setFormData)
                             toggleModal()
                         }}
                     >
@@ -46,4 +42,15 @@ export default function PrivacyOverlay({
             </div>
         </div>
     )
+}
+
+const handleFollowersChange = (
+    indexList: number[],
+    setFormData: React.Dispatch<React.SetStateAction<PostFormFields>>,
+) => {
+    setFormData((prevValues) => {
+        const temp = Object.assign({}, prevValues)
+        temp.authorizedFollowers = indexList
+        return temp
+    })
 }

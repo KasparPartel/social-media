@@ -1,24 +1,14 @@
 import "./createPost.css"
-import attachmentIcon from "../../assets/attachment_icon.svg"
-import privateAddIcon from "../../assets/private_add.svg"
-import privateResetIcon from "../../assets/Reset.svg"
 import { useState } from "react"
 import { PostFormFields } from "../models"
-import { toBase64 } from "../../additional-functions/images"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import toggleHook from "../../hooks/useToggle"
-import PrivacyOverlay from "./privacyOverlay"
-
-const PrivacySettings = {
-    Public: "1",
-    Semi: "2",
-    Private: "3",
-}
-
-interface attachment {
-    name: string
-    value: string
-}
+import { NavigateFunction, useNavigate } from "react-router-dom"
+import { fetchErrorChecker } from "../../additional-functions/fetchErr"
+import { PostPrivacy, PrivacySettings } from "./privacySection"
+import PostText from "./text"
+import AttachmentList from "./attachmentList"
+import { PostAttachmentInput } from "./attachmentInput"
 
 export default function CreatePost() {
     const { toggle: modalOpen, toggleChange: toggleModal } = toggleHook(false)
@@ -42,12 +32,16 @@ export default function CreatePost() {
 }
 
 function Modal() {
-    const userId = Number(localStorage.getItem("id"))
-    const [postText, setText] = useState("")
-    const [postAttachments, setAttachments] = useState<attachment[]>([])
-    const [postPrivacy, setPrivacy] = useState(PrivacySettings.Public)
-    const [postAllowedUsers, setAllowedUsers] = useState<number[]>([])
-    const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
+    const navigate = useNavigate()
+    const deafultFormData: PostFormFields = {
+        privacy: PrivacySettings.Public,
+        text: "",
+        attachments: [],
+        authorizedFollowers: [],
+    }
+    const [formData, setFormData] = useState<PostFormFields>(deafultFormData)
+    const [attachmentData, setAttachmentData] = useState<{ name: string; value: string }[]>([])
+    const [fileIsLoading, setFileLoading] = useState(false)
 
     return (
         <div className="create-post-wrapper">
@@ -55,100 +49,38 @@ function Modal() {
                 className="post-form"
                 onSubmit={(e) => {
                     e.preventDefault()
-                    handleSubmit(
-                        postText,
-                        Number(postPrivacy),
-                        postAttachments,
-                        postAllowedUsers,
-                        userId,
-                    )
-                    setText("")
-                    setAttachments([])
-                    setPrivacy(PrivacySettings.Public)
-                    setAllowedUsers([])
+                    formData.attachments = attachmentData.map((attachment) => attachment.value)
+                    handleSubmit(formData, navigate)
                 }}
             >
-                <textarea
-                    name="text"
-                    onChange={(e) => setText(e.currentTarget.value)}
-                    value={postText}
-                    className="post-form__text"
+                <PostText
+                    {...{
+                        formData,
+                        setFormData,
+                    }}
                 />
-
-                <ul className="post-form__attachment-list">
-                    {postAttachments &&
-                        postAttachments.map((file, i) => (
-                            <li className="post-form__attachment" key={i}>
-                                {file.name} -{" "}
-                                <span onClick={() => handleRemoveAttachment(i, setAttachments)}>
-                                    remove
-                                </span>
-                            </li>
-                        ))}
-                </ul>
-
+                <AttachmentList
+                    {...{
+                        attachmentData,
+                        setAttachmentData,
+                    }}
+                />
                 <div className="post-form__bar">
                     <div className="post-form__options">
-                        <select
-                            name="privacy"
-                            value={postPrivacy}
-                            onChange={(e) => setPrivacy(e.target.value)}
-                            className="post-form__privacy"
-                        >
-                            <option value={PrivacySettings.Public}>Public</option>
-                            <option value={PrivacySettings.Semi}>Semi</option>
-                            <option value={PrivacySettings.Private}>Private</option>
-                        </select>
-
-                        {postPrivacy === PrivacySettings.Semi && (
-                            <>
-                                <img
-                                    className="post-form__add-users-img"
-                                    src={
-                                        postAllowedUsers.length > 0
-                                            ? privateResetIcon
-                                            : privateAddIcon
-                                    }
-                                    alt="add users"
-                                    onClick={toggleOverlay}
-                                />
-                                {postAllowedUsers.length > 0 ? (
-                                    <div className="post-form__add-users-info">
-                                        Added {postAllowedUsers.length}{" "}
-                                        {postAllowedUsers.length > 1 ? "users" : "user"}
-                                    </div>
-                                ) : null}
-                                {overlayOpen ? (
-                                    <PrivacyOverlay
-                                        {...{
-                                            toggleModal: toggleOverlay,
-                                            userId,
-                                            postAllowedUsers,
-                                            setAllowedUsers,
-                                        }}
-                                    />
-                                ) : null}
-                            </>
-                        )}
-
-                        <label className="post-form__attachment-label">
-                            <img
-                                className="post-form__attachment-img"
-                                src={attachmentIcon}
-                                alt="attachment"
-                            />
-                            <input
-                                onChange={(e) => handleAddAttachment(e, setAttachments)}
-                                type="file"
-                                multiple
-                                accept="image/jpeg, image/png, image/gif"
-                                name="attachments"
-                                hidden
-                            />
-                        </label>
+                        <PostPrivacy
+                            {...{
+                                formData,
+                                setFormData,
+                            }}
+                        />
+                        <PostAttachmentInput
+                            {...{
+                                setFileLoading,
+                                setAttachmentData,
+                            }}
+                        />
                     </div>
-
-                    <button type="submit" className="button">
+                    <button type="submit" className="button" disabled={fileIsLoading}>
                         Create
                     </button>
                 </div>
@@ -157,48 +89,27 @@ function Modal() {
     )
 }
 
-const handleAddAttachment = (e: React.ChangeEvent<HTMLInputElement>, setAttachments) => {
-    if (e.target.files) {
-        const fileList = e.target.files
-        const i = e.target.files.length - 1
-
-        toBase64(fileList[i]).then((data) =>
-            setAttachments((prevState: attachment[]) => [
-                ...prevState,
-                { name: fileList[i].name, value: data },
-            ]),
+function handleSubmit(formData: PostFormFields, navigate: NavigateFunction) {
+    if (
+        formData.privacy >= 1 &&
+        formData.privacy <= 3 &&
+        (formData.text != "" || formData.attachments.length > 0)
+    ) {
+        fetchHandler(
+            `http://localhost:8080/user/${localStorage.getItem("id")}/posts`,
+            "POST",
+            formData,
         )
-    }
-}
-
-const handleRemoveAttachment = (i: number, setAttachments) => {
-    setAttachments((prevState: attachment[]) => {
-        const arrCopy = [...prevState]
-        arrCopy.splice(i, 1)
-        return [...arrCopy]
-    })
-}
-
-const handleSubmit = (
-    text: string,
-    privacy: number,
-    attachments: attachment[],
-    authorizedFollowers: number[],
-    userId: number,
-) => {
-    if (privacy >= 1 && privacy <= 3 && text) {
-        const formFields: PostFormFields = {
-            privacy,
-            text,
-            attachments: attachments.map((attachment) => attachment.value),
-            ...(privacy === 2 && { authorizedFollowers }),
-        }
-
-        fetchHandler(`http://localhost:8080/user/${userId}/posts`, "POST", formFields)
             .then((r) => r.json())
-            .then(console.log)
-        //TODO: handle error and success in return
+            .then((r) => {
+                if (r.errors) {
+                    const errors = fetchErrorChecker(r.errors, navigate)
+                    if (errors) errors.forEach((err) => alert(err.description))
+                    return
+                }
+                alert("Post created successfully!")
+            })
         return
     }
-    alert("Text is empty or privacy setting is wrong")
+    alert("No user input or privacy setting is wrong")
 }
