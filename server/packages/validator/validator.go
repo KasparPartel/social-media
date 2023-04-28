@@ -121,7 +121,7 @@ func (v *ValidationBuilder) ValidateUserExists(userIds ...int) *ValidationBuilde
 
 func (v *ValidationBuilder) ValidateIsUnique(tableName string, err error) *ValidationBuilder {
 	if err != nil && strings.Contains(err.Error(), "UNIQUE") && strings.Contains(err.Error(), tableName) {
-		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrUniqueEmail, tableName+" is already taken"))
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrNotUnique, tableName+" is already taken"))
 	}
 
 	return v
