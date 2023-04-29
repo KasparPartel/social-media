@@ -46,3 +46,23 @@ func CreateComment(postId, userId int, comment models.CreateCommentRequest) (*mo
 		CreationDate: int(creationDate),
 	}, nil
 }
+
+func GetCommentsByPostId(postId int) ([]int, error) {
+	comments := []int{}
+	rows, err := db.Query("SELECT id FROM comments WHERE postId = ?", postId)
+	if err != nil {
+		return []int{}, err
+	}
+
+	for rows.Next() {
+		id := 0
+
+		err = rows.Scan(&id)
+		if err != nil {
+			return []int{}, err
+		}
+		comments = append(comments, id)
+	}
+
+	return comments, nil
+}

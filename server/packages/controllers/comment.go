@@ -16,9 +16,44 @@ import (
 
 // GET post/:id/comments/
 func GetComments(w http.ResponseWriter, r *http.Request) {
-	commentsArray := []int{56, 666, 23, 45, 66}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(commentsArray)
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	postId, _ := strconv.Atoi(inputId)
+
+	requestId := s.GetUID()
+
+	post, err := sqlite.GetPostById(postId, requestId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	commentsId, err := sqlite.GetCommentsByPostId(post.Id)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = commentsId
+
+	json.NewEncoder(w).Encode(response)
 }
 
 // POST post/:id/comments/
