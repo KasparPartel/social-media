@@ -123,5 +123,35 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 
 // GET comment/:id
 func GetComment(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
 
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	commentId, _ := strconv.Atoi(inputId)
+
+	requestId := s.GetUID()
+
+	comment, err := sqlite.GetCommentById(commentId, requestId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = comment
+
+	json.NewEncoder(w).Encode(response)
 }
