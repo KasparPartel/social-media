@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS postAllows (
+    postId INTEGER NOT NULL,
+    userId INTEGER NOT NULL
+);

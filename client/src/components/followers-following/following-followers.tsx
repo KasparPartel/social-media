@@ -1,50 +1,18 @@
+import { useNavigate } from "react-router-dom"
+import { getUsersList } from "../../additional-functions/getUsers"
+import { User } from "../models"
+import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
 
-interface User {
-    firstName: string
-    lastName: string
-}
-
-const userList: User[] = [
-    {
-        firstName: "Waldo",
-        lastName: "West",
-    },
-    {
-        firstName: "Olympia",
-        lastName: "MacDuff",
-    },
-    {
-        firstName: "Simin",
-        lastName: "Fishman",
-    },
-    {
-        firstName: "Zelig",
-        lastName: "Apostolov",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-    {
-        firstName: "Kathlyn",
-        lastName: "Pontecorvo",
-    },
-]
-
 export default function FollowingFollowers() {
+    const navigate = useNavigate()
+    const id = Number(localStorage.getItem('id'))
+    const followingList = getUsersList({ id, navigate, endpoint: "followings" })
+    const followersList = getUsersList({ id, navigate, endpoint: "followers" })
     return (
         <div className="test-container">
-            <FollowingFollowersContainer header="Following" userList={userList} />
-            <FollowingFollowersContainer header="Followers" userList={userList} />
+            <FollowingFollowersContainer header="Following" userList={followingList} />
+            <FollowingFollowersContainer header="Followers" userList={followersList} />
         </div>
     )
 }
@@ -55,23 +23,17 @@ interface FollowingFollowersContainerProps {
 }
 
 function FollowingFollowersContainer({ header, userList }: FollowingFollowersContainerProps) {
-    const generateColor = () => {
-        const randNum = Math.floor(Math.random() * 3)
-        const colors = ["5CDC97", "65C8FF", "9673ff"]
-
-        return colors[randNum]
-    }
-
     return (
         <div className="following-followers">
             <div className="following-followers__header">{header}</div>
             <div className="list">
                 {userList.map((user, i) => (
                     <div className="user-card" key={i}>
-                        <div
+                        <img
                             className="user-card__avatar"
-                            style={{ backgroundColor: `#${generateColor()}` }}
-                        ></div>
+                            src={user.avatar !== "" ? user.avatar : altAvatar}
+                            alt="beb"
+                        />
                         {`${user.firstName} ${user.lastName}`}
                     </div>
                 ))}

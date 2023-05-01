@@ -21,7 +21,7 @@ export interface AdditionalInfoFormFields {
 }
 
 export interface RequestProps {
-    e: React.FormEvent<HTMLFormElement>
+    e?: React.FormEvent<HTMLFormElement>
     setErrorArr?: (errs: ErrorResponse[]) => void
     navigate: NavigateFunction
     image?: Blob
@@ -51,7 +51,7 @@ export interface Post {
 }
 
 export interface User {
-    id?: string
+    id?: number
     avatar: string
     email: string
     login: string
@@ -61,4 +61,5 @@ export interface User {
     aboutMe: string
     dateOfBirth: number
     isPublic: boolean
+    followStatus?: number
 }

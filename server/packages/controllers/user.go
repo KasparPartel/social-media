@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"social-network/packages/db/sqlite"
-	"social-network/packages/errorHandler"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
 	"social-network/packages/session"
 	"social-network/packages/validator"
@@ -20,27 +20,27 @@ import (
 //
 // --->>> (data: {id, email, firstName, lastName, dateOfBirth}, errors: [code, description])
 func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	var parsedUser sqlite.User
+	var u sqlite.User
 
 	// get user info
-	err := json.NewDecoder(r.Body).Decode(&parsedUser)
+	err := json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
 	v := validator.ValidationBuilder{}
 
-	v.ValidateEmail(parsedUser.Email).
-		ValidatePassword(parsedUser.Password).
-		ValidateFirstName(parsedUser.FirstName).
-		ValidateLastName(parsedUser.LastName)
+	errs := v.ValidateEmail(u.Email).
+		ValidatePassword(u.Password).
+		ValidateFirstName(u.FirstName).
+		ValidateLastName(u.LastName).
+		Validate()
 
-	errs := v.Validate()
 	// return all format errors
 	if len(errs) > 0 {
 		response.Errors = errs
@@ -48,21 +48,19 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(parsedUser.Password), 10)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	parsedUser.Password = string(hashedPassword)
+	u.Password = string(hashedPassword)
 
-	id, err := sqlite.CreateUser(parsedUser)
-	if !validator.IsUnique("email", err) {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrUniqueEmail,
-			Description: "email is already taken",
-		}}
+	id, err := sqlite.CreateUser(u)
+	errs = v.ValidateIsUnique("email", err).Validate()
+	if len(errs) > 0 {
+		response.Errors = errs
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -73,16 +71,20 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := session.SessionProvider.AddSession(id)
+	session.SessionProvider.SetToken(token, w)
+
 	response.Data = models.GetUserResponse{
 		Id:          id,
-		Email:       parsedUser.Email,
-		Login:       parsedUser.Login,
-		FirstName:   parsedUser.FirstName,
-		LastName:    parsedUser.LastName,
-		AboutMe:     parsedUser.AboutMe,
-		DateOfBirth: parsedUser.DateOfBirth,
-		IsPublic:    parsedUser.IsPublic,
+		Email:       u.Email,
+		Login:       u.Login,
+		FirstName:   u.FirstName,
+		LastName:    u.LastName,
+		AboutMe:     u.AboutMe,
+		DateOfBirth: u.DateOfBirth,
+		IsPublic:    u.IsPublic,
 	}
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -93,7 +95,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 // --->>> (data: {id, avatar, email, login, firstName, lastName, aboutMe dateOfBirth, isPublic}, errors: [code, description])
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var parsedUser sqlite.User
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 
 	// get user info
 	err := json.NewDecoder(r.Body).Decode(&parsedUser)
@@ -106,10 +108,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if len(parsedUser.Password) < 1 {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrIncorrectCred,
-			Description: "incorrect login or password",
-		}}
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrIncorrectCred, "incorrect login or password"))
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -117,10 +116,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	u, err := sqlite.AuthorizeUser(parsedUser)
 
 	if err == bcrypt.ErrMismatchedHashAndPassword || err == sql.ErrNoRows {
-		response.Errors = []*errorHandler.ErrorResponse{{
-			Code:        errorHandler.ErrIncorrectCred,
-			Description: "incorrect login or password",
-		}}
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrIncorrectCred, "incorrect login or password"))
 		json.NewEncoder(w).Encode(response)
 		return
 	}

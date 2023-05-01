@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"social-network/packages/db/sqlite"
-	"social-network/packages/errorHandler"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/httpRouting"
 	"social-network/packages/models"
 	"social-network/packages/session"
@@ -15,19 +15,19 @@ import (
 
 // GET /user/:id/followers
 func GetFollowers(w http.ResponseWriter, r *http.Request) {
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
-	u, errRes, err := utils.HasAccess(r)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+	u, _, err := utils.HasAccess(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	if errRes != nil {
-		response.Errors = []*errorHandler.ErrorResponse{errRes}
-		json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -45,19 +45,19 @@ func GetFollowers(w http.ResponseWriter, r *http.Request) {
 
 // GET /user/:id/followings
 func GetFollowings(w http.ResponseWriter, r *http.Request) {
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
-	u, errRes, err := utils.HasAccess(r)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+	u, _, err := utils.HasAccess(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	if errRes != nil {
-		response.Errors = []*errorHandler.ErrorResponse{errRes}
-		json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -75,12 +75,12 @@ func GetFollowings(w http.ResponseWriter, r *http.Request) {
 
 // PUT /user/:id/followers
 func UpdateFollowers(w http.ResponseWriter, r *http.Request) {
-	response := &errorHandler.Response{}
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
 
-	s, sessionErr := session.SessionProvider.GetSession(r)
-	if sessionErr != nil {
-		response.Errors = []*errorHandler.ErrorResponse{sessionErr}
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -103,10 +103,8 @@ func UpdateFollowers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if followStatus == 0 {
-		response.Errors = append(response.Errors, &errorHandler.ErrorResponse{
-			Code:        errorHandler.ErrNotFound,
-			Description: "wrong variable(s) in request",
-		})
+		response.Errors = append(response.Errors, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request"))
+
 		json.NewEncoder(w).Encode(response)
 		return
 	}

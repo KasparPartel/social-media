@@ -10,7 +10,7 @@ export function ImageUpload(
 
 export async function updateImage(formFields: AdditionalInfoFormFields, image: Blob) {
     if (image === null) {
-        formFields.avatar = ""
+        delete formFields.avatar
         return
     }
     await toBase64(image).then((r) => {

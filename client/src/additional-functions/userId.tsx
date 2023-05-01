@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 /**
  * checks if saved user id (in localStorage) is equal to paramId
  */
-export default function useUserId(paramId: string): boolean {
+export default function checkParamId(paramId: string): boolean {
     const [id, setId] = useState<string>()
     useEffect(() => {
-        const id = localStorage.getItem("id")
-        if (id) {
-            setId(id)
+        const storedId = localStorage.getItem("id")
+        if (storedId) {
+            setId(storedId)
         }
     }, [id])
     return id === paramId
