@@ -31,3 +31,16 @@ type GetPostResponse struct {
 	Attachments  []string `json:"attachments"` // of image/gif encoded with base64
 	CreationDate int      `json:"creationDate"`
 }
+
+type CreateGroupRequest struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
+type CreateGroupResponse struct {
+	Id           int    `json:"id"`
+	Title        string `json:"title"`
+	Description  string `json:"description"`
+	CreationDate int    `json:"creationDate"`
+	UserId       int    `json:"userId"`
+}

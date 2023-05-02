@@ -2,16 +2,15 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"social-network/packages/db/sqlite"
+	eh "social-network/packages/errorHandler"
+	"social-network/packages/models"
+	"social-network/packages/session"
+	"social-network/packages/validator"
+	"strings"
 )
-
-type Group struct {
-	Id          int    `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Members     []int  `json:"members"`
-	Requsts     []int  `json:"requsts"` // id of users who requested to group
-}
 
 // GET /user/:id/groups
 func GetGroups(w http.ResponseWriter, r *http.Request) {
@@ -21,12 +20,55 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(groupIdArray)
 }
 
-// POST /user/:id/groups
+// POST /groups
 func CreateGroup(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
 
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	responseId := s.GetUID()
+	group := models.CreateGroupRequest{}
+
+	// get user info
+	err = json.NewDecoder(r.Body).Decode(&group)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	group.Title = strings.TrimSpace(group.Title)
+	group.Description = strings.TrimSpace(group.Description)
+
+	v := validator.ValidationBuilder{}
+	errArr := v.ValidateGroupInput(group.Title, group.Description).
+		Validate()
+
+	if len(errArr) > 0 {
+		response.Errors = errArr
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	groupResponse, err := sqlite.CreateGroup(group, responseId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = groupResponse
+
+	json.NewEncoder(w).Encode(response)
 }
 
-// GET /groups/
+// GET /groups
 func GetAllGroups(w http.ResponseWriter, r *http.Request) {
 	groupIdArray := []int{88, 544, 556, 13, 1}
 
@@ -36,16 +78,7 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request) {
 
 // GET /group/:id
 func GetGroup(w http.ResponseWriter, r *http.Request) {
-	testGroup := &Group{
-		Id:          1,
-		Title:       "test group",
-		Description: "test description",
-		Members:     []int{544, 54, 12},
-		Requsts:     []int{13, 4},
-	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(testGroup)
 }
 
 // PUT /group/:id
