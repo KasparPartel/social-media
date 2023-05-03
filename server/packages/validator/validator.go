@@ -127,6 +127,14 @@ func (v *ValidationBuilder) ValidateIsUnique(tableName string, err error) *Valid
 	return v
 }
 
+func (v *ValidationBuilder) ValidateGroupInput(title, description string) *ValidationBuilder {
+	if title == "" || description == "" {
+		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrEmptyInput, "no input provided"))
+	}
+
+	return v
+}
+
 func (v ValidationBuilder) Validate() []*eh.ErrorResponse {
 	return v.errs
 }

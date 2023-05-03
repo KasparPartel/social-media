@@ -31,7 +31,6 @@ func main() {
 
 	r.NewRoute("POST", `/user/(?P<id>\d+)/posts`, controllers.CreatePost)
 	r.NewRoute("POST", `/user/(?P<id>\d+)/chats`, controllers.CreateChat)
-	r.NewRoute("POST", `/user/(?P<id>\d+)/groups`, controllers.CreateGroup)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)/followers`, controllers.UpdateFollowers)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)`, controllers.UpdateUserInfo)
 
@@ -46,6 +45,7 @@ func main() {
 	r.NewRoute("POST", `/chat/(?P<id>\d+)`, controllers.CreateMessage)
 
 	r.NewRoute("GET", `/groups`, controllers.GetAllGroups)
+	r.NewRoute("POST", `/groups`, controllers.CreateGroup)
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)`, controllers.GetGroup)
 	r.NewRoute("PUT", `/group/(?P<id>\d+)`, controllers.UpdateGroup)
