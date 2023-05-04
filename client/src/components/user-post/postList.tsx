@@ -1,43 +1,40 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { fetchHandlerNoBody } from "../../additional-functions/fetchHandler"
-import useUserId from "../../hooks/userId"
+import { useNavigate, useParams } from "react-router-dom"
 import useUserInfo from "../../hooks/userInfo"
-import { noSuchUser, userProfilePrivate } from "../user-information/templates"
-
 import UserPost from "./userPost"
 import "./userPost.css"
+import checkParamId from "../../additional-functions/userId"
+import { getPostIds } from "./fetch"
+import Loading from "./render-states/loading"
 
+/*
+ * Parent component for rendering posts created by specific user
+ */
 export default function PostList() {
-    const { paramId } = useParams()
-    const myProfile = useUserId(paramId)
-    const user = useUserInfo(paramId)
-
     const [idList, setIdList] = useState<number[]>([])
+    const [loading, setLoading] = useState(true)
     const [err, setErr] = useState<Error>(null)
+    const { paramId } = useParams()
+    const navigate = useNavigate()
+    const myProfile = checkParamId(paramId)
+    const user = useUserInfo(paramId, setLoading)
 
     useEffect(() => {
         if (user && user.id) {
-            const getPosts = async () => {
-                fetchHandlerNoBody(`http://localhost:8080/user/${user.id}/posts`, "GET")
-                    .then((res) => {
-                        if (!res.ok) {
-                            throw new Error(`HTTP error: status ${res.status}`)
-                        }
-                        return res.json()
-                    })
-                    .then(
-                        (data) => setIdList(data),
-                        (err) => setErr(err),
-                    )
-            }
-
-            getPosts()
+            getPostIds(user.id, setIdList, setErr)
         }
     }, [user])
 
-    if (!user) return noSuchUser()
-    if (!myProfile && !user.isPublic) return userProfilePrivate()
+    useEffect(() => {
+        if (!loading) {
+            if (!user || (!myProfile && !user.isPublic && user.followStatus != 3)) {
+                navigate(`/user/${paramId}`)
+                return
+            }
+        }
+    }, [loading, myProfile, user])
+
+    if (loading) return <Loading />
     return UserPosts({ idList, err })
 }
 

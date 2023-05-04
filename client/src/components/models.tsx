@@ -1,4 +1,3 @@
-import { createContext } from "react"
 import { NavigateFunction } from "react-router-dom"
 
 export interface LoginFormFields {
@@ -62,4 +61,12 @@ export interface User {
     dateOfBirth: number
     isPublic: boolean
     followStatus?: number
+}
+
+export interface PostComment {
+    dateOfCreation: number
+    login: string
+    parentId: number
+    text: string
+    userId: number
 }
