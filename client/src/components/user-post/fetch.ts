@@ -2,7 +2,7 @@ import fetchHandler from "../../additional-functions/fetchHandler"
 import { Dispatch, SetStateAction } from "react"
 import { Post, PostComment } from "../models"
 
-/*
+/**
  *  Fetches all post ids related to user
  */
 export const getPostIds = (
@@ -23,7 +23,7 @@ export const getPostIds = (
         )
 }
 
-/*
+/**
  *  Fetches single post data
  */
 export const getPostData = (
@@ -39,19 +39,25 @@ export const getPostData = (
             }
             return res.json()
         })
-        .then(
-            (data) => {
-                setPost(data.data)
-                setIsLoading(false)
-            },
-            (err) => {
-                setErr(err)
-                setIsLoading(false)
-            },
-        )
+        .then((data) => {
+            fetchHandler(`http://localhost:8080/user/1`, `GET`)
+                .then((r) => r.json())
+                .then((r) => {
+                    if (r.errors) throw new Error(`HTTP error: status ${r.status}`)
+                    data.data.login = r.data.login
+                    data.data.firstName = r.data.firstName
+                    data.data.lastName = r.data.lastName
+                    setPost(data.data)
+                    setIsLoading(false)
+                })
+        })
+        .catch((err) => {
+            setErr(err)
+            setIsLoading(false)
+        })
 }
 
-/*
+/**
  *   Fetches all comment ids related to post
  */
 export const getCommentsIds = (
@@ -79,8 +85,8 @@ export const getCommentsIds = (
         )
 }
 
-/*
- * Fetches single post data
+/**
+ * Fetches single comment data
  */
 export const getCommentData = (
     commentId: number,
@@ -107,7 +113,7 @@ export const getCommentData = (
         )
 }
 
-/*
+/**
  * POSTS comment
  */
 export const postComment = (

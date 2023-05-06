@@ -10,7 +10,7 @@ import { ServerResponse, User } from "../components/models"
  */
 export default function useUserInfo(
     paramId: string,
-    setLoading: (arg: boolean) => void,
+    setLoading?: (arg: boolean) => void,
 ): User | null {
     const navigate = useNavigate()
     const [user, setUser] = useState<User>(null)
@@ -20,7 +20,7 @@ export default function useUserInfo(
             .then((r) => r.json())
             .then((r: ServerResponse) => {
                 r.errors ? fetchErrorChecker(r.errors, navigate) : setUser(r.data)
-                setLoading(false)
+                if (setLoading) setLoading(false)
             })
             .catch(() => fetchErrorChecker([], navigate))
     }, [paramId])

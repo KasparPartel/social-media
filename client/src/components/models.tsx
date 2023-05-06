@@ -38,15 +38,14 @@ export interface ErrorResponse {
 }
 
 export interface Post {
-    parentId: number
-    login: string
-    userId: number
-    postId: number
-    title: string
+    id: number      // id of current post
+    userId: number      // creator post id
+    login?: string // creator post login
+    firstName?: string
+    lastName?: string
     text: string
-    dateOfCreation: number
-    visibility: string
-    attachments: string[]
+    attachments: string[] // array of image/gif encoded with base64
+    creationDate: number      // milliseconds timestamp
 }
 
 export interface User {

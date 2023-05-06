@@ -10,13 +10,10 @@ import { convertDateToString } from "../../additional-functions/time"
 
 export default function CommentList({ postId }: { postId: number }) {
     const [commentsIdList, setCommentsIdList] = useState<number[]>([])
-    const [, setUserLoading] = useState(true)
     const [inputText, setInputText] = useState("")
     const [err, setErr] = useState<Error>()
     const [isLoading, setIsLoading] = useState(true)
-    // const { paramId } = useParams()
-    // const user = useUserInfo(paramId)
-    const myUser = useUserInfo(localStorage.getItem("id"), setUserLoading)
+    const myUser = useUserInfo(localStorage.getItem("id"))
 
     useEffect(() => {
         getCommentsIds(postId, setCommentsIdList, setErr, setIsLoading)

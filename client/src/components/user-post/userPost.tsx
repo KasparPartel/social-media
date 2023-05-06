@@ -6,6 +6,7 @@ import CommentList from "./comment"
 import Loading from "./render-states/loading"
 import "./userPost.css"
 import { getPostData } from "./fetch"
+import moment from "moment"
 
 export default function UserPost({ postId }: { postId: number }) {
     const [post, setPost] = useState<Post | undefined>(undefined)
@@ -32,6 +33,8 @@ export default function UserPost({ postId }: { postId: number }) {
     if (isLoading) return <Loading color="orange" />
     return (
         <article className="post">
+            <p className="post__info">{`${`${post.login ? post.login : `${post.firstName} ${post.lastName}`
+                }`} : ${moment(post.creationDate).format("YYYY-MM-DD")}`}</p>
             {post.text ? (
                 <p
                     ref={refText}
@@ -60,9 +63,8 @@ export default function UserPost({ postId }: { postId: number }) {
                     <p className="post__attachments-toggler" onClick={() => toggleAttachments()}>
                         {attachmentsOpen
                             ? "Show less"
-                            : `Show ${
-                                  post.text ? attachmentsCount : attachmentsCount - 1
-                              } more attachment${attachmentsCount > 1 ? "s" : ""}`}
+                            : `Show ${post.text ? attachmentsCount : attachmentsCount - 1
+                            } more attachment${attachmentsCount > 1 ? "s" : ""}`}
                     </p>
                 )}
 
