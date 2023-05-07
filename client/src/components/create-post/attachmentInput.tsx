@@ -44,11 +44,13 @@ function handleAddAttachment(
     >,
     setFileLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
-    toBase64(e.target.files[0]).then((data) => {
-        setAttachmentData((prevValues) => [
-            ...prevValues,
-            { name: e.target.files[0].name, value: data },
-        ])
-        setFileLoading(false)
-    })
+    for (let i = 0; i < e.target.files.length; i++) {
+        toBase64(e.target.files[i]).then((data) => {
+            setAttachmentData((prevValues) => [
+                ...prevValues,
+                { name: e.target.files[i].name, value: data },
+            ])
+            setFileLoading(false)
+        })
+    }
 }

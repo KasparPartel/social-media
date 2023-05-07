@@ -50,7 +50,11 @@ function Modal() {
                 onSubmit={(e) => {
                     e.preventDefault()
                     formData.attachments = attachmentData.map((attachment) => attachment.value)
-                    handleSubmit(formData, navigate)
+                    const result = handleSubmit(formData, navigate)
+                    if (result) {
+                        setFormData(deafultFormData)
+                        setAttachmentData([])
+                    }
                 }}
             >
                 <PostText
@@ -89,7 +93,7 @@ function Modal() {
     )
 }
 
-function handleSubmit(formData: PostFormFields, navigate: NavigateFunction) {
+function handleSubmit(formData: PostFormFields, navigate: NavigateFunction): boolean {
     if (
         formData.privacy >= 1 &&
         formData.privacy <= 3 &&
@@ -105,11 +109,11 @@ function handleSubmit(formData: PostFormFields, navigate: NavigateFunction) {
                 if (r.errors) {
                     const errors = fetchErrorChecker(r.errors, navigate)
                     if (errors) errors.forEach((err) => alert(err.description))
-                    return
+                    return false
                 }
                 alert("Post created successfully!")
             })
-        return
+        return true
     }
     alert("No user input or privacy setting is wrong")
 }

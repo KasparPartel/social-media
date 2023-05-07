@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
 import privateUserList from "./privacyUserList"
@@ -7,16 +6,17 @@ import { PostFormFields } from "../models"
 interface PrivacyOverlayProps {
     toggleModal: () => void
     setFormData: React.Dispatch<React.SetStateAction<PostFormFields>>
+    indexList: number[],
+    setIndexList: (arg: number[]) => void
 }
 
-export default function PrivacyOverlay({ toggleModal, setFormData }: PrivacyOverlayProps) {
+export default function PrivacyOverlay({ toggleModal, setFormData, indexList, setIndexList }: PrivacyOverlayProps) {
     const navigate = useNavigate()
     const userList = getUsersList({
         id: Number(localStorage.getItem("id")),
         navigate,
         endpoint: "followers",
     })
-    const [indexList, setIndexList] = useState<number[]>([])
 
     return (
         <div className="add-users">

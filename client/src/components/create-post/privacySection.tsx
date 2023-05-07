@@ -4,6 +4,7 @@ import privateResetIcon from "../../assets/Reset.svg"
 import PrivacyOverlay from "./privacyOverlay"
 import toggleHook from "../../hooks/useToggle"
 import { CommonPostProps } from "./text"
+import { useState } from "react"
 
 export const PrivacySettings = {
     Public: 1,
@@ -13,6 +14,7 @@ export const PrivacySettings = {
 
 export function PostPrivacy({ formData, setFormData }: CommonPostProps) {
     const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
+    const [indexList, setIndexList] = useState<number[]>([])
 
     return (
         <>
@@ -50,6 +52,8 @@ export function PostPrivacy({ formData, setFormData }: CommonPostProps) {
                             {...{
                                 toggleModal: toggleOverlay,
                                 setFormData,
+                                indexList,
+                                setIndexList
                             }}
                         />
                     ) : null}
