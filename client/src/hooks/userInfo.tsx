@@ -8,12 +8,10 @@ import { ServerResponse, User } from "../components/models"
  * Tries to find a user with the inputted id.
  * @returns either the user or null if the user does not exist
  */
-export default function useUserInfo(
-    paramId: string,
-    setLoading: (arg: boolean) => void,
-): User | null {
+export default function useUserInfo(paramId: string) {
     const navigate = useNavigate()
     const [user, setUser] = useState<User>(null)
+    const [isLoading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchHandler(`http://localhost:8080/user/${paramId}`, `GET`)
@@ -25,5 +23,5 @@ export default function useUserInfo(
             .catch(() => fetchErrorChecker([], navigate))
     }, [paramId])
 
-    return user
+    return { user, isLoading }
 }

@@ -53,7 +53,7 @@
 }
 
 .button_follow-status_unknown {
-    background-color: grey;
+    background-color: var(--grey);
 }
 
 .button_follow-status_not-following {

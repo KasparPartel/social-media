@@ -6,7 +6,7 @@ import "./followers-following.css"
 
 export default function FollowingFollowers() {
     const navigate = useNavigate()
-    const id = Number(localStorage.getItem('id'))
+    const id = Number(localStorage.getItem("id"))
     const followingList = getUsersList({ id, navigate, endpoint: "followings" })
     const followersList = getUsersList({ id, navigate, endpoint: "followers" })
     return (
@@ -27,16 +27,18 @@ function FollowingFollowersContainer({ header, userList }: FollowingFollowersCon
         <div className="following-followers">
             <div className="following-followers__header">{header}</div>
             <div className="list">
-                {userList.map((user, i) => (
-                    <div className="user-card" key={i}>
-                        <img
-                            className="user-card__avatar"
-                            src={user.avatar !== "" ? user.avatar : altAvatar}
-                            alt="beb"
-                        />
-                        {`${user.firstName} ${user.lastName}`}
-                    </div>
-                ))}
+                {userList.map((user, i) => {
+                    return (
+                        <div className="user-card" key={i}>
+                            <img
+                                className="user-card__avatar"
+                                src={user.avatar !== "" ? user.avatar : altAvatar}
+                                alt="avatar"
+                            />
+                            {`${user.firstName} ${user.lastName}`}
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

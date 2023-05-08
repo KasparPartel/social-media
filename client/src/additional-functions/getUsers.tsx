@@ -10,11 +10,7 @@ interface followersProps {
     endpoint: string
 }
 
-export function getUsersList({
-    id,
-    navigate,
-    endpoint,
-}: followersProps): User[] {
+export function getUsersList({ id, navigate, endpoint }: followersProps): User[] {
     const [userList, setUserList] = useState<User[]>([])
 
     useEffect(() => {

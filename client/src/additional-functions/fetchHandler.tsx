@@ -1,13 +1,9 @@
-import {
-    AdditionalInfoFormFields,
-    LoginFormFields,
-    RegistrationFormFields,
-} from "../components/models"
+import { FormFields } from "../components/models"
 
 export default async function fetchHandler(
     inputURL: string,
     method: string,
-    formFields?: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields,
+    formFields?: FormFields,
 ): Promise<Response> {
     const request: RequestInit = {
         method,

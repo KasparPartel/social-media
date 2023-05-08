@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom"
 import Header from "./components/header/header"
 import { UserProfile } from "./components/user-information/user-information"
 import FollowingFollowers from "./components/followers-following/following-followers"
+import CreatePost from "./components/create-post/createPost"
 
 export default function App() {
     return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route path="/additional-registration" element={<AdditionalInfo />} />
             <Route element={<Header id={0} />}>
                 <Route path="/user/:paramId" element={<UserProfile />} />
+                <Route path="/post-test" element={<CreatePost />} />
                 <Route path="/test" element={<FollowingFollowers />} />
             </Route>
             <Route path="/internal-error" element={<h1>Error 500</h1>} />

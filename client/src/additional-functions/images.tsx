@@ -19,7 +19,7 @@ export async function updateImage(formFields: AdditionalInfoFormFields, image: B
     // TODO: handle reject needed
 }
 
-async function toBase64(file: Blob): Promise<string> {
+export async function toBase64(file: Blob): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
