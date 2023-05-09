@@ -32,15 +32,16 @@ type GetPostResponse struct {
 	CreationDate int      `json:"creationDate"`
 }
 
-type CreateGroupRequest struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
+type CreateCommentRequest struct {
+	Text        string   `json:"text"`
+	Attachments []string `json:"attachments"`
 }
 
-type CreateGroupResponse struct {
-	Id           int    `json:"id"`
-	Title        string `json:"title"`
-	Description  string `json:"description"`
-	CreationDate int    `json:"creationDate"`
-	UserId       int    `json:"userId"`
+type CreateCommentResponse struct {
+	Id           int      `json:"id"`
+	UserId       int      `json:"userId"`
+	PostId       int      `json:"postId"`
+	Text         string   `json:"text"`
+	Attachments  []string `json:"attachments"`
+	CreationDate int      `json:"creationDate"`
 }
