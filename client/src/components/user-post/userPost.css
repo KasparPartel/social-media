@@ -14,9 +14,16 @@
 
 .post__info {
     display: flex;
+    align-items: baseline;
+    gap: 0.5em;
     margin: 0;
     color: var(--black);
     font-size: 18px;
+}
+
+.post__info__date {
+    color: #4d4d4d;
+    font-size: 0.9em;
 }
 
 .post__text {
