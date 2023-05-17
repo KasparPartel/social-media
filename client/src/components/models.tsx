@@ -1,5 +1,11 @@
 import { NavigateFunction } from "react-router-dom"
 
+export type FormFields =
+    | LoginFormFields
+    | RegistrationFormFields
+    | AdditionalInfoFormFields
+    | PostFormFields
+
 export interface LoginFormFields {
     login: string
     password: string
@@ -17,6 +23,13 @@ export interface AdditionalInfoFormFields {
     avatar: string
     login: string
     aboutMe: string
+}
+
+export interface PostFormFields {
+    privacy: number
+    text: string
+    attachments: string[]
+    authorizedFollowers?: number[]
 }
 
 export interface RequestProps {

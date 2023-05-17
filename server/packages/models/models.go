@@ -31,3 +31,17 @@ type GetPostResponse struct {
 	Attachments  []string `json:"attachments"` // of image/gif encoded with base64
 	CreationDate int      `json:"creationDate"`
 }
+
+type CreateCommentRequest struct {
+	Text        string   `json:"text"`
+	Attachments []string `json:"attachments"`
+}
+
+type CreateCommentResponse struct {
+	Id           int      `json:"id"`
+	UserId       int      `json:"userId"`
+	PostId       int      `json:"postId"`
+	Text         string   `json:"text"`
+	Attachments  []string `json:"attachments"`
+	CreationDate int      `json:"creationDate"`
+}

@@ -16,8 +16,8 @@ const (
 	ErrLoginFormat
 	ErrFirstNameFormat
 	ErrLastNameFormat
-	ErrUniqueEmail
-	ErrUniqueLogin
+	ErrNotUnique
+	_
 	ErrIncorrectCred
 	ErrSessionExpired
 	ErrSessionNotExist

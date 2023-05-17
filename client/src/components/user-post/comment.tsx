@@ -13,7 +13,7 @@ export default function CommentList({ postId }: { postId: number }) {
     const [inputText, setInputText] = useState("")
     const [err, setErr] = useState<Error>()
     const [isLoading, setIsLoading] = useState(true)
-    const myUser = useUserInfo(localStorage.getItem("id"))
+    const { user } = useUserInfo(localStorage.getItem("id"))
 
     useEffect(() => {
         getCommentsIds(postId, setCommentsIdList, setErr, setIsLoading)
@@ -28,10 +28,10 @@ export default function CommentList({ postId }: { postId: number }) {
 
         const comment: PostComment = {
             dateOfCreation: Date.now(),
-            login: myUser.login ?? "",
+            login: user.login ?? "",
             parentId: 0,
             text: inputText,
-            userId: myUser.id,
+            userId: user.id,
         }
 
         postComment(postId, comment, setCommentsIdList, setErr, setIsLoading)
@@ -44,7 +44,7 @@ export default function CommentList({ postId }: { postId: number }) {
             {commentsIdList.map((id, i) => (
                 <Comment commentId={id} key={i} />
             ))}
-            {myUser && (
+            {user && (
                 <form className="comment__form" onSubmit={(e) => handleSubmit(e)}>
                     <input
                         type="text"

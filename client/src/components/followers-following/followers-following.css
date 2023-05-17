@@ -29,20 +29,27 @@
     height: 100%;
     padding: 0 20px;
     gap: 0.5em;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .user-card {
     box-sizing: border-box;
     display: flex;
 
+    overflow-y: hidden;
     min-width: max-content;
     padding: 0.5em 1em;
     gap: 2em;
     border-radius: 12px;
+    justify-content: space-between;
     align-items: center;
     background-color: var(--main-white);
     color: var(--black);
+}
+
+.user-card_pressed {
+    background-color: var(--light-green);
+    box-shadow: inset -2px -2px 2px rgba(0, 0, 0, 0.25), inset 2px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 .user-card__avatar {

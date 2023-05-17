@@ -1,0 +1,143 @@
+.create-post-wrapper {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1em;
+    background: var(--main-orange);
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5em;
+}
+
+.post-form__text {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 215px;
+    padding: 0.5em;
+    resize: none;
+    border: 1px solid black;
+}
+
+.post-form__attachment-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+}
+
+.post-form__attachment {
+    padding: 0.2em;
+    border-radius: 5px;
+
+    list-style-type: none;
+    background: whitesmoke;
+}
+
+.post-form__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.post-form__options {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.post-form__privacy {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: clamp(10vw, 10em, 25vw);
+    padding: 0.5em 1em;
+    border-radius: 5px;
+
+    background-color: var(--main-green);
+    border: 1px solid black;
+    background-image: url("../../assets/down_arrow.svg");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-position: calc(100% - 1em);
+}
+
+.post-form__privacy::-ms-expand {
+    display: none;
+}
+
+.post-form__attachment-label {
+    line-height: 0;
+}
+
+.post-form__attachment-img {
+    width: 2em;
+    cursor: pointer;
+}
+
+.post-form__add-users-img {
+    width: 2em;
+    cursor: pointer;
+}
+
+.add-users {
+    background-color: rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    position: fixed;
+    top: 0%;
+    left: 0%;
+}
+
+.add-users__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    max-height: 60%;
+    max-width: 70%;
+    padding: 1em;
+    gap: 1em;
+
+    border-radius: 12px;
+    background-color: orange;
+}
+
+.add-users__user-checkbox-wrapper {
+    cursor: pointer;
+}
+
+.add-users__user-checkbox {
+    display: none;
+}
+
+.add-users__scroll {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    width: 100%;
+    padding: 0.5em 0.25em;
+    gap: 0.5em;
+
+    overflow-y: auto;
+
+    font-size: 18px;
+}
+
+.add-users__button-container {
+    display: flex;
+    gap: 0.5em;
+}

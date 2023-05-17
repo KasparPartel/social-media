@@ -1,16 +1,7 @@
-import {
-    AdditionalInfoFormFields,
-    LoginFormFields,
-    RegistrationFormFields,
-    RequestProps,
-    ServerResponse,
-} from "../components/models"
+import { FormFields, RequestProps, ServerResponse } from "../components/models"
 import { fetchErrorChecker } from "./fetchErr"
 
-export function formDataExtractor(
-    formData: FormData,
-    formFields: LoginFormFields | RegistrationFormFields | AdditionalInfoFormFields,
-) {
+export function formDataExtractor(formData: FormData, formFields: FormFields) {
     formData.forEach((value, key) => {
         if (key in formFields && value) {
             formFields[key] = value
@@ -35,7 +26,11 @@ export async function authReturnHandler(
                     return
                 }
                 if (r.data && r.data.id) localStorage.setItem("id", String(r.data.id))
-                navigate(isRegistration ? `/additional-registration` : `/user/${localStorage.getItem("id")}`)
+                navigate(
+                    isRegistration
+                        ? `/additional-registration`
+                        : `/user/${localStorage.getItem("id")}`,
+                )
             })
             .catch(() => navigate(`/internal-error`))
         return
