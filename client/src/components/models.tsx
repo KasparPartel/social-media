@@ -50,6 +50,17 @@ export interface ErrorResponse {
     description?: string
 }
 
+export interface Post {
+    id: number      // id of current post
+    userId: number      // creator post id
+    login?: string // creator post login
+    firstName?: string
+    lastName?: string
+    text: string
+    attachments: string[] // array of image/gif encoded with base64
+    creationDate: number      // milliseconds timestamp
+}
+
 export interface User {
     id?: number
     avatar: string
@@ -62,4 +73,12 @@ export interface User {
     dateOfBirth: number
     isPublic: boolean
     followStatus?: number
+}
+
+export interface PostComment {
+    dateOfCreation: number
+    login: string
+    parentId: number
+    text: string
+    userId: number
 }

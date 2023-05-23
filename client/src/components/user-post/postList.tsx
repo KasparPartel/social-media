@@ -1,76 +1,49 @@
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import useUserInfo from "../../hooks/userInfo"
 import UserPost from "./userPost"
-import { Post } from "./userPost"
+import "./userPost.css"
+import checkParamId from "../../additional-functions/userId"
+import { getPostIds } from "./fetch"
+import Loading from "./render-states/loading"
 
-const postList: Post[] = [
-    {
-        text:
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and..." +
-            "On the other hand, we denounce with righteous indignation and dislike men who are" +
-            " so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they" +
-            " cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and...",
-
-        attachments: ["https://via.placeholder.com/150"],
-    },
-    {
-        text: "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.",
-        attachments: ["https://via.placeholder.com/150", "https://via.placeholder.com/150"],
-    },
-    {
-        text: "",
-        attachments: [
-            "https://via.placeholder.com/150",
-            "https://via.placeholder.com/324",
-            "https://via.placeholder.com/645",
-            "https://via.placeholder.com/90",
-            "https://via.placeholder.com/900",
-            "https://via.placeholder.com/150",
-            "https://via.placeholder.com/10",
-        ],
-    },
-    {
-        text: "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.",
-        attachments: [],
-    },
-]
-
+/*
+ * Parent component for rendering posts created by specific user
+ */
 export default function PostList() {
+    const [idList, setIdList] = useState<number[]>([])
+    const [err, setErr] = useState<Error>(null)
+    const { paramId } = useParams()
+    const navigate = useNavigate()
+    const myProfile = checkParamId(paramId)
+    const { user, isLoading } = useUserInfo(paramId)
+
+    useEffect(() => {
+        if (user && user.id) {
+            getPostIds(user.id, setIdList, setErr)
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (!isLoading) {
+            if (!user || (!myProfile && !user.isPublic && user.followStatus != 3)) {
+                navigate(`/user/${paramId}`)
+                return
+            }
+        }
+    }, [isLoading, myProfile, user])
+
+    if (isLoading) return <Loading />
+    return UserPosts({ idList, err })
+}
+
+const UserPosts = ({ idList, err }: { idList: number[]; err: Error }) => {
+    if (err) return <div>Cannot load posts - {err.message}</div>
     return (
-        <div className="postList">
-            {postList.map((post, i) => (
-                <UserPost post={post} key={i} />
+        <section className="postList">
+            {idList.map((postId, i) => (
+                <UserPost postId={postId} key={i} />
             ))}
-        </div>
+        </section>
     )
 }
