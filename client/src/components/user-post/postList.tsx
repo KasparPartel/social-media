@@ -5,18 +5,19 @@ import UserPost from "./userPost"
 import "./userPost.css"
 import checkParamId from "../../additional-functions/userId"
 import { getPostIds } from "./fetch"
-import Loading from "./render-states/loading"
+import LoadingSkeleton from "../render-states/LoadingSkeleton"
 
 /*
  * Parent component for rendering posts created by specific user
  */
 export default function PostList() {
     const [idList, setIdList] = useState<number[]>([])
+    const [loading, setLoading] = useState(true)
     const [err, setErr] = useState<Error>(null)
     const { paramId } = useParams()
     const navigate = useNavigate()
     const myProfile = checkParamId(paramId)
-    const { user, isLoading } = useUserInfo(paramId)
+    const user = useUserInfo(paramId, setLoading)
 
     useEffect(() => {
         if (user && user.id) {
@@ -25,15 +26,15 @@ export default function PostList() {
     }, [user])
 
     useEffect(() => {
-        if (!isLoading) {
+        if (!loading) {
             if (!user || (!myProfile && !user.isPublic && user.followStatus != 3)) {
                 navigate(`/user/${paramId}`)
                 return
             }
         }
-    }, [isLoading, myProfile, user])
+    }, [loading, myProfile, user])
 
-    if (isLoading) return <Loading />
+    if (loading) return <LoadingSkeleton dataName="posts" />
     return UserPosts({ idList, err })
 }
 
