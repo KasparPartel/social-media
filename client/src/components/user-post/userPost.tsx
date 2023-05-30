@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
 import { useOpenText } from "../../hooks/openText"
 import { Post } from "../models"
-import CommentList from "./comment"
-import Loading from "./render-states/loading"
+import CommentList from "../post-comment/CommentList"
+import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import "./userPost.css"
 import { getPostData } from "./fetch"
 import moment from "moment"
@@ -30,7 +30,7 @@ export default function UserPost({ postId }: { postId: number }) {
     const toggleAttachments = () => setAttachmentsOpen(!attachmentsOpen)
 
     if (err) return <div>{err.message}</div>
-    if (isLoading) return <Loading color="orange" />
+    if (isLoading) return <LoadingSkeleton color="orange" dataName="post" />
     return (
         <article className="post">
             <p className="post__info">

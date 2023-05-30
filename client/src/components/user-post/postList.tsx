@@ -5,7 +5,7 @@ import UserPost from "./userPost"
 import "./userPost.css"
 import checkParamId from "../../additional-functions/userId"
 import { getPostIds } from "./fetch"
-import Loading from "./render-states/loading"
+import LoadingSkeleton from "../render-states/LoadingSkeleton"
 
 /*
  * Parent component for rendering posts created by specific user
@@ -34,7 +34,7 @@ export default function PostList() {
         }
     }, [loading, myProfile, user])
 
-    if (loading) return <Loading />
+    if (loading) return <LoadingSkeleton dataName="posts" />
     return UserPosts({ idList, err })
 }
 
