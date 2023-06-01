@@ -6,7 +6,7 @@ interface UsernameProps {
 }
 
 export default function Username({ userId, commentLogin }: UsernameProps) {
-    const user = useUserInfo(userId.toString())
+    const { user } = useUserInfo(userId.toString())
 
     if (!user) return <span>{commentLogin}</span>
     return (

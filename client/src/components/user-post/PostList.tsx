@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import useUserInfo from "../../hooks/userInfo"
-import UserPost from "./userPost"
+import UserPost from "./UserPost"
 import "./userPost.css"
 import checkParamId from "../../additional-functions/userId"
 import { getPostIds } from "./fetch"
@@ -12,12 +12,11 @@ import LoadingSkeleton from "../render-states/LoadingSkeleton"
  */
 export default function PostList() {
     const [idList, setIdList] = useState<number[]>([])
-    const [loading, setLoading] = useState(true)
     const [err, setErr] = useState<Error>(null)
     const { paramId } = useParams()
     const navigate = useNavigate()
     const myProfile = checkParamId(paramId)
-    const user = useUserInfo(paramId, setLoading)
+    const { user, isLoading } = useUserInfo(paramId)
 
     useEffect(() => {
         if (user && user.id) {
@@ -26,15 +25,15 @@ export default function PostList() {
     }, [user])
 
     useEffect(() => {
-        if (!loading) {
+        if (!isLoading) {
             if (!user || (!myProfile && !user.isPublic && user.followStatus != 3)) {
                 navigate(`/user/${paramId}`)
                 return
             }
         }
-    }, [loading, myProfile, user])
+    }, [isLoading, myProfile, user])
 
-    if (loading) return <LoadingSkeleton dataName="posts" />
+    if (isLoading) return <LoadingSkeleton dataName="posts" />
     return UserPosts({ idList, err })
 }
 

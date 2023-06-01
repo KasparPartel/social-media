@@ -20,7 +20,7 @@ export const getCommentsIds = (
         })
         .then(
             (data) => {
-                setCommentsIdList(data)
+                setCommentsIdList(data.data)
                 setIsLoading(false)
             },
             (err) => {
@@ -48,7 +48,7 @@ export const getCommentData = (
         })
         .then(
             (data) => {
-                setComment(data)
+                setComment(data.data)
                 setIsLoading(false)
             },
             (err) => {

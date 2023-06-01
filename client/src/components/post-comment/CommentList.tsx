@@ -12,11 +12,12 @@ interface CommentListProps {
 }
 
 export default function CommentList({ postId }: CommentListProps) {
-    const [commentsIdList, setCommentsIdList] = useState<number[] | null>(null)
+    const [commentsIdList, setCommentsIdList] = useState<number[]>(null)
     const [inputText, setInputText] = useState("")
     const [err, setErr] = useState<Error>(null)
     const [isLoading, setIsLoading] = useState(true)
-    const myUser = useUserInfo(localStorage.getItem("id"))
+
+    const { user: myUser } = useUserInfo(localStorage.getItem("id"))
 
     useEffect(() => {
         getCommentsIds(postId, setCommentsIdList, setErr, setIsLoading)
@@ -36,6 +37,7 @@ export default function CommentList({ postId }: CommentListProps) {
             parentId: 0,
             text: inputText,
             userId: myUser.id,
+            attachments: [],
         }
 
         postComment(postId, comment, setCommentsIdList, setErr, setIsLoading)
@@ -45,7 +47,7 @@ export default function CommentList({ postId }: CommentListProps) {
     if (isLoading) return <LoadingSkeleton color="orange" dataName="comments" />
     return (
         <section className="post__comments">
-            {commentsIdList ? (
+            {commentsIdList && commentsIdList.length > 0 ? (
                 commentsIdList.map((id, i) => <Comment commentId={id} key={i} />)
             ) : (
                 <p>No comments yet...</p>

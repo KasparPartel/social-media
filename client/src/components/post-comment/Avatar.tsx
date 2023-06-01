@@ -6,7 +6,7 @@ interface AvatarProps {
 }
 
 export default function Avatar({ userId }: AvatarProps) {
-    const user = useUserInfo(userId.toString())
+    const { user } = useUserInfo(userId.toString())
 
     return <img className="comment__avatar" src={user ? user.avatar : altAvatar} alt="avatar" />
 }
