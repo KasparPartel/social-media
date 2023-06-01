@@ -40,8 +40,8 @@ export interface RequestProps {
     id?: string
 }
 
-export interface ServerResponse {
-    data: null | User
+export interface ServerResponse<T> {
+    data: null | T
     errors: ErrorResponse[]
 }
 

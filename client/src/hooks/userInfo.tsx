@@ -16,7 +16,7 @@ export default function useUserInfo(paramId: string) {
     useEffect(() => {
         fetchHandler(`http://localhost:8080/user/${paramId}`, `GET`)
             .then((r) => r.json())
-            .then((r: ServerResponse) => {
+            .then((r: ServerResponse<User>) => {
                 r.errors ? fetchErrorChecker(r.errors, navigate) : setUser(r.data)
                 setLoading(false)
             })
