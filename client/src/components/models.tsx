@@ -5,6 +5,7 @@ export type FormFields =
     | RegistrationFormFields
     | AdditionalInfoFormFields
     | PostFormFields
+    | ProfileSettingsUpdateFormFields
 
 export interface LoginFormFields {
     login: string
@@ -25,6 +26,13 @@ export interface AdditionalInfoFormFields {
     aboutMe: string
 }
 
+export interface ProfileSettingsUpdateFormFields {
+    avatar?: string // base64 encoded
+    login?: string
+    aboutMe?: string
+    isPublic?: string
+}
+
 export interface PostFormFields {
     privacy: number
     text: string
@@ -40,6 +48,13 @@ export interface RequestProps {
     id?: string
 }
 
+export interface ProfileSettingsUpdateRequestProps {
+    e: React.FormEvent<HTMLFormElement>
+    id: number
+    navigate: NavigateFunction
+    avatar: Blob
+}
+
 export interface ServerResponse {
     data: null | User
     errors: ErrorResponse[]
@@ -51,14 +66,14 @@ export interface ErrorResponse {
 }
 
 export interface Post {
-    id: number      // id of current post
-    userId: number      // creator post id
+    id: number // id of current post
+    userId: number // creator post id
     login?: string // creator post login
     firstName?: string
     lastName?: string
     text: string
     attachments: string[] // array of image/gif encoded with base64
-    creationDate: number      // milliseconds timestamp
+    creationDate: number // milliseconds timestamp
 }
 
 export interface User {

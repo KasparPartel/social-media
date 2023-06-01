@@ -97,7 +97,7 @@ export function AdditionalInfo() {
                             />
                         </div>
                     )}
-                    <label className="button form__button form__button_with-label label_cursor-pointer">
+                    <label className="button form__button form__button_with-label">
                         Image upload
                         <input
                             name="avatar"

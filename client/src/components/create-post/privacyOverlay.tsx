@@ -6,11 +6,16 @@ import { PostFormFields } from "../models"
 interface PrivacyOverlayProps {
     toggleModal: () => void
     setFormData: React.Dispatch<React.SetStateAction<PostFormFields>>
-    indexList: number[],
+    indexList: number[]
     setIndexList: (arg: number[]) => void
 }
 
-export default function PrivacyOverlay({ toggleModal, setFormData, indexList, setIndexList }: PrivacyOverlayProps) {
+export default function PrivacyOverlay({
+    toggleModal,
+    setFormData,
+    indexList,
+    setIndexList,
+}: PrivacyOverlayProps) {
     const navigate = useNavigate()
     const userList = getUsersList({
         id: Number(localStorage.getItem("id")),

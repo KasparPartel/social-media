@@ -3,6 +3,8 @@ import {
     LoginFormFields,
     AdditionalInfoFormFields,
     RequestProps,
+    ProfileSettingsUpdateFormFields,
+    ProfileSettingsUpdateRequestProps,
 } from "../components/models"
 import fetchHandler from "./fetchHandler"
 import { formDataExtractor, authReturnHandler } from "./form"
@@ -53,5 +55,31 @@ export function AdditionalInfoRequest({ e, id, setErrorArr, navigate, image }: R
     updateImage(formFields, image)
         .then(() => fetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields))
         .then((r) => authReturnHandler(r, { setErrorArr, navigate }, false))
+        .catch(() => navigate("/internal-error"))
+}
+
+export function ProfileSettingsUpdateRequest({
+    e,
+    id,
+    navigate,
+    avatar,
+}: ProfileSettingsUpdateRequestProps) {
+    e.preventDefault()
+    const formFields: ProfileSettingsUpdateFormFields = {
+        avatar: "",
+        login: "",
+        aboutMe: "",
+        isPublic: "",
+    }
+
+    formDataExtractor(new FormData(e.currentTarget), formFields)
+
+    return updateImage(formFields, avatar)
+        .then(() => fetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields))
+        .then((r) => r.json())
+        .then((r) => {
+            if (r.errors === null) return null
+            return r.errors
+        })
         .catch(() => navigate("/internal-error"))
 }

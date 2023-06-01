@@ -53,7 +53,7 @@ export function PostPrivacy({ formData, setFormData }: CommonPostProps) {
                                 toggleModal: toggleOverlay,
                                 setFormData,
                                 indexList,
-                                setIndexList
+                                setIndexList,
                             }}
                         />
                     ) : null}

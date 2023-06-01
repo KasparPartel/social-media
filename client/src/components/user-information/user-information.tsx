@@ -33,14 +33,10 @@ export function UserProfile() {
                     <div className="information__short-container">
                         <ShortInfo
                             {...{
-                                firstName: user.firstName,
-                                lastName: user.lastName,
-                                avatar: user.avatar,
-                                isPublic: user.isPublic,
+                                user,
                                 isMyProfile,
                                 openText,
                                 height,
-                                followStatus: user.followStatus,
                             }}
                         />
                         {!isMyProfile ? (
@@ -62,6 +58,12 @@ export function UserProfile() {
                                 labelText="Birth date"
                                 insideText={moment(user.dateOfBirth).format("YYYY-MM-DD")}
                             />
+                            {isMyProfile ? (
+                                <LabeledParagraph
+                                    labelText="Privacy"
+                                    insideText={user.isPublic ? "Public" : "Private"}
+                                />
+                            ) : null}
                         </div>
                     </div>
                 </div>
