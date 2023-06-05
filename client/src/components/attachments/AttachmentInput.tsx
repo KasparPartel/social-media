@@ -11,9 +11,14 @@ interface PostAttachmentsProps {
             }[]
         >
     >
+    children?: React.ReactNode
 }
 
-export function PostAttachmentInput({ setFileLoading, setAttachmentData }: PostAttachmentsProps) {
+export function AttachmentInput({
+    setFileLoading,
+    setAttachmentData,
+    children,
+}: PostAttachmentsProps) {
     return (
         <label className="post-form__attachment-label">
             <img className="post-form__attachment-img" src={attachmentIcon} alt="attachment" />
@@ -28,6 +33,7 @@ export function PostAttachmentInput({ setFileLoading, setAttachmentData }: PostA
                 name="attachments"
                 hidden
             />
+            {children}
         </label>
     )
 }

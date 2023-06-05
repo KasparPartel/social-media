@@ -1,9 +1,24 @@
+import "./attachments.css"
+import { useState } from "react"
+import AttachmentModal from "./AttachmentModal"
+
 interface AttachmentProps {
     src: string
 }
 
 export function Attachment({ src }: AttachmentProps) {
-    return <img className="post__attachment" src={src} alt="attachment" />
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    return (
+        <>
+            <img
+                className="post__attachment"
+                src={src}
+                alt="attachment"
+                onClick={() => setIsModalOpen(true)}
+            />
+            {isModalOpen && <AttachmentModal src={src} setIsModalOpen={setIsModalOpen} />}
+        </>
+    )
 }
 
 interface AttachmentsListProps {
