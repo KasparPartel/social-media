@@ -64,6 +64,7 @@ export default function AddComment({ postId, myUser, setCommentsIdList }: AddCom
                     name="addComment"
                     className="comment__input"
                     placeholder="Type a comment..."
+                    autoComplete="off"
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     required={attachmentData.length == 0}

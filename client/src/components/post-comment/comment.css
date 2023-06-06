@@ -90,6 +90,7 @@
 }
 
 .comment-posting__container > .post-form__attachment-label {
+    padding: 0.7em;
     z-index: 1;
     position: relative;
     display: flex;
