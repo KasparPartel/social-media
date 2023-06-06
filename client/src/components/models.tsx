@@ -40,8 +40,8 @@ export interface RequestProps {
     id?: string
 }
 
-export interface ServerResponse {
-    data: null | User
+export interface ServerResponse<T> {
+    data: null | T
     errors: ErrorResponse[]
 }
 
@@ -51,14 +51,14 @@ export interface ErrorResponse {
 }
 
 export interface Post {
-    id: number      // id of current post
-    userId: number      // creator post id
+    id: number // id of current post
+    userId: number // creator post id
     login?: string // creator post login
     firstName?: string
     lastName?: string
     text: string
     attachments: string[] // array of image/gif encoded with base64
-    creationDate: number      // milliseconds timestamp
+    creationDate: number // milliseconds timestamp
 }
 
 export interface User {
@@ -76,9 +76,11 @@ export interface User {
 }
 
 export interface PostComment {
-    dateOfCreation: number
+    id?: number
+    creationDate: number
     login: string
     parentId: number
     text: string
     userId: number
+    attachments: string[]
 }

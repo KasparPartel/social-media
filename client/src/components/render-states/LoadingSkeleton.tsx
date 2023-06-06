@@ -1,8 +1,13 @@
 import "./render-states.css"
 import { useEffect, useState } from "react"
 
-export default function Loading({ color }: { color?: string }) {
-    const [colorHEX, setColorHEX] = useState("#008290")
+interface LoadingSkeletonProps {
+    color?: string
+    dataName?: string // What data is being loaded - e.g. article, post, header etc.
+}
+
+export default function LoadingSkeleton({ color, dataName }: LoadingSkeletonProps) {
+    const [colorHEX, setColorHEX] = useState("#008290") // default blue
 
     useEffect(() => {
         if (color === "red") {
@@ -20,7 +25,7 @@ export default function Loading({ color }: { color?: string }) {
                     <div style={{ boxShadow: `0 2px 0 0 ${colorHEX}` }}></div>
                 </div>
             </div>
-            <p>Loading</p>
+            <p>Loading {dataName}...</p>
         </div>
     )
 }

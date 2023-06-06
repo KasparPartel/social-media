@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom"
 import Header from "./components/header/header"
 import { UserProfile } from "./components/user-information/user-information"
 import FollowingFollowers from "./components/followers-following/following-followers"
-import PostList from "./components/user-post/postList"
+import PostList from "./components/user-post/PostList"
 import CreatePost from "./components/create-post/createPost"
 
 export default function App() {

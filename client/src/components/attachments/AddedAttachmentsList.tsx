@@ -1,4 +1,4 @@
-interface AttachmentListProps {
+interface AddedAttachmentsListProps {
     attachmentData: {
         name: string
         value: string
@@ -13,7 +13,10 @@ interface AttachmentListProps {
     >
 }
 
-export default function AttachmentList({ attachmentData, setAttachmentData }: AttachmentListProps) {
+export default function AddedAttachmentsList({
+    attachmentData,
+    setAttachmentData,
+}: AddedAttachmentsListProps) {
     return (
         <ul className="post-form__attachment-list">
             {attachmentData &&

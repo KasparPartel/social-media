@@ -1,4 +1,4 @@
-import { FormFields, RequestProps, ServerResponse } from "../components/models"
+import { FormFields, RequestProps, ServerResponse, User } from "../components/models"
 import { fetchErrorChecker } from "./fetchErr"
 
 export function formDataExtractor(formData: FormData, formFields: FormFields) {
@@ -19,7 +19,7 @@ export async function authReturnHandler(
     if (r.status === 200) {
         await r
             .json()
-            .then((r: ServerResponse) => {
+            .then((r: ServerResponse<User>) => {
                 if (r.errors && r.errors.length != 0) {
                     const errArr = fetchErrorChecker(r.errors, navigate)
                     if (errArr) setErrorArr(errArr)

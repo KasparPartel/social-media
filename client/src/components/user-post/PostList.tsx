@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import useUserInfo from "../../hooks/userInfo"
-import UserPost from "./userPost"
+import UserPost from "./UserPost"
 import "./userPost.css"
 import checkParamId from "../../additional-functions/userId"
 import { getPostIds } from "./fetch"
-import Loading from "./render-states/loading"
+import LoadingSkeleton from "../render-states/LoadingSkeleton"
 
 /*
  * Parent component for rendering posts created by specific user
@@ -33,7 +33,7 @@ export default function PostList() {
         }
     }, [isLoading, myProfile, user])
 
-    if (isLoading) return <Loading />
+    if (isLoading) return <LoadingSkeleton dataName="posts" />
     return UserPosts({ idList, err })
 }
 
