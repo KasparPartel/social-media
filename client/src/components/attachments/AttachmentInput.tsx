@@ -1,7 +1,7 @@
 import { toBase64 } from "../../additional-functions/images"
 import attachmentIcon from "../../assets/attachment_icon.svg"
 
-interface PostAttachmentsProps {
+interface AttachmentInputProps {
     setFileLoading: React.Dispatch<React.SetStateAction<boolean>>
     setAttachmentData: React.Dispatch<
         React.SetStateAction<
@@ -11,6 +11,7 @@ interface PostAttachmentsProps {
             }[]
         >
     >
+    attachmentCount?: number
     children?: React.ReactNode
 }
 
@@ -18,7 +19,7 @@ export function AttachmentInput({
     setFileLoading,
     setAttachmentData,
     children,
-}: PostAttachmentsProps) {
+}: AttachmentInputProps) {
     return (
         <label className="post-form__attachment-label">
             <img className="post-form__attachment-img" src={attachmentIcon} alt="attachment" />

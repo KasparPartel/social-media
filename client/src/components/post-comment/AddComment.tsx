@@ -4,13 +4,17 @@ import { PostComment, User } from "../models"
 import { postComment } from "./fetch"
 import { AttachmentInput } from "../attachments/AttachmentInput"
 import AddedAttachmentsList from "../attachments/AddedAttachmentsList"
+import { fetchErrorChecker } from "../../additional-functions/fetchErr"
+import { useNavigate } from "react-router-dom"
 
 interface AddCommentProps {
     postId: number
     myUser: User
+    setCommentsIdList: React.Dispatch<React.SetStateAction<number[]>>
 }
 
-export default function AddComment({ postId, myUser }: AddCommentProps) {
+export default function AddComment({ postId, myUser, setCommentsIdList }: AddCommentProps) {
+    const navigate = useNavigate()
     const [inputText, setInputText] = useState("")
     const [attachmentData, setAttachmentData] = useState<{ name: string; value: string }[]>([])
     const [isFileLoading, setFileLoading] = useState(false)
@@ -18,15 +22,14 @@ export default function AddComment({ postId, myUser }: AddCommentProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const attachments = attachmentData.map((attachment) => attachment.value)
-
-        if (inputText === "") {
-            console.log("comment input is empty")
+        if (inputText === "" && attachmentData.length === 0) {
             return
         }
 
+        const attachments = attachmentData.map((attachment) => attachment.value)
+
         const comment: PostComment = {
-            dateOfCreation: Date.now(),
+            creationDate: Date.now(),
             login: myUser.login ?? "",
             parentId: 0,
             text: inputText,
@@ -34,11 +37,23 @@ export default function AddComment({ postId, myUser }: AddCommentProps) {
             attachments: attachments,
         }
 
-        try {
-            postComment(postId, comment)
-        } catch (e) {
-            console.log(e as Error)
+        const fetchPostComment = async () => {
+            try {
+                const data = await postComment(postId, comment)
+                if (data.errors) {
+                    fetchErrorChecker(data.errors, navigate)
+                    return
+                }
+                setCommentsIdList((prevState) => [...prevState, data.data.id])
+
+                setInputText(() => "")
+                setAttachmentData(() => [])
+            } catch (e) {
+                console.log(e as Error)
+            }
         }
+
+        fetchPostComment()
     }
 
     return (
@@ -51,6 +66,7 @@ export default function AddComment({ postId, myUser }: AddCommentProps) {
                     placeholder="Type a comment..."
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
+                    required={attachmentData.length == 0}
                 />
                 <AttachmentInput
                     {...{

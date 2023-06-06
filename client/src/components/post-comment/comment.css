@@ -18,6 +18,10 @@
     background-color: var(--white);
 }
 
+.post__comment > .post__attachment {
+    width: 40%;
+}
+
 .comment__form {
     border-radius: 8px;
     background: var(--white);

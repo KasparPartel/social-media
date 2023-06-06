@@ -22,7 +22,18 @@ export default function Comment({ commentId }: CommentProps) {
     const attachmentsCount = comment?.attachments.length
 
     useEffect(() => {
-        getCommentData(commentId, setComment, setErr, setIsLoading)
+        const fetchComment = async () => {
+            try {
+                const response = await getCommentData(commentId)
+                setComment(response.data)
+            } catch (e) {
+                setErr(e as Error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchComment()
     }, [commentId])
 
     const toggleAttachments = () => setIsAttachmentsOpen(!isAttachmentsOpen)
@@ -39,7 +50,7 @@ export default function Comment({ commentId }: CommentProps) {
                         <Username userId={comment.userId} commentLogin={comment.login} />
                     </Link>
                     <span className="comment__timestamp">
-                        {convertDateToString(comment.dateOfCreation)}
+                        {convertDateToString(comment.creationDate)}
                     </span>
                 </div>
             </div>

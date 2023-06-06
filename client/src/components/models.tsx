@@ -76,7 +76,8 @@ export interface User {
 }
 
 export interface PostComment {
-    dateOfCreation: number
+    id?: number
+    creationDate: number
     login: string
     parentId: number
     text: string

@@ -17,7 +17,7 @@ export default function CommentList({ postId }: CommentListProps) {
     const { user: myUser } = useUserInfo(localStorage.getItem("id"))
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCommentIds = async () => {
             try {
                 const response = await getCommentsIds(postId)
                 setCommentsIdList(response.data)
@@ -28,7 +28,7 @@ export default function CommentList({ postId }: CommentListProps) {
             }
         }
 
-        fetchData()
+        fetchCommentIds()
     }, [])
 
     if (err) return <ErrorSkeleton message={err.message} />
@@ -36,11 +36,13 @@ export default function CommentList({ postId }: CommentListProps) {
     return (
         <section className="post__comments">
             {commentsIdList && commentsIdList.length > 0 ? (
-                commentsIdList.map((id, i) => <Comment commentId={id} key={i} />)
+                commentsIdList.map((id, i) => <Comment commentId={id} key={id} />)
             ) : (
                 <p>No comments yet...</p>
             )}
-            {myUser && <AddComment postId={postId} myUser={myUser} />}
+            {myUser && (
+                <AddComment postId={postId} myUser={myUser} setCommentsIdList={setCommentsIdList} />
+            )}
         </section>
     )
 }

@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { PostComment, ServerResponse } from "../models"
 
@@ -17,36 +16,23 @@ export const getCommentsIds = async (postId: number): Promise<ServerResponse<num
 /**
  * Fetches single comment data
  */
-export const getCommentData = (
-    commentId: number,
-    setComment: Dispatch<SetStateAction<PostComment>>,
-    setErr: Dispatch<SetStateAction<Error>>,
-    setIsLoading: Dispatch<SetStateAction<boolean>>,
-) => {
-    fetchHandler(`http://localhost:8080/comment/${commentId}`, "GET")
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`HTTP error: status ${res.status}`)
-            }
-            return res.json()
-        })
-        .then(
-            (data) => {
-                setComment(data.data)
-                setIsLoading(false)
-            },
-            (err) => {
-                setErr(err)
-                setIsLoading(false)
-            },
-        )
+export const getCommentData = async (commentId: number): Promise<ServerResponse<PostComment>> => {
+    const url = `http://localhost:8080/comment/${commentId}`
+
+    const res = await fetchHandler(url, "GET")
+    if (!res.ok) throw new Error(`HTTP error: status ${res.status}`)
+
+    return await res.json()
 }
 
 /**
  * POSTS comment
  */
-export const postComment = (postId: number, comment: PostComment) => {
-    fetch(`http://localhost:8080/post/${postId}/comments`, {
+export const postComment = async (
+    postId: number,
+    comment: PostComment,
+): Promise<ServerResponse<PostComment>> => {
+    const res = await fetch(`http://localhost:8080/post/${postId}/comments`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -54,12 +40,7 @@ export const postComment = (postId: number, comment: PostComment) => {
         },
         body: JSON.stringify(comment),
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Error posting to api: ${res.status} status code`)
-            }
+    if (!res.ok) throw new Error(`HTTP error: status ${res.status}`)
 
-            getCommentsIds(postId)
-        })
-        .catch((err) => console.log(err.message))
+    return await res.json()
 }
