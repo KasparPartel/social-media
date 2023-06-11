@@ -1,23 +1,14 @@
-
-
-/* Create new group */
-.create {
+.create-new-group__button {
     width: auto;
     height: 50px;
     padding: 15px;
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: bold;
     color: #ffffff;
     font-size: 20px;
     line-height: 20px;
 }
-::placeholder {
-    color: var(--black);
-    font-weight: bold;
-    align-content: center;
-    text-align: center;
-}
+
 
 .create-group-form {
     border-radius: 12px;
@@ -34,6 +25,7 @@
     height: 300px;
     background-color: var(--main-orange);
 }
+
 .create-group-form__disc {
     padding: 10px;
     border-radius: 12px;
@@ -50,7 +42,7 @@
     text-align: center;
 }
 
-.buttons>input:first-child {
+.create-group-form__cancel {
     background-color: var(--main-red);
     margin-right: 20px;
 }

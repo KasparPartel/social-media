@@ -2,80 +2,79 @@ import "./createGroup.css"
 import React, { useState } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { MakeGroupFormFields } from "../models"
-export default function CreateGroup() {
-    const [popup, setPopup] = React.useState(true)
-    const OGdata: MakeGroupFormFields = {
-        title: "",
-        description: ""
-    }
 
-    const [formData, setFormData] = useState<MakeGroupFormFields>(OGdata)
+const defaultGroupFormData: MakeGroupFormFields = {
+    title: "",
+    description: ""
+}
+export default function CreateGroup() {
+    const [isFormOpen, setFormOpen] = React.useState(false)
+
+    const [formData, setFormData] = useState<MakeGroupFormFields>(defaultGroupFormData)
     return(
         <>
-            {popup ? (
-                
-                <input 
-                
-                    type="button"
-                    className="create button"
-                    value="CREATE NEW GROUP"
-                    onClick={() => setPopup(false)}/>
+            {isFormOpen ? (
+                 <form className="create-group-form"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit(formData)
+                        setFormOpen(false)
+                        setFormData(defaultGroupFormData)
+                 }}>
+
+                    <input
+                        className="create-group-form__title"
+                        placeholder="TITLE"
+                        value={formData.title}
+                        onChange={(e) => {
+                            setFormData(prev => ({
+                                ...prev,
+                                ["title"]: e.target.value
+                            }))
+                        }}
+                        />
+                    <textarea
+                        rows={5}
+                        cols={5}
+                        className="create-group-form__disc"
+                        placeholder="Description"
+                        value={formData.description}
+                        onChange={(e) => {
+                            setFormData(prev => ({
+                                ...prev,
+                                ["description"]: e.target.value
+                            }))
+                        }}
+                    />
+
+                 
+                 <div className="buttons">
+                     <input
+                         type="button"
+                         className="create-group-form__cancel button"
+                         value="CANCEL"
+
+                         onClick={() => {
+                             setFormOpen(false)
+                             setFormData(defaultGroupFormData)
+                         }}
+                     />
+                     <input
+                         type="submit"
+                         className="create-group-form__submit button"
+                         value="SUBMIT"
+                     />
+                 </div>
+
+                </form>
+
                 ) : (
 
-                    <form className="create-group-form"
-                        onSubmit={(e) => {
-                            e.preventDefault()
-                            handleSubmit(formData)
-                            setPopup(true)
-                            setFormData(OGdata)
-                        }}
-                    >
-                        <input
-                            
-                            className="create-group-form__title"
-                            placeholder="TITLE"
-                            value={formData.title}
-                            onChange={(e) => {
-                                setFormData(prev => ({
-                                    ...prev,
-                                    ["title"]: e.target.value
-                                }))
-                            }}
-                        />
-                        <textarea
-                            rows={5}
-                            cols={5}
-                            className="create-group-form__disc"
-                            placeholder="Description"
-                            value={formData.description}
-                            onChange={(e) => {
-                                setFormData(prev => ({
-                                    ...prev,
-                                    ["description"]: e.target.value
-                                }))
-                            }}
-                        />
-
-                        
-                        <div className="buttons">
-                            <input
-                                type="button"
-                                className="create-group-form__cancel button"
-                                value="CANCEL"
-
-                                onClick={() => {
-                                    setPopup(true)
-                                    setFormData(OGdata)
-                                }}
-                            />
-                            <input
-                                type="submit"
-                                className="create-group-form__submit button"
-                                value="SUBMIT"
-                            />
-                        </div>
-
-                    </form>
+                    <input 
+                        type="button"
+                        className="create-new-group__button button"
+                        value="CREATE NEW GROUP"
+                        onClick={() => setFormOpen(true)}/>
                 )
             }
         </>
