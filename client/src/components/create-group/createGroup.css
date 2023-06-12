@@ -1,18 +1,13 @@
 .create-new-group__button {
-    width: auto;
-    height: 50px;
-    padding: 15px;
-    font-style: normal;
+    padding: 13px 50px;
     font-weight: bold;
-    color: #ffffff;
-    font-size: 20px;
-    line-height: 20px;
+    color: var(--white);
+    font-size: 26px;
 }
-
 
 .create-group-form {
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,28 +16,21 @@
     left: 35%;
 
     gap: 20px;
-    width: 30%;
-    height: 300px;
     background-color: var(--main-orange);
 }
 
-.create-group-form__disc {
-    padding: 10px;
-    border-radius: 12px;
-    width: 80%;
-    height: 70%;
-}
-.create-group-form__title {
-    width: 80%;
+.create-group-form__textinput {
+    width: 100%;
     border-radius: 12px;
     padding: 10px;
     align-items: center;
-    height: 20px;
-
     text-align: center;
+
+    resize: none;
+    overflow-y: hidden;
 }
 
-.create-group-form__cancel {
-    background-color: var(--main-red);
-    margin-right: 20px;
+.create-group-form__buttons {
+    display: flex;
+    gap: 20px;
 }

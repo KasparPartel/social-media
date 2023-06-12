@@ -12,6 +12,11 @@
     background-color: var(--main-green);
 }
 
+.button_red {
+    background-color: var(--main-red);
+    color: var(--white);
+}
+
 .label {
     display: flex;
     gap: 1em;
