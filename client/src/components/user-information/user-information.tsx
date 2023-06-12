@@ -17,7 +17,7 @@ export interface followProps {
 
 export function UserProfile() {
     const { paramId } = useParams()
-    const { user, isLoading } = useUserInfo(paramId)
+    const [user, isLoading, setUser] = useUserInfo(paramId)
     const isMyProfile = checkParamId(paramId)
     const { height, style, refText, openText } = useOpenText(0)
     const [followPorps, setFollowPorps] = useState<followProps>(followStatusHandler(0))
@@ -33,14 +33,11 @@ export function UserProfile() {
                     <div className="information__short-container">
                         <ShortInfo
                             {...{
-                                firstName: user.firstName,
-                                lastName: user.lastName,
-                                avatar: user.avatar,
-                                isPublic: user.isPublic,
+                                user,
                                 isMyProfile,
                                 openText,
                                 height,
-                                followStatus: user.followStatus,
+                                setUser
                             }}
                         />
                         {!isMyProfile ? (
@@ -62,6 +59,12 @@ export function UserProfile() {
                                 labelText="Birth date"
                                 insideText={moment(user.dateOfBirth).format("YYYY-MM-DD")}
                             />
+                            {isMyProfile ? (
+                                <LabeledParagraph
+                                    labelText="Privacy"
+                                    insideText={user.isPublic ? "Public" : "Private"}
+                                />
+                            ) : null}
                         </div>
                     </div>
                 </div>

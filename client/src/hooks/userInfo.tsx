@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../additional-functions/fetchErr"
 import fetchHandler from "../additional-functions/fetchHandler"
@@ -8,7 +8,7 @@ import { ServerResponse, User } from "../components/models"
  * Tries to find a user with the inputted id.
  * @returns either the user or null if the user does not exist
  */
-export default function useUserInfo(paramId: string) {
+export default function useUserInfo(paramId: string): [User, boolean, React.Dispatch<React.SetStateAction<User>>] {
     const navigate = useNavigate()
     const [user, setUser] = useState<User>(null)
     const [isLoading, setLoading] = useState(true)
@@ -23,5 +23,5 @@ export default function useUserInfo(paramId: string) {
             .catch(() => fetchErrorChecker([], navigate))
     }, [paramId])
 
-    return { user, isLoading }
+    return [user, isLoading, setUser]
 }

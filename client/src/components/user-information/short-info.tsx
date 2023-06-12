@@ -1,43 +1,58 @@
+import { useNavigate } from "react-router-dom"
 import altAvatar from "../../assets/default-avatar.png"
+import settingsIcon from "../../assets/settings_icon.svg"
+import toggleHook from "../../hooks/useToggle"
+import { ProfileSettings } from "../profile-settings/settings"
+import { User } from "../models"
 
 interface shortInfoProps {
-    firstName: string
-    lastName: string
-    avatar: string
-    isPublic: boolean
+    user: User
     isMyProfile: boolean
     openText: () => void
     height: number
-    followStatus: number
+    setUser: React.Dispatch<React.SetStateAction<User>>
 }
 
-export default function ShortInfo({
-    firstName,
-    lastName,
-    avatar,
-    isPublic,
-    isMyProfile,
-    openText,
-    height,
-    followStatus,
-}: shortInfoProps) {
+export default function ShortInfo({ user, isMyProfile, openText, height, setUser }: shortInfoProps) {
+    const avatarImg = user.avatar !== "" ? user.avatar : altAvatar
+    const { toggle: toggleProfileSettings, toggleChange } = toggleHook(false)
+    const navigate = useNavigate
+
     return (
         <div className="short-info">
-            <img
-                className="short-info__avatar"
-                src={avatar !== "" ? avatar : altAvatar}
-                alt="avatar"
-            />
-            <div className="short-info__name">{`${firstName} ${lastName}`}</div>
-            {isPublic || isMyProfile || followStatus == 3 ? (
-                <button
-                    className="button"
-                    onClick={() => {
-                        openText()
-                    }}
-                >
-                    {height > 0 ? "Less information ↑" : "More information ↓"}
-                </button>
+            <img className="short-info__avatar" src={avatarImg} alt="avatar" />
+            <div className="short-info__name">{user.login ? user.login : `${user.firstName} ${user.lastName}`}</div>
+            {user.isPublic || isMyProfile || user.followStatus == 3 ? (
+                <>
+                    <button
+                        className="button"
+                        onClick={() => {
+                            openText()
+                        }}
+                    >
+                        {height > 0 ? "Less information ↑" : "More information ↓"}
+                    </button>
+                    {isMyProfile ? (
+                        <>
+                            <img
+                                onClick={toggleChange}
+                                src={settingsIcon}
+                                style={{ cursor: "pointer" }}
+                                alt="settings"
+                            />
+                            {toggleProfileSettings ? (
+                                <ProfileSettings
+                                    {...{
+                                        user,
+                                        setUser,
+                                        navigate,
+                                        toggleChange
+                                    }}
+                                />
+                            ) : null}
+                        </>
+                    ) : null}
+                </>
             ) : (
                 <div className="short-info__privacy">Private profile</div>
             )}

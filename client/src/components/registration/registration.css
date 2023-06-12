@@ -35,10 +35,6 @@
     justify-content: center;
 }
 
-.label_cursor-pointer {
-    cursor: pointer;
-}
-
 .form__image-container_centered {
     align-items: center;
 }

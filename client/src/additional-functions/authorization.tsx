@@ -1,8 +1,9 @@
 import {
     RegistrationFormFields,
     LoginFormFields,
-    AdditionalInfoFormFields,
+    ProfileSettingsUpdateFormFields,
     RequestProps,
+    ProfileSettingsUpdateRequestProps,
 } from "../components/models"
 import fetchHandler from "./fetchHandler"
 import { formDataExtractor, authReturnHandler } from "./form"
@@ -42,7 +43,7 @@ export function RegistrationRequest({ e, setErrorArr, navigate }: RequestProps) 
 
 export function AdditionalInfoRequest({ e, id, setErrorArr, navigate, image }: RequestProps) {
     e.preventDefault()
-    const formFields: AdditionalInfoFormFields = {
+    const formFields: ProfileSettingsUpdateFormFields = {
         avatar: "",
         login: "",
         aboutMe: "",

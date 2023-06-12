@@ -3,7 +3,7 @@ import { NavigateFunction } from "react-router-dom"
 export type FormFields =
     | LoginFormFields
     | RegistrationFormFields
-    | AdditionalInfoFormFields
+    | ProfileSettingsUpdateFormFields
     | PostFormFields
     | MakeGroupFormFields
 
@@ -20,10 +20,11 @@ export interface RegistrationFormFields {
     dateOfBirth: number
 }
 
-export interface AdditionalInfoFormFields {
-    avatar: string
-    login: string
-    aboutMe: string
+export interface ProfileSettingsUpdateFormFields {
+    avatar?: string // base64 encoded
+    login?: string
+    aboutMe?: string
+    isPublic?: string
 }
 
 export interface MakeGroupFormFields {
@@ -44,6 +45,13 @@ export interface RequestProps {
     navigate: NavigateFunction
     image?: Blob
     id?: string
+}
+
+export interface ProfileSettingsUpdateRequestProps {
+    e: React.FormEvent<HTMLFormElement>
+    id: number
+    navigate: NavigateFunction
+    avatar: Blob
 }
 
 export interface ServerResponse<T> {
