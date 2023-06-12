@@ -58,3 +58,9 @@ type CreateGroupResponse struct {
 	CreationDate int    `json:"creationDate"`
 	UserId       int    `json:"userId"`
 }
+
+type GetGroupInfoResponse struct {
+	Id         int    `json:"id"`         // group id
+	Title      string `json:"title"`      // group title
+	JoinStatus int    `json:"joinStatus"` // 1 - not joined, 2 - requested, 3 - joined
+}
