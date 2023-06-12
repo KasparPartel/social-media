@@ -17,7 +17,7 @@ export interface followProps {
 
 export function UserProfile() {
     const { paramId } = useParams()
-    const { user, isLoading } = useUserInfo(paramId)
+    const [user, isLoading, setUser] = useUserInfo(paramId)
     const isMyProfile = checkParamId(paramId)
     const { height, style, refText, openText } = useOpenText(0)
     const [followPorps, setFollowPorps] = useState<followProps>(followStatusHandler(0))
@@ -37,6 +37,7 @@ export function UserProfile() {
                                 isMyProfile,
                                 openText,
                                 height,
+                                setUser
                             }}
                         />
                         {!isMyProfile ? (

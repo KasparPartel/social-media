@@ -2,27 +2,22 @@ import "./settings.css"
 import { useState } from "react"
 import { ImageUpload } from "../../additional-functions/images"
 import avatar_deafult from "../../assets/default-avatar.png"
-import { ProfileSettingsUpdateRequest } from "../../additional-functions/authorization"
-import { NavigateFunction } from "react-router-dom"
+import { ProfileSettingsUpdateRequest } from "../../additional-functions/profileSettings"
+import { NavigateFunction, redirect } from "react-router-dom"
+import { User } from "../models"
 
 interface ProfileSettingsProps {
-    id: number
+    user: User
+    setUser: React.Dispatch<React.SetStateAction<User>>
     navigate: NavigateFunction
     toggleChange: () => void
-    avatar?: string
-    login?: string
-    aboutMe?: string
-    isPublic?: boolean
 }
 
 export function ProfileSettings({
-    id,
+    user: { id, login, aboutMe, avatar, isPublic },
+    setUser,
     navigate,
     toggleChange,
-    avatar,
-    login,
-    aboutMe,
-    isPublic,
 }: ProfileSettingsProps) {
     const [currentAvatar, setCurrentAvatar] = useState<Blob>(null)
     const [aboutMeText, setAboutMeText] = useState<string>(aboutMe)
@@ -33,15 +28,24 @@ export function ProfileSettings({
             <form
                 className="settings"
                 onSubmit={(e) => {
-                    ProfileSettingsUpdateRequest({ e, id, navigate, avatar: currentAvatar }).then(
-                        (r) => {
-                            if (r === null) {
-                                window.location.reload()
-                            } else {
-                                console.log(r)
-                            }
-                        },
-                    )
+                    ProfileSettingsUpdateRequest({ e, id, navigate, avatar: currentAvatar })
+                        .then((r) => {
+                            if (!r.data) throw "No data"
+
+                            setUser((prevValue) => {
+                                const temp = Object.assign({}, prevValue)
+                                Object.entries(r.data).forEach(([key, value]) => {
+                                    if (Object.hasOwn(temp, key)) {
+                                        temp[key] = value
+                                    }
+                                });
+
+                                return temp
+                            })
+
+                        })
+                        .catch((err) => navigate('/internal-error'))
+                        .finally(toggleChange)
                 }}
             >
                 <div className="settings__container">
@@ -111,8 +115,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                ? avatar
-                                : avatar_deafult
+                                    ? avatar
+                                    : avatar_deafult
                         }
                         alt="attachment"
                     />

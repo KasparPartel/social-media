@@ -10,17 +10,18 @@ interface shortInfoProps {
     isMyProfile: boolean
     openText: () => void
     height: number
+    setUser: React.Dispatch<React.SetStateAction<User>>
 }
 
-export default function ShortInfo({ user, isMyProfile, openText, height }: shortInfoProps) {
+export default function ShortInfo({ user, isMyProfile, openText, height, setUser }: shortInfoProps) {
     const avatarImg = user.avatar !== "" ? user.avatar : altAvatar
-    const { toggle, toggleChange } = toggleHook(false)
+    const { toggle: toggleProfileSettings, toggleChange } = toggleHook(false)
     const navigate = useNavigate
 
     return (
         <div className="short-info">
             <img className="short-info__avatar" src={avatarImg} alt="avatar" />
-            <div className="short-info__name">{`${user.firstName} ${user.lastName}`}</div>
+            <div className="short-info__name">{user.login ? user.login : `${user.firstName} ${user.lastName}`}</div>
             {user.isPublic || isMyProfile || user.followStatus == 3 ? (
                 <>
                     <button
@@ -39,16 +40,13 @@ export default function ShortInfo({ user, isMyProfile, openText, height }: short
                                 style={{ cursor: "pointer" }}
                                 alt="settings"
                             />
-                            {toggle ? (
+                            {toggleProfileSettings ? (
                                 <ProfileSettings
                                     {...{
-                                        id: user.id,
+                                        user,
+                                        setUser,
                                         navigate,
-                                        toggleChange,
-                                        avatar: user.avatar,
-                                        login: user.login,
-                                        aboutMe: user.aboutMe,
-                                        isPublic: user.isPublic,
+                                        toggleChange
                                     }}
                                 />
                             ) : null}

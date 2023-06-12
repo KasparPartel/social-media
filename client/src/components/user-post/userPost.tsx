@@ -9,8 +9,8 @@ import { getPostData } from "./fetch"
 import moment from "moment"
 
 export default function UserPost({ postId }: { postId: number }) {
-    const [post, setPost] = useState<Post | undefined>(undefined)
-    const [err, setErr] = useState<Error | null>(null)
+    const [post, setPost] = useState<Post>(null)
+    const [err, setErr] = useState<Error>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [attachmentsCount, setAttachmentsCount] = useState(0)
     const [attachmentsOpen, setAttachmentsOpen] = useState(false)
@@ -68,9 +68,8 @@ export default function UserPost({ postId }: { postId: number }) {
                     <p className="post__attachments-toggler" onClick={() => toggleAttachments()}>
                         {attachmentsOpen
                             ? "Show less"
-                            : `Show ${
-                                  post.text ? attachmentsCount : attachmentsCount - 1
-                              } more attachment${attachmentsCount > 1 ? "s" : ""}`}
+                            : `Show ${post.text ? attachmentsCount : attachmentsCount - 1
+                            } more attachment${attachmentsCount > 1 ? "s" : ""}`}
                     </p>
                 )}
 

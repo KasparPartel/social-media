@@ -1,4 +1,4 @@
-import { AdditionalInfoFormFields, ProfileSettingsUpdateFormFields } from "../components/models"
+import { ProfileSettingsUpdateFormFields } from "../components/models"
 
 export function ImageUpload(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -8,10 +8,7 @@ export function ImageUpload(
     setImage(e.target.files[0])
 }
 
-export async function updateImage(
-    formFields: AdditionalInfoFormFields | ProfileSettingsUpdateFormFields,
-    image: Blob,
-) {
+export async function updateImage(formFields: ProfileSettingsUpdateFormFields, image: Blob) {
     if (image === null) {
         delete formFields.avatar
         return

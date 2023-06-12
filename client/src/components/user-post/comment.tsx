@@ -13,7 +13,7 @@ export default function CommentList({ postId }: { postId: number }) {
     const [inputText, setInputText] = useState("")
     const [err, setErr] = useState<Error>()
     const [isLoading, setIsLoading] = useState(true)
-    const { user } = useUserInfo(localStorage.getItem("id"))
+    const [user] = useUserInfo(localStorage.getItem("id"))
 
     useEffect(() => {
         getCommentsIds(postId, setCommentsIdList, setErr, setIsLoading)

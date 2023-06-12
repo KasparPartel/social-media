@@ -16,7 +16,7 @@ export default function PostList() {
     const { paramId } = useParams()
     const navigate = useNavigate()
     const myProfile = checkParamId(paramId)
-    const { user, isLoading } = useUserInfo(paramId)
+    const [user, isLoading] = useUserInfo(paramId)
 
     useEffect(() => {
         if (user && user.id) {
