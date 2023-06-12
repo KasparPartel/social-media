@@ -8,6 +8,7 @@ import { UserProfile } from "./components/user-information/user-information"
 import FollowingFollowers from "./components/followers-following/following-followers"
 import PostList from "./components/user-post/PostList"
 import CreatePost from "./components/create-post/createPost"
+import CreateGroup from "./components/create-group/createGroup"
 
 export default function App() {
     return (
@@ -19,6 +20,7 @@ export default function App() {
                 <Route path="/user/:paramId" element={<UserProfile />} />
                 <Route path="/post-test" element={<CreatePost />} />
                 <Route path="/test" element={<FollowingFollowers />} />
+                <Route path="/groups" element={<CreateGroup />} />
             </Route>
             <Route path="/user/:paramId/posts" element={<PostList />} />
             <Route path="/internal-error" element={<h1>Error 500</h1>} />

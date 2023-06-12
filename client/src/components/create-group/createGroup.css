@@ -1,0 +1,36 @@
+.create-new-group__button {
+    padding: 13px 50px;
+    font-weight: bold;
+    color: var(--white);
+    font-size: 26px;
+}
+
+.create-group-form {
+    border-radius: 12px;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: absolute;
+    left: 35%;
+
+    gap: 20px;
+    background-color: var(--main-orange);
+}
+
+.create-group-form__textinput {
+    width: 100%;
+    border-radius: 12px;
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+
+    resize: none;
+    overflow-y: hidden;
+}
+
+.create-group-form__buttons {
+    display: flex;
+    gap: 20px;
+}
