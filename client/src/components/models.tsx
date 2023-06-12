@@ -5,6 +5,7 @@ export type FormFields =
     | RegistrationFormFields
     | ProfileSettingsUpdateFormFields
     | PostFormFields
+    | MakeGroupFormFields
 
 export interface LoginFormFields {
     login: string
@@ -24,6 +25,11 @@ export interface ProfileSettingsUpdateFormFields {
     login?: string
     aboutMe?: string
     isPublic?: string
+}
+
+export interface MakeGroupFormFields {
+    title: string
+    description: string
 }
 
 export interface PostFormFields {

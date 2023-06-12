@@ -7,6 +7,7 @@ import Header from "./components/header/header"
 import { UserProfile } from "./components/user-information/user-information"
 import PostList from "./components/user-post/PostList"
 import CreatePost from "./components/create-post/createPost"
+import CreateGroup from "./components/create-group/createGroup"
 
 export default function App() {
     return (
