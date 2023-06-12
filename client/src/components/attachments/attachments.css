@@ -1,0 +1,36 @@
+.attachments-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+    justify-content: flex-start;
+    gap: 1em;
+}
+
+.attachment_modal {
+    box-sizing: border-box;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 4em;
+    background: hsla(0, 0%, 0%, 0.6);
+    z-index: 100000;
+}
+
+.attachment_modal > img {
+    width: 50%;
+}
+
+.close-modal__btn {
+    position: absolute;
+    right: 2em;
+    top: 2em;
+    width: 2em;
+    height: 2em;
+    font-size: 2em;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}

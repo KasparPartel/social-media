@@ -28,7 +28,7 @@ export function getUsersList({ id, navigate, endpoint }: followersProps): User[]
                         "GET",
                     )
                         .then((r) => r.json())
-                        .then((r: ServerResponse) => {
+                        .then((r: ServerResponse<User>) => {
                             if (r.errors) throw new Error()
                             return r.data
                         })

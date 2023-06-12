@@ -7,8 +7,8 @@ import { NavigateFunction, useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { PostPrivacy, PrivacySettings } from "./privacySection"
 import PostText from "./text"
-import AttachmentList from "./attachmentList"
-import { PostAttachmentInput } from "./attachmentInput"
+import AddedAttachmentsList from "../attachments/AddedAttachmentsList"
+import { AttachmentInput } from "../attachments/AttachmentInput"
 
 export default function CreatePost() {
     const { toggle: modalOpen, toggleChange: toggleModal } = toggleHook(false)
@@ -63,7 +63,7 @@ function Modal() {
                         setFormData,
                     }}
                 />
-                <AttachmentList
+                <AddedAttachmentsList
                     {...{
                         attachmentData,
                         setAttachmentData,
@@ -77,7 +77,7 @@ function Modal() {
                                 setFormData,
                             }}
                         />
-                        <PostAttachmentInput
+                        <AttachmentInput
                             {...{
                                 setFileLoading,
                                 setAttachmentData,

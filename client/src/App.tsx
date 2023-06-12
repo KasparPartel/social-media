@@ -5,7 +5,7 @@ import { Registration, AdditionalInfo } from "./components/registration/registra
 import { Route, Routes } from "react-router-dom"
 import Header from "./components/header/header"
 import { UserProfile } from "./components/user-information/user-information"
-import PostList from "./components/user-post/postList"
+import PostList from "./components/user-post/PostList"
 import CreatePost from "./components/create-post/createPost"
 
 export default function App() {

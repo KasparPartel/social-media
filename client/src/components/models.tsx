@@ -48,8 +48,8 @@ export interface ProfileSettingsUpdateRequestProps {
     avatar: Blob
 }
 
-export interface ServerResponse {
-    data: null | User
+export interface ServerResponse<T> {
+    data: null | T
     errors: ErrorResponse[]
 }
 
@@ -84,9 +84,11 @@ export interface User {
 }
 
 export interface PostComment {
-    dateOfCreation: number
+    id?: number
+    creationDate: number
     login: string
     parentId: number
     text: string
     userId: number
+    attachments: string[]
 }
