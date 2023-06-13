@@ -64,3 +64,10 @@ type GetGroupInfoResponse struct {
 	Title      string `json:"title"`      // group title
 	JoinStatus int    `json:"joinStatus"` // 1 - not joined, 2 - requested, 3 - joined
 }
+
+type GetGroupResponse struct {
+	Id          int    `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	JoinStatus  int    `json:"joinStatus"`
+}
