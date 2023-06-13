@@ -32,3 +32,46 @@ func CreateGroup(group models.CreateGroupRequest, userId int) (*models.CreateGro
 		UserId:       userId,
 	}, nil
 }
+
+func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
+	groups := make([]models.GetGroupInfoResponse, 0)
+
+	rows, err := db.Query(`
+	SELECT id,
+		title,
+		userId,
+		(
+			SELECT isAccepted
+			FROM group_members
+			WHERE id = group_members.groupId
+				AND group_members.userId = ?
+		)
+	FROM groups`, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		tempGroup := models.GetGroupInfoResponse{JoinStatus: 1}
+		ownerId := 0
+		var isAccepted *int
+
+		err = rows.Scan(&tempGroup.Id, &tempGroup.Title, &ownerId, &isAccepted)
+		if err != nil {
+			return nil, err
+		}
+
+		switch {
+		case ownerId == userId || (isAccepted != nil && *isAccepted == 1):
+			tempGroup.JoinStatus = 3
+		case isAccepted != nil && *isAccepted == 0:
+			tempGroup.JoinStatus = 2
+		default:
+			tempGroup.JoinStatus = 1
+		}
+
+		groups = append(groups, tempGroup)
+	}
+
+	return groups, nil
+}

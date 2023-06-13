@@ -70,10 +70,27 @@ func CreateGroup(w http.ResponseWriter, r *http.Request) {
 
 // GET /groups
 func GetAllGroups(w http.ResponseWriter, r *http.Request) {
-	groupIdArray := []int{88, 544, 556, 13, 1}
-
+	response := &eh.Response{}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(groupIdArray)
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	requestId := s.GetUID()
+
+	groupsResponse, err := sqlite.GetAllGroups(requestId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = groupsResponse
+	json.NewEncoder(w).Encode(response)
 }
 
 // GET /group/:id
