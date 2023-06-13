@@ -1,6 +1,8 @@
 package sqlite
 
 import (
+	"database/sql"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
 	"time"
 )
@@ -74,4 +76,42 @@ func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
 	}
 
 	return groups, nil
+}
+
+func GetGroup(userId, groupId int) (*models.GetGroupResponse, error) {
+	group := &models.GetGroupResponse{JoinStatus: 1}
+	ownerId := 0
+	var isAccepted *int
+
+	err := db.QueryRow(`
+	SELECT id,
+		title,
+		description,
+		userId,
+		(
+			SELECT isAccepted
+			FROM group_members
+			WHERE id = group_members.groupId
+				AND group_members.userId = ?
+		)
+	FROM groups
+	WHERE id = ?`, userId, groupId).Scan(&group.Id, &group.Title, &group.Description, &ownerId, &isAccepted)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	if err == sql.ErrNoRows {
+		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
+	}
+
+	switch {
+	case ownerId == userId || (isAccepted != nil && *isAccepted == 1):
+		group.JoinStatus = 3
+	case isAccepted != nil && *isAccepted == 0:
+		group.JoinStatus = 2
+	default:
+		group.JoinStatus = 1
+	}
+
+	return group, nil
 }

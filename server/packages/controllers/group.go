@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
+	"social-network/packages/httpRouting"
 	"social-network/packages/models"
 	"social-network/packages/session"
 	"social-network/packages/validator"
+	"strconv"
 	"strings"
 )
 
@@ -95,7 +97,34 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request) {
 
 // GET /group/:id
 func GetGroup(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
 
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	requestUserId := s.GetUID()
+	inputId, _ := httpRouting.GetField(r, "id")
+	groupId, _ := strconv.Atoi(inputId)
+
+	groupsResponse, err := sqlite.GetGroup(requestUserId, groupId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = groupsResponse
+	json.NewEncoder(w).Encode(response)
 }
 
 // PUT /group/:id
