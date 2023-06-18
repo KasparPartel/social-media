@@ -1,0 +1,62 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    height: 100vh;
+    width: 100vw;
+
+    font-size: 36px;
+    font-weight: bold;
+    white-space: nowrap;
+    background: var(--dark-blue);
+    color: var(--main-white);
+}
+
+.main {
+    display: flex;
+    align-items: flex-end;
+    gap: 6em;
+}
+
+.shuttle {
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: auto;
+    animation: CogAnimation2 30s linear infinite;
+}
+
+.astronaut {
+    width: 15rem;
+    height: 15rem;
+    animation: CogAnimation 10s linear infinite;
+}
+
+.planet {
+    width: 10rem;
+    height: 10rem;
+    animation: CogAnimation 365s linear infinite;
+}
+
+@keyframes CogAnimation {
+    0% {
+        transform: rotate(-360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes CogAnimation2 {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}

@@ -6,6 +6,8 @@
 }
 
 .create-group-form {
+    width: 50%;
+    height: 50%;
     border-radius: 12px;
     padding: 20px 40px;
     display: flex;
@@ -21,13 +23,18 @@
 
 .create-group-form__textinput {
     width: 100%;
-    border-radius: 12px;
     padding: 10px;
     align-items: center;
     text-align: center;
+    border-radius: 12px;
+    border: 0;
 
-    resize: none;
     overflow-y: hidden;
+}
+
+.create-group-form__textarea {
+    height: 100%;
+    resize: none;
 }
 
 .create-group-form__buttons {

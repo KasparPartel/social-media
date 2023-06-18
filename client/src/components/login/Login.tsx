@@ -1,7 +1,7 @@
 import "./login.css"
 import { ErrorResponse } from "../models"
 import { LoginRequest } from "../../additional-functions/authorization"
-import ErrorWindow from "../error-window/error-window"
+import ErrorWindow from "../error-window/ErrorWindow"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 

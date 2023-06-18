@@ -41,7 +41,7 @@
 }
 
 .post__attachment {
-    width: 50%;
+    width: 100%;
     align-self: center;
 }
 
@@ -66,8 +66,8 @@
 .postList {
     display: flex;
     flex-direction: column;
+    padding: 1em;
     box-sizing: border-box;
     gap: 1em;
+    overflow-y: scroll;
 }
-
-

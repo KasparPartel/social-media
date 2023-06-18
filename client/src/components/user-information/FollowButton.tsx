@@ -1,5 +1,5 @@
 import { followRequest } from "../../additional-functions/follow"
-import { followProps } from "./user-information"
+import { followProps } from "./UserInformation"
 
 interface followButtonProps {
     id: number

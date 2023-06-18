@@ -22,15 +22,16 @@ export default function AddedAttachmentsList({
             {attachmentData &&
                 attachmentData.map((file, i) => (
                     <li className="post-form__attachment" key={i}>
-                        {file.name} -{" "}
-                        <span
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
+                        {file.name}
+                        <button
+                            className="button button_red button_non-stretched"
+                            onClick={(e) => {
+                                e.preventDefault()
                                 handleRemoveAttachment(i, setAttachmentData)
                             }}
                         >
                             remove
-                        </span>
+                        </button>
                     </li>
                 ))}
         </ul>

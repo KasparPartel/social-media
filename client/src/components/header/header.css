@@ -1,14 +1,9 @@
-body {
-    background: var(--blue);
-}
-
 .header {
     box-sizing: border-box;
     display: flex;
 
     padding: 10px 40px;
     gap: 40px;
-    height: 80px;
     min-width: max-content;
 
     background: var(--main-orange);
@@ -16,18 +11,9 @@ body {
 
 .header__button {
     height: 100%;
-}
-
-.header__button_red {
-    color: var(--white);
-    background: var(--main-red);
+    font-size: 26px;
 }
 
 .header__button_right-side {
     margin-left: auto;
-}
-
-.button_disabled {
-    background-color: gray;
-    cursor: default;
 }

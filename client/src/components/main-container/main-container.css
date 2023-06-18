@@ -1,0 +1,9 @@
+body {
+    background: var(--blue);
+}
+
+.main-container {
+    display: grid;
+    grid-template-rows: 80px min-content;
+    height: 100vh;
+}

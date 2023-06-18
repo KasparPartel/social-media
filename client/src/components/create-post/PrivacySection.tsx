@@ -1,7 +1,7 @@
 import { PostFormFields } from "../models"
 import privateAddIcon from "../../assets/private_add.svg"
 import privateResetIcon from "../../assets/Reset.svg"
-import PrivacyOverlay from "./privacyOverlay"
+import PrivacyOverlay from "./PrivacyOverlay"
 import toggleHook from "../../hooks/useToggle"
 import { CommonPostProps } from "./text"
 import { useState } from "react"

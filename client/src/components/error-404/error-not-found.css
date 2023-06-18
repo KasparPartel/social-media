@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900");
+
+.error-not-found__wrapper {
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background-color: var(--dark-blue);
+}
+
+#yetiSVG,
+#lightSVG {
+    width: 600px;
+    height: 470px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+}

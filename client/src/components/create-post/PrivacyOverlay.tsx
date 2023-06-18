@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
-import privateUserList from "./privacyUserList"
+import privateUserList from "./PrivacyUserList"
 import { PostFormFields } from "../models"
+import { ProfilePlaceholders } from "../followers-following/FollowingFollowers"
 
 interface PrivacyOverlayProps {
     toggleModal: () => void
@@ -27,7 +28,9 @@ export default function PrivacyOverlay({
         <div className="add-users">
             <div className="add-users__wrapper">
                 <div className="add-users__scroll">
-                    {privateUserList(userList, indexList, setIndexList)}
+                    {userList.length === 0
+                        ? ProfilePlaceholders.noFollowers
+                        : privateUserList(userList, indexList, setIndexList)}
                 </div>
                 <div className="add-users__button-container">
                     <button className="button" type="button" onClick={toggleModal}>
