@@ -15,7 +15,7 @@ export default function Header({ id }: entryButton) {
 
     const customButtonInfo = [
         { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
-        { name: "Groups", path: `/` },
+        { name: "Groups", path: `/groups` },
         { name: "Users", path: `/` },
         { name: "Notifications", path: `/` },
     ]
