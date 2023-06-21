@@ -71,3 +71,7 @@ type GetGroupResponse struct {
 	Description string `json:"description"`
 	JoinStatus  int    `json:"joinStatus"`
 }
+
+type UpdateJoinStatus struct {
+	JoinStatus int `json:"joinStatus"`
+}
