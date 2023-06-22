@@ -87,7 +87,7 @@ func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
 	return groups, nil
 }
 
-func GetGroup(userId, groupId int) (*models.GetGroupResponse, error) {
+func GetGroupById(groupId, userId int) (*models.GetGroupResponse, error) {
 	group := &models.GetGroupResponse{JoinStatus: 1}
 	ownerId := 0
 	var isAccepted *int
@@ -141,7 +141,7 @@ func InviteToGroup(groupId, userId int, invitedUsers []int) ([]int, error) {
 		return nil, err
 	}
 
-	group, err := GetGroup(userId, groupId)
+	group, err := GetGroupById(groupId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +153,7 @@ func InviteToGroup(groupId, userId int, invitedUsers []int) ([]int, error) {
 	temp := make([]int, 0)
 
 	for _, id := range invitedUsers {
-		group, err = GetGroup(id, groupId)
+		group, err = GetGroupById(groupId, id)
 		if group.JoinStatus != 1 {
 			continue
 		}
@@ -171,4 +171,38 @@ func InviteToGroup(groupId, userId int, invitedUsers []int) ([]int, error) {
 	}
 
 	return temp, nil
+}
+
+func UpdateJoinStatus(groupId, userId int, isJoining bool) (int, error) {
+	group, err := GetGroupById(groupId, userId)
+	if err != nil {
+		return 0, err
+	}
+
+	if group.JoinStatus != 1 && isJoining {
+		return group.JoinStatus, nil
+	} else if group.JoinStatus == 1 && !isJoining {
+		return 1, nil
+	}
+
+	var sqlStmt *sql.Stmt
+	if isJoining {
+		sqlStmt, err = db.Prepare("INSERT INTO group_members (groupId, userId) VALUES (?, ?)")
+	} else {
+		sqlStmt, err = db.Prepare("DELETE FROM group_members WHERE groupId = ? AND userId = ?")
+	}
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = sqlStmt.Exec(groupId, userId)
+	if err != nil {
+		return 0, err
+	}
+
+	if isJoining {
+		return 2, nil
+	} else {
+		return 1, nil
+	}
 }

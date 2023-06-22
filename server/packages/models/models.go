@@ -75,3 +75,7 @@ type GetGroupResponse struct {
 type InviteToGroup struct {
 	Users []int `json:"users"`
 }
+
+type UpdateJoinStatus struct {
+	JoinStatus int `json:"joinStatus"`
+}

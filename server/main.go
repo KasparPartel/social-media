@@ -25,7 +25,6 @@ func main() {
 	r.NewRoute("GET", `/user/(?P<id>\d+)`, controllers.GetUserInfo)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/posts`, controllers.GetPosts)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/chats`, controllers.GetChats)
-	r.NewRoute("GET", `/user/(?P<id>\d+)/groups`, controllers.GetGroups)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followers`, controllers.GetFollowers)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followings`, controllers.GetFollowings)
 
@@ -49,7 +48,7 @@ func main() {
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)`, controllers.GetGroup)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/invite`, controllers.InviteToGroup)
-	r.NewRoute("PUT", `/group/(?P<id>\d+)`, controllers.UpdateGroup)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/(?P<action>leave|join)`, controllers.JoinLeaveGroup)
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
 

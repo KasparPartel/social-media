@@ -14,14 +14,6 @@ import (
 	"strings"
 )
 
-// GET /user/:id/groups
-func GetGroups(w http.ResponseWriter, r *http.Request) {
-	groupIdArray := []int{88, 544}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(groupIdArray)
-}
-
 // POST /groups
 func CreateGroup(w http.ResponseWriter, r *http.Request) {
 	response := &eh.Response{}
@@ -111,7 +103,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 	inputId, _ := httpRouting.GetField(r, "id")
 	groupId, _ := strconv.Atoi(inputId)
 
-	groupsResponse, err := sqlite.GetGroup(requestUserId, groupId)
+	groupsResponse, err := sqlite.GetGroupById(groupId, requestUserId)
 	if errRes, ok := err.(*eh.ErrorResponse); ok {
 		response.Errors = []*eh.ErrorResponse{errRes}
 		json.NewEncoder(w).Encode(response)
@@ -127,9 +119,46 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// PUT /group/:id
-func UpdateGroup(w http.ResponseWriter, r *http.Request) {
+// POST /group/:id/:action (actions: join, leave). Example: /group/12/join
+func JoinLeaveGroup(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
 
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	requestUserId := s.GetUID()
+	inputId, _ := httpRouting.GetField(r, "id")
+	action, _ := httpRouting.GetField(r, "action")
+	groupId, _ := strconv.Atoi(inputId)
+
+	isJoining := true
+
+	switch action {
+	case "join":
+		isJoining = true
+	case "leave":
+		isJoining = false
+	}
+
+	joinStatus, err := sqlite.UpdateJoinStatus(groupId, requestUserId, isJoining)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = models.UpdateJoinStatus{JoinStatus: joinStatus}
+	json.NewEncoder(w).Encode(response)
 }
 
 // GET /group/:groupId/invite
