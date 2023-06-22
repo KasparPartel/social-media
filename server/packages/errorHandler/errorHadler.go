@@ -31,8 +31,8 @@ const (
 )
 
 type Response struct {
-	Data   any              `json:"data"`
-	Errors []*ErrorResponse `json:"errors"`
+	Data   any              `json:"data,omitempty"`
+	Errors []*ErrorResponse `json:"errors,omitempty"`
 }
 
 type ErrorResponse struct {

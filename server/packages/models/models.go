@@ -71,3 +71,7 @@ type GetGroupResponse struct {
 	Description string `json:"description"`
 	JoinStatus  int    `json:"joinStatus"`
 }
+
+type InviteToGroup struct {
+	Users []int `json:"users"`
+}

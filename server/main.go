@@ -48,6 +48,7 @@ func main() {
 	r.NewRoute("POST", `/groups`, controllers.CreateGroup)
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)`, controllers.GetGroup)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/invite`, controllers.InviteToGroup)
 	r.NewRoute("PUT", `/group/(?P<id>\d+)`, controllers.UpdateGroup)
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
