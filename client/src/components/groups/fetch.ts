@@ -4,7 +4,7 @@ export const sendJoinRequest = (
   groupId: number,
   setJoinStatus: React.Dispatch<React.SetStateAction<number>>,
 ) => {
-  fetchHandler(`http://localhost:8080/group/:${groupId}/join`, "PUT").then((resp) => {
+  fetchHandler(`http://localhost:8080/group/${groupId}/join`, "PUT").then((resp) => {
     if (!resp.ok) {
       throw new Error(`HTTP error: status ${resp.status}`)
     }
