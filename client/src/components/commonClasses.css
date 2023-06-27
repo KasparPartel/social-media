@@ -12,9 +12,22 @@
     background-color: var(--main-green);
 }
 
+.button_disabled {
+    background-color: gray;
+    cursor: default;
+}
+
 .button_red {
     background-color: var(--main-red);
     color: var(--white);
+}
+
+.button_non-stretched {
+    width: min-content;
+}
+
+.button_orange {
+    background-color: var(--main-orange);
 }
 
 .label {
@@ -27,4 +40,13 @@
 .label__section {
     margin: 0;
     color: var(--black);
+}
+
+.link {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
 }

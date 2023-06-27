@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
-import { useOpenText } from "../../hooks/openText"
+import { useOpenText } from "../../hooks/useOpenText"
 import { Post } from "../models"
 import CommentList from "../post-comment/CommentList"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
@@ -54,7 +54,7 @@ export default function UserPost({ postId }: UserPostProps) {
             )}
 
             <div className="post__actions">
-                {attachmentsCount > 1 && (
+                {((attachmentsCount > 0 && post.text) || attachmentsCount > 1) && (
                     <AttachmentsToggler
                         isOpen={isAttachmentsOpen}
                         attachmentsCount={attachmentsCount}

@@ -1,9 +1,9 @@
 import "./settings.css"
 import { useState } from "react"
 import { ImageUpload } from "../../additional-functions/images"
-import avatar_deafult from "../../assets/default-avatar.png"
+import avatar_default from "../../assets/default-avatar.png"
 import { ProfileSettingsUpdateRequest } from "../../additional-functions/profileSettings"
-import { NavigateFunction, redirect } from "react-router-dom"
+import { NavigateFunction } from "react-router-dom"
 import { User } from "../models"
 
 interface ProfileSettingsProps {
@@ -38,26 +38,25 @@ export function ProfileSettings({
                                     if (Object.hasOwn(temp, key)) {
                                         temp[key] = value
                                     }
-                                });
+                                })
 
                                 return temp
                             })
-
                         })
-                        .catch((err) => navigate('/internal-error'))
+                        .catch(() => navigate("/internal-error"))
                         .finally(toggleChange)
                 }}
             >
                 <div className="settings__container">
                     <p className="settings__title">Account settings</p>
                     <div className="settings__button-container">
-                        <button type="submit" className="settings__button button form__button">
+                        <button type="submit" className="settings__button button">
                             Save changes
                         </button>
                         <button
                             type="button"
                             onClick={toggleChange}
-                            className="settings__button settings__button_orange button form__button"
+                            className="settings__button button button_orange"
                         >
                             Cancel
                         </button>
@@ -73,10 +72,9 @@ export function ProfileSettings({
                             onChange={(e) => setLoginText(e.target.value)}
                         />
                     </label>
-                    <label className="settings__input-label">
+                    <label style={{ height: "100%" }} className="settings__input-label">
                         Bio
                         <textarea
-                            rows={6}
                             className="settings__textarea form__field"
                             name="aboutMe"
                             placeholder="Bio here"
@@ -116,7 +114,7 @@ export function ProfileSettings({
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
                                     ? avatar
-                                    : avatar_deafult
+                                    : avatar_default
                         }
                         alt="attachment"
                     />

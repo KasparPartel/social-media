@@ -3,7 +3,6 @@ import {
     LoginFormFields,
     ProfileSettingsUpdateFormFields,
     RequestProps,
-    ProfileSettingsUpdateRequestProps,
 } from "../components/models"
 import fetchHandler from "./fetchHandler"
 import { formDataExtractor, authReturnHandler } from "./form"

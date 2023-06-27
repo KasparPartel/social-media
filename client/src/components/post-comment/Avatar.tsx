@@ -1,4 +1,4 @@
-import useUserInfo from "../../hooks/userInfo"
+import useUserInfo from "../../hooks/useUserInfo"
 import altAvatar from "../../assets/default-avatar.png"
 
 interface AvatarProps {
@@ -6,7 +6,12 @@ interface AvatarProps {
 }
 
 export default function Avatar({ userId }: AvatarProps) {
-    const [user] = useUserInfo(userId.toString())
-
-    return <img className="comment__avatar" src={user ? user.avatar : altAvatar} alt="avatar" />
+    const [user] = useUserInfo(userId)
+    return (
+        <img
+            className="comment__avatar"
+            src={!user ? null : user.avatar ? user.avatar : altAvatar}
+            alt="avatar"
+        />
+    )
 }
