@@ -47,6 +47,7 @@ func main() {
 	r.NewRoute("POST", `/groups`, controllers.CreateGroup)
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)`, controllers.GetGroup)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/invite`, controllers.InviteToGroup)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/(?P<action>leave|join)`, controllers.JoinLeaveGroup)
 
 	http.HandleFunc("/", r.ServeWithCORS(c))

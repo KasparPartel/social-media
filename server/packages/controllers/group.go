@@ -160,3 +160,53 @@ func JoinLeaveGroup(w http.ResponseWriter, r *http.Request) {
 	response.Data = models.UpdateJoinStatus{JoinStatus: joinStatus}
 	json.NewEncoder(w).Encode(response)
 }
+
+// GET /group/:groupId/invite
+func InviteToGroup(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	requestUserId := s.GetUID()
+	inputId, _ := httpRouting.GetField(r, "id")
+	groupId, _ := strconv.Atoi(inputId)
+
+	invitedUsers := models.InviteToGroup{}
+
+	err = json.NewDecoder(r.Body).Decode(&invitedUsers)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	v := validator.ValidationBuilder{}
+
+	errs := v.ValidateUserExists(invitedUsers.Users...).Validate()
+	if len(errs) != 0 {
+		response.Errors = errs
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	users, err := sqlite.InviteToGroup(groupId, requestUserId, invitedUsers.Users)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = models.InviteToGroup{Users: users}
+	json.NewEncoder(w).Encode(response)
+}
