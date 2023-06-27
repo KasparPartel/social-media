@@ -29,13 +29,13 @@ interface ModalProp {
 
 function Modal({ toggleModal }: ModalProp) {
     const navigate = useNavigate()
-    const deafultFormData: PostFormFields = {
+    const defaultFormData: PostFormFields = {
         privacy: PrivacySettings.Public,
         text: "",
         attachments: [],
         authorizedFollowers: [],
     }
-    const [formData, setFormData] = useState<PostFormFields>(deafultFormData)
+    const [formData, setFormData] = useState<PostFormFields>(defaultFormData)
     const [attachmentData, setAttachmentData] = useState<{ name: string; value: string }[]>([])
     const [fileIsLoading, setFileLoading] = useState(false)
 
@@ -49,7 +49,7 @@ function Modal({ toggleModal }: ModalProp) {
                         formData.attachments = attachmentData.map((attachment) => attachment.value)
                         const result = handleSubmit(formData, navigate)
                         if (result) {
-                            setFormData(deafultFormData)
+                            setFormData(defaultFormData)
                             setAttachmentData([])
                             toggleModal()
                         }

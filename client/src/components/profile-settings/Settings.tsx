@@ -1,7 +1,7 @@
 import "./settings.css"
 import { useState } from "react"
 import { ImageUpload } from "../../additional-functions/images"
-import avatar_deafult from "../../assets/default-avatar.png"
+import avatar_default from "../../assets/default-avatar.png"
 import { ProfileSettingsUpdateRequest } from "../../additional-functions/profileSettings"
 import { NavigateFunction } from "react-router-dom"
 import { User } from "../models"
@@ -113,8 +113,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                ? avatar
-                                : avatar_deafult
+                                    ? avatar
+                                    : avatar_default
                         }
                         alt="attachment"
                     />

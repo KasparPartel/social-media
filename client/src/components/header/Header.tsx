@@ -23,13 +23,13 @@ const customButtonInfo = [
     { name: "Users", path: `/users` },
     { name: "Notifications", path: `/notifications` },
 ]
-const deafultState = Array<boolean>(customButtonInfo.length).fill(false)
+const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
 
 export function Header({ buttonIndex }: entryButton) {
     const { isMyProfile } = useUserId()
     const navigate = useNavigate()
 
-    const [buttonState, setButtonState] = useState<boolean[]>(deafultState)
+    const [buttonState, setButtonState] = useState<boolean[]>(defaultState)
     useEffect(() => {
         setButtonState((prevState) => {
             const temp = Object.assign({}, prevState)
