@@ -186,6 +186,15 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	v := validator.ValidationBuilder{}
+
+	errs := v.ValidateUserExists(invitedUsers.Users...).Validate()
+	if len(errs) != 0 {
+		response.Errors = errs
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	users, err := sqlite.InviteToGroup(groupId, requestUserId, invitedUsers.Users)
 	if errRes, ok := err.(*eh.ErrorResponse); ok {
 		response.Errors = []*eh.ErrorResponse{errRes}
