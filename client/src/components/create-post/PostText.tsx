@@ -1,8 +1,10 @@
+import { NavigateFunction } from "react-router-dom"
 import { PostFormFields } from "../models"
 
 export interface CommonPostProps {
     formData: PostFormFields
     setFormData: React.Dispatch<React.SetStateAction<PostFormFields>>
+    navigate?: NavigateFunction
 }
 
 export default function PostText({ formData, setFormData }: CommonPostProps) {

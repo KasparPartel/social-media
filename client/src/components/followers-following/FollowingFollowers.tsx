@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
 import { User } from "../models"
 import altAvatar from "../../assets/default-avatar.png"
@@ -11,10 +11,9 @@ export const ProfilePlaceholders = {
 }
 
 export default function FollowingFollowers() {
-    const navigate = useNavigate()
     const { paramId } = useParamId()
-    const followingList = getUsersList({ id: Number(paramId), navigate, endpoint: "followings" })
-    const followersList = getUsersList({ id: Number(paramId), navigate, endpoint: "followers" })
+    const followingList = getUsersList({ id: Number(paramId), endpoint: "followings" })
+    const followersList = getUsersList({ id: Number(paramId), endpoint: "followers" })
     return (
         <div className="following-followers__wrapper">
             <FollowingFollowersContainer header="Following" userList={followingList} />
@@ -36,21 +35,21 @@ function FollowingFollowersContainer({ header, userList }: FollowingFollowersCon
                 {userList.length === 0
                     ? placeholderPicker(header)
                     : userList.map((user, i) => {
-                          return (
-                              <div className="user-card" key={i}>
-                                  <img
-                                      className="user-card__avatar"
-                                      src={user.avatar !== "" ? user.avatar : altAvatar}
-                                      alt="avatar"
-                                  />
-                                  <Link to={`/user/${user.id}`} className="link">
-                                      {user.login
-                                          ? user.login
-                                          : `${user.firstName} ${user.lastName}`}
-                                  </Link>
-                              </div>
-                          )
-                      })}
+                        return (
+                            <div className="user-card" key={i}>
+                                <img
+                                    className="user-card__avatar"
+                                    src={user.avatar !== "" ? user.avatar : altAvatar}
+                                    alt="avatar"
+                                />
+                                <Link to={`/user/${user.id}`} className="link">
+                                    {user.login
+                                        ? user.login
+                                        : `${user.firstName} ${user.lastName}`}
+                                </Link>
+                            </div>
+                        )
+                    })}
             </div>
         </div>
     )
