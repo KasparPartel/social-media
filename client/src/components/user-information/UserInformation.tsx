@@ -2,17 +2,17 @@ import moment from "moment"
 import { useEffect, useState } from "react"
 import { followStatusHandler } from "../../additional-functions/follow"
 import { useOpenText } from "../../hooks/useOpenText"
-import useUserInfo from "../../hooks/useUserInfo"
+import useUserInfo from "../../hooks/useEntityInfo"
 import FollowButton from "./FollowButton"
 import LabeledParagraph from "./Label"
 import ShortInfo from "./ShortInfo"
 import "./user-information.css"
-import { NoSuchUser } from "./NoSuchUser"
 import FollowingFollowers from "../followers-following/FollowingFollowers"
 import CreatePost from "../create-post/CreatePost"
 import PostList from "../user-post/PostList"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
-import useUserId from "../../hooks/useUserId"
+import useParamId from "../../hooks/useParamId"
+import { useNavigate } from "react-router-dom"
 
 export interface followProps {
     followClass: string
@@ -20,7 +20,8 @@ export interface followProps {
 }
 
 export function UserProfile() {
-    const { paramId, isMyProfile } = useUserId()
+    const navigate = useNavigate()
+    const { paramId, isMyProfile } = useParamId()
 
     const [user, isLoading, setUser] = useUserInfo(paramId)
     const { height, style, refText, openText } = useOpenText(0)
@@ -81,7 +82,7 @@ export function UserProfile() {
                     </div>
                 </>
             ) : (
-                <NoSuchUser />
+                navigate("/error-not-found")
             )}
         </>
     )

@@ -76,7 +76,7 @@ export interface Post {
 }
 
 export interface User {
-    id?: number
+    id: number
     avatar: string
     email: string
     login: string
@@ -87,6 +87,13 @@ export interface User {
     dateOfBirth: number
     isPublic: boolean
     followStatus?: number
+}
+
+export interface Group {
+    id: number
+    title: string
+    description: string
+    joinStatus: number // 1 - not joined, 2 - requested, 3 - joined
 }
 
 export interface PostComment {

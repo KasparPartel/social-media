@@ -7,6 +7,7 @@ import MainContainer from "./components/main-container/MainContainer"
 import { UserProfile } from "./components/user-information/UserInformation"
 import { ErrorNotFound } from "./components/error-404/ErrorNotFound"
 import { ErrorGeneral } from "./components/error-general/ErrorGeneral"
+import { GroupPage } from "./components/single-group/Group"
 
 export default function App() {
     return (
@@ -26,8 +27,10 @@ export default function App() {
             <Route path="/additional-registration" element={<AdditionalInfo />} />
             <Route element={<MainContainer />}>
                 <Route path="/user/:paramId" element={<UserProfile />} />
+                <Route path="/group/:paramId" element={<GroupPage />} />
             </Route>
             <Route path="/internal-error" element={<ErrorGeneral />} />
+            <Route path="/error-not-found" element={<ErrorNotFound />} />
             <Route path="*" element={<ErrorNotFound />} />
         </Routes>
     )

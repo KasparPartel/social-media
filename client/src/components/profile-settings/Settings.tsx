@@ -113,8 +113,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                    ? avatar
-                                    : avatar_default
+                                ? avatar
+                                : avatar_default
                         }
                         alt="attachment"
                     />

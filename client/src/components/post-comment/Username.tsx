@@ -1,4 +1,4 @@
-import useUserInfo from "../../hooks/useUserInfo"
+import useUserInfo from "../../hooks/useEntityInfo"
 
 interface UsernameProps {
     userId: number

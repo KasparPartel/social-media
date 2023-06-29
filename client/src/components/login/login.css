@@ -46,12 +46,6 @@
     background: var(--main-white);
 }
 
-.form__button {
-    background: var(--main-green);
-
-    cursor: pointer;
-}
-
 .switch-button {
     height: 4%;
 

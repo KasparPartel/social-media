@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../additional-functions/fetchErr"
 import fetchHandler from "../additional-functions/fetchHandler"
-import { ServerResponse, User } from "../components/models"
+import { Group, ServerResponse, User } from "../components/models"
 
 /**
  * Tries to find a user with the inputted id.
@@ -26,4 +26,24 @@ export default function useUserInfo(
     }, [paramId])
 
     return [user, isLoading, setUser]
+}
+
+export function useGroupInfo(
+    paramId: number,
+): [Group, boolean, React.Dispatch<React.SetStateAction<Group>>] {
+    const navigate = useNavigate()
+    const [group, setGroup] = useState<Group>(null)
+    const [isLoading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetchHandler(`http://localhost:8080/group/${paramId}`, `GET`)
+            .then((r) => r.json())
+            .then((r: ServerResponse<Group>) => {
+                r.errors ? fetchErrorChecker(r.errors, navigate) : setGroup(r.data)
+                setLoading(false)
+            })
+            .catch(() => fetchErrorChecker([], navigate))
+    }, [paramId])
+
+    return [group, isLoading, setGroup]
 }
