@@ -79,3 +79,19 @@ type InviteToGroup struct {
 type UpdateJoinStatus struct {
 	JoinStatus int `json:"joinStatus"`
 }
+
+type CreatePostEventRequest struct {
+	Text     string `json:"text"`
+	IsEvent  bool   `json:"isEvent"`
+	Title    string `json:"title"`
+	DateTime int    `json:"datetime"` // milliseconds
+}
+
+type CreatePostEventResponse struct {
+	Id       int     `json:"id"`
+	UserId   int     `json:"userId"`
+	Text     string  `json:"text"`
+	Title    *string `json:"title,omitempty"`
+	DateTime *int    `json:"datetime,omitempty"` // milliseconds
+	IsGoing  *int    `json:"isGoing,omitempty"`  // always 1 if isEvent
+}
