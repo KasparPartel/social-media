@@ -4,7 +4,9 @@ import PrivacyOverlay from "../create-post/PrivacyOverlay"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { getUsersList } from "../../additional-functions/getUsers"
 
-interface InviteButtonParam { paramId: number }
+interface InviteButtonParam {
+    paramId: number
+}
 
 export function InviteButton({ paramId }: InviteButtonParam) {
     const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
@@ -16,33 +18,35 @@ export function InviteButton({ paramId }: InviteButtonParam) {
 
     return (
         <>
-            <button
-                onClick={toggleOverlay}
-                className="button group__button">Invite</button>
+            <button onClick={toggleOverlay} className="button group__button">
+                Invite
+            </button>
             {overlayOpen ? (
                 <PrivacyOverlay
                     {...{
                         toggleModal: toggleOverlay,
                         indexList,
                         setIndexList,
-                        userList
+                        userList,
                     }}
                 >
                     <button
                         className="button"
                         type="button"
                         onClick={() => {
-                            fetchHandler(
-                                `http://localhost:8080/group/${paramId}/invite`, "POST", { users: indexList.map(userIndex => userList[userIndex].id) }
-                            ).then(r => r.json()).then(console.log)
+                            fetchHandler(`http://localhost:8080/group/${paramId}/invite`, "POST", {
+                                users: indexList.map((userIndex) => userList[userIndex].id),
+                            })
+                                .then((r) => r.json())
+                                .then(console.log)
                             setIndexList([])
                             toggleOverlay()
                         }}
                     >
                         Invite
                     </button>
-                </PrivacyOverlay>) : null
-            }
+                </PrivacyOverlay>
+            ) : null}
         </>
     )
 }

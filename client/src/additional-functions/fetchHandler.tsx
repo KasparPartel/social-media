@@ -3,7 +3,7 @@ import { FormFields } from "../components/models"
 export default async function fetchHandler(
     inputURL: string,
     method: string,
-    formFields?: FormFields | { users: number[]; },
+    formFields?: FormFields,
 ): Promise<Response> {
     const request: RequestInit = {
         method,

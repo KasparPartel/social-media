@@ -59,7 +59,7 @@ export function PostPrivacy({ formData, setFormData }: CommonPostProps) {
                                 setFormData,
                                 indexList,
                                 setIndexList,
-                                userList
+                                userList,
                             }}
                         >
                             <button
@@ -87,7 +87,7 @@ const handleFollowersChange = (
 ) => {
     setFormData((prevValues) => {
         const temp = Object.assign({}, prevValues)
-        temp.authorizedFollowers = indexList.map(userIndex => userList[userIndex].id)
+        temp.authorizedFollowers = indexList.map((userIndex) => userList[userIndex].id)
         return temp
     })
 }

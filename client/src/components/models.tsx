@@ -6,6 +6,11 @@ export type FormFields =
     | ProfileSettingsUpdateFormFields
     | PostFormFields
     | MakeGroupFormFields
+    | GroupUserInvitations
+
+interface GroupUserInvitations {
+    users: number[]
+}
 
 export interface LoginFormFields {
     login: string

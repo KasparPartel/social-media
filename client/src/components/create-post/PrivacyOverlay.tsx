@@ -16,7 +16,7 @@ export default function PrivacyOverlay({
     indexList,
     setIndexList,
     userList,
-    children
+    children,
 }: PrivacyOverlayProps) {
     return (
         <div className="add-users">
@@ -36,4 +36,3 @@ export default function PrivacyOverlay({
         </div>
     )
 }
-

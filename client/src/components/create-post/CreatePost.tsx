@@ -73,7 +73,7 @@ function Modal({ toggleModal }: ModalProp) {
                                 {...{
                                     formData,
                                     setFormData,
-                                    navigate
+                                    navigate,
                                 }}
                             />
                             <AttachmentInput
