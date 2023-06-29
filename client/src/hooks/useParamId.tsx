@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-export default function useUserId() {
+export default function useParamId() {
     const { paramId } = useParams()
     if (!Number(paramId)) return { paramId: 0, isMyProfile: false }
 

@@ -3,7 +3,7 @@ import { getUsersList } from "../../additional-functions/getUsers"
 import { User } from "../models"
 import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
-import useUserId from "../../hooks/useUserId"
+import useParamId from "../../hooks/useParamId"
 
 export const ProfilePlaceholders = {
     noFollowers: "No followers yet",
@@ -12,7 +12,7 @@ export const ProfilePlaceholders = {
 
 export default function FollowingFollowers() {
     const navigate = useNavigate()
-    const { paramId } = useUserId()
+    const { paramId } = useParamId()
     const followingList = getUsersList({ id: Number(paramId), navigate, endpoint: "followings" })
     const followersList = getUsersList({ id: Number(paramId), navigate, endpoint: "followers" })
     return (
