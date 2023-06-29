@@ -286,3 +286,60 @@ func CreateGroupPost(groupId, userId int, text string) (*models.CreatePostEventR
 
 	return event, nil
 }
+
+func GetAllPosts(groupId int) ([]models.CreatePostEventResponse, error) {
+	rows, err := db.Query(`
+	SELECT 
+		id,
+		text,
+		userId
+	FROM posts
+	WHERE groupId = ?`, groupId)
+	if err != nil {
+		return nil, err
+	}
+
+	posts := make([]models.CreatePostEventResponse, 0)
+
+	for rows.Next() {
+		temp := models.CreatePostEventResponse{}
+		err = rows.Scan(&temp.Id, &temp.Text, &temp.UserId)
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, temp)
+	}
+
+	return posts, nil
+}
+
+func GetAllEvents(groupId int) ([]models.CreatePostEventResponse, error) {
+	rows, err := db.Query(`
+	SELECT 
+		id,
+		text,
+		userId,
+		title,
+		datetime
+	FROM events
+	WHERE groupId = ?`, groupId)
+	if err != nil {
+		return nil, err
+	}
+
+	events := make([]models.CreatePostEventResponse, 0)
+	defaultIsGoing := 1
+
+	for rows.Next() {
+		temp := models.CreatePostEventResponse{IsGoing: &defaultIsGoing} // TODO: complete isGoing to get actual status
+		err = rows.Scan(&temp.Id, &temp.Text, &temp.UserId, &temp.Title, &temp.DateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		events = append(events, temp)
+	}
+
+	return events, nil
+}
