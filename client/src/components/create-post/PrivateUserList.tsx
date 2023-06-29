@@ -1,7 +1,7 @@
 import { User } from "../models"
 import altAvatar from "../../assets/default-avatar.png"
 
-export default function privateUserList(
+export default function PrivateUserList(
     userList: User[],
     selectedArr: number[],
     setSelectedArr: (arg: number[]) => void,

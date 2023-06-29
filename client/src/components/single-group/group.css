@@ -16,6 +16,10 @@
     background-color: var(--main-orange);
 }
 
+.group_centered {
+    grid-template-columns: auto;
+}
+
 .group__right {
     display: flex;
     align-items: center;
@@ -49,6 +53,10 @@
     border-radius: 12px;
     background-color: var(--main-white);
     font-size: 24px;
+}
+
+.group__descriptio_not-stretched {
+    width: auto;
 }
 
 .group__buttons-container {

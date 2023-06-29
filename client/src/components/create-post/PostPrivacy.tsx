@@ -1,10 +1,11 @@
-import { PostFormFields } from "../models"
+import { PostFormFields, User } from "../models"
 import privateAddIcon from "../../assets/private_add.svg"
 import privateResetIcon from "../../assets/Reset.svg"
 import PrivacyOverlay from "./PrivacyOverlay"
 import toggleHook from "../../hooks/useToggle"
-import { CommonPostProps } from "./text"
+import { CommonPostProps } from "./PostText"
 import { useState } from "react"
+import { getUsersList } from "../../additional-functions/getUsers"
 
 export const PrivacySettings = {
     Public: 1,
@@ -15,6 +16,10 @@ export const PrivacySettings = {
 export function PostPrivacy({ formData, setFormData }: CommonPostProps) {
     const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
     const [indexList, setIndexList] = useState<number[]>([])
+    const userList = getUsersList({
+        id: Number(localStorage.getItem("id")),
+        endpoint: "followers",
+    })
 
     return (
         <>
@@ -54,13 +59,37 @@ export function PostPrivacy({ formData, setFormData }: CommonPostProps) {
                                 setFormData,
                                 indexList,
                                 setIndexList,
+                                userList,
                             }}
-                        />
+                        >
+                            <button
+                                className="button"
+                                type="button"
+                                onClick={() => {
+                                    handleFollowersChange(indexList, userList, setFormData)
+                                    toggleOverlay()
+                                }}
+                            >
+                                Continue
+                            </button>
+                        </PrivacyOverlay>
                     ) : null}
                 </>
             )}
         </>
     )
+}
+
+const handleFollowersChange = (
+    indexList: number[],
+    userList: User[],
+    setFormData: React.Dispatch<React.SetStateAction<PostFormFields>>,
+) => {
+    setFormData((prevValues) => {
+        const temp = Object.assign({}, prevValues)
+        temp.authorizedFollowers = indexList.map((userIndex) => userList[userIndex].id)
+        return temp
+    })
 }
 
 const handlePrivacyChange = (

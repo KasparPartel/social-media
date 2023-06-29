@@ -5,8 +5,8 @@ import fetchHandler from "../../additional-functions/fetchHandler"
 import toggleHook from "../../hooks/useToggle"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
-import { PostPrivacy, PrivacySettings } from "./PrivacySection"
-import PostText from "./text"
+import { PostPrivacy, PrivacySettings } from "./PostPrivacy"
+import PostText from "./PostText"
 import AddedAttachmentsList from "../attachments/AddedAttachmentsList"
 import { AttachmentInput } from "../attachments/AttachmentInput"
 
@@ -73,6 +73,7 @@ function Modal({ toggleModal }: ModalProp) {
                                 {...{
                                     formData,
                                     setFormData,
+                                    navigate,
                                 }}
                             />
                             <AttachmentInput
