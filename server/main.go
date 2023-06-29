@@ -50,6 +50,8 @@ func main() {
 	r.NewRoute("POST", `/group/(?P<id>\d+)/invite`, controllers.InviteToGroup)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/(?P<action>leave|join)`, controllers.JoinLeaveGroup)
 
+	r.NewRoute("POST", `/group/(?P<id>\d+)/feed`, controllers.CreatePostEvent)
+
 	http.HandleFunc("/", r.ServeWithCORS(c))
 
 	log.Println("The API is available at the link: http://localhost:8080")

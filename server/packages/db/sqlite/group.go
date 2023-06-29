@@ -206,3 +206,83 @@ func UpdateJoinStatus(groupId, userId int, isJoining bool) (int, error) {
 		return 1, nil
 	}
 }
+
+func CreateGroupEvent(groupId, userId int, text, title string, datetime int) (*models.CreatePostEventResponse, error) {
+	if text == "" || title == "" {
+		return nil, eh.NewErrorResponse(eh.ErrEmptyInput, "no input provided")
+	}
+
+	sqlStmt, err := db.Prepare(`INSERT INTO events (
+        groupId,
+        userId,
+        text,
+        title,
+        datetime,
+        creationDate
+    ) VALUES (?, ?, ?, ?, ?, ?)`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	creationDate := time.Now().UnixMilli()
+
+	sqlResult, err := sqlStmt.Exec(groupId, userId, text, title, datetime, creationDate)
+	if err != nil {
+		return nil, err
+	}
+	eventId, err := sqlResult.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	defaultIsGoing := 1
+
+	event := &models.CreatePostEventResponse{
+		Id:       int(eventId),
+		UserId:   userId,
+		Text:     text,
+		Title:    &title,
+		DateTime: &datetime,
+		IsGoing:  &defaultIsGoing,
+	}
+
+	return event, nil
+}
+
+func CreateGroupPost(groupId, userId int, text string) (*models.CreatePostEventResponse, error) {
+	if text == "" {
+		return nil, eh.NewErrorResponse(eh.ErrEmptyInput, "no input provided")
+	}
+
+	sqlStmt, err := db.Prepare(`INSERT INTO posts (
+        groupId,
+        userId,
+        text,
+        creationDate,
+        privacy
+    ) VALUES (?, ?, ?, ?, ?)`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	creationDate := time.Now().UnixMilli()
+
+	sqlResult, err := sqlStmt.Exec(groupId, userId, text, creationDate, 3)
+	if err != nil {
+		return nil, err
+	}
+	postId, err := sqlResult.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	event := &models.CreatePostEventResponse{
+		Id:     int(postId),
+		UserId: userId,
+		Text:   text,
+	}
+
+	return event, nil
+}

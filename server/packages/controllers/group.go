@@ -210,3 +210,65 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 	response.Data = models.InviteToGroup{Users: users}
 	json.NewEncoder(w).Encode(response)
 }
+
+// POST /group/:groupId/feed
+func CreatePostEvent(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	requestUserId := s.GetUID()
+	inputId, _ := httpRouting.GetField(r, "id")
+	groupId, _ := strconv.Atoi(inputId)
+
+	group, err := sqlite.GetGroupById(groupId, requestUserId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	} else if group.JoinStatus != 3 {
+		response.Errors = []*eh.ErrorResponse{
+			eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	post := models.CreatePostEventRequest{}
+	err = json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	post.Text = strings.TrimSpace(post.Text)
+	post.Title = strings.TrimSpace(post.Title)
+
+	responsePost := &models.CreatePostEventResponse{}
+
+	if post.IsEvent {
+		responsePost, err = sqlite.CreateGroupEvent(groupId, requestUserId, post.Text, post.Title, post.DateTime)
+	} else {
+		responsePost, err = sqlite.CreateGroupPost(groupId, requestUserId, post.Text)
+	}
+
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = responsePost
+	json.NewEncoder(w).Encode(response)
+}
