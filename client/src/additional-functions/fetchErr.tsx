@@ -6,17 +6,15 @@ export function fetchErrorChecker(
     navigate: NavigateFunction,
 ): ErrorResponse[] | void {
     if (errArr.length < 1) {
-        navigate("/login", {
-            state: {
-                type: 0,
-                data: [{ code: 0, description: "something went wrong, please relogin" }],
-            },
-        })
+        navigate("/internal-error")
         return
     }
 
     const resErrs = errArr.filter((err) => err.code === 13 || err.code === 14)
 
-    if (resErrs.length > 0) navigate("/login", { state: { type: 0, data: resErrs } })
+    if (resErrs.length > 0) {
+        localStorage.removeItem("id")
+        navigate("/login", { state: { type: 0, data: resErrs } })
+    }
     return errArr
 }

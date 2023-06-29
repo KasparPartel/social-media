@@ -18,21 +18,24 @@ export default function AddComment({ postId, myUser, setCommentsIdList }: AddCom
     const [inputText, setInputText] = useState("")
     const [attachmentData, setAttachmentData] = useState<{ name: string; value: string }[]>([])
     const [isFileLoading, setFileLoading] = useState(false)
+    const [isSubmitting, setSubmitting] = useState(false)
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (inputText === "" && attachmentData.length === 0) {
+        const text = inputText.trim()
+        if ((text === "" && attachmentData.length === 0) || isFileLoading || isSubmitting) {
             return
         }
 
+        setSubmitting(true)
         const attachments = attachmentData.map((attachment) => attachment.value)
 
         const comment: PostComment = {
             creationDate: Date.now(),
             login: myUser.login ?? "",
             parentId: 0,
-            text: inputText,
+            text: text,
             userId: myUser.id,
             attachments: attachments,
         }
@@ -50,6 +53,9 @@ export default function AddComment({ postId, myUser, setCommentsIdList }: AddCom
                 setAttachmentData(() => [])
             } catch (e) {
                 console.log(e as Error)
+            } finally {
+                setFileLoading(false)
+                setSubmitting(false)
             }
         }
 

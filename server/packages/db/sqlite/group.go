@@ -47,8 +47,14 @@ func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
 			FROM group_members
 			WHERE id = group_members.groupId
 				AND group_members.userId = ?
+		),
+		(
+			SELECT 1
+			FROM group_invitation
+			WHERE id = group_invitation.groupId
+				AND group_invitation.userId = ?
 		)
-	FROM groups`, userId)
+	FROM groups`, userId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +63,9 @@ func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
 		tempGroup := models.GetGroupInfoResponse{JoinStatus: 1}
 		ownerId := 0
 		var isAccepted *int
+		var isInvited *int
 
-		err = rows.Scan(&tempGroup.Id, &tempGroup.Title, &ownerId, &isAccepted)
+		err = rows.Scan(&tempGroup.Id, &tempGroup.Title, &ownerId, &isAccepted, &isInvited)
 		if err != nil {
 			return nil, err
 		}
@@ -68,6 +75,8 @@ func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
 			tempGroup.JoinStatus = 3
 		case isAccepted != nil && *isAccepted == 0:
 			tempGroup.JoinStatus = 2
+		case isInvited != nil:
+			tempGroup.JoinStatus = 4
 		default:
 			tempGroup.JoinStatus = 1
 		}
@@ -82,6 +91,7 @@ func GetGroupById(groupId, userId int) (*models.GetGroupResponse, error) {
 	group := &models.GetGroupResponse{JoinStatus: 1}
 	ownerId := 0
 	var isAccepted *int
+	var isInvited *int
 
 	err := db.QueryRow(`
 	SELECT id,
@@ -93,9 +103,15 @@ func GetGroupById(groupId, userId int) (*models.GetGroupResponse, error) {
 			FROM group_members
 			WHERE id = group_members.groupId
 				AND group_members.userId = ?
+		),
+		(
+			SELECT 1
+			FROM group_invitation
+			WHERE id = group_invitation.groupId
+				AND group_invitation.userId = ?
 		)
 	FROM groups
-	WHERE id = ?`, userId, groupId).Scan(&group.Id, &group.Title, &group.Description, &ownerId, &isAccepted)
+	WHERE id = ?`, userId, userId, groupId).Scan(&group.Id, &group.Title, &group.Description, &ownerId, &isAccepted, &isInvited)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -109,11 +125,52 @@ func GetGroupById(groupId, userId int) (*models.GetGroupResponse, error) {
 		group.JoinStatus = 3
 	case isAccepted != nil && *isAccepted == 0:
 		group.JoinStatus = 2
+	case isInvited != nil:
+		group.JoinStatus = 4
 	default:
 		group.JoinStatus = 1
 	}
 
 	return group, nil
+}
+
+func InviteToGroup(groupId, userId int, invitedUsers []int) ([]int, error) {
+	sqlStmt, err := db.Prepare(`INSERT INTO group_invitation (groupId, userId)
+	VALUES (?, ?);`)
+	if err != nil {
+		return nil, err
+	}
+
+	group, err := GetGroupById(groupId, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if group.JoinStatus != 3 {
+		return nil, eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")
+	}
+
+	temp := make([]int, 0)
+
+	for _, id := range invitedUsers {
+		group, err = GetGroupById(groupId, id)
+		if group.JoinStatus != 1 {
+			continue
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = sqlStmt.Exec(groupId, id)
+		if err != nil {
+			return nil, err
+		}
+
+		temp = append(temp, id)
+	}
+
+	return temp, nil
 }
 
 func UpdateJoinStatus(groupId, userId int, isJoining bool) (int, error) {
@@ -148,4 +205,141 @@ func UpdateJoinStatus(groupId, userId int, isJoining bool) (int, error) {
 	} else {
 		return 1, nil
 	}
+}
+
+func CreateGroupEvent(groupId, userId int, text, title string, datetime int) (*models.CreatePostEventResponse, error) {
+	if text == "" || title == "" {
+		return nil, eh.NewErrorResponse(eh.ErrEmptyInput, "no input provided")
+	}
+
+	sqlStmt, err := db.Prepare(`INSERT INTO events (
+        groupId,
+        userId,
+        text,
+        title,
+        datetime,
+        creationDate
+    ) VALUES (?, ?, ?, ?, ?, ?)`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	creationDate := time.Now().UnixMilli()
+
+	sqlResult, err := sqlStmt.Exec(groupId, userId, text, title, datetime, creationDate)
+	if err != nil {
+		return nil, err
+	}
+	eventId, err := sqlResult.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	defaultIsGoing := 1
+
+	event := &models.CreatePostEventResponse{
+		Id:       int(eventId),
+		UserId:   userId,
+		Text:     text,
+		Title:    &title,
+		DateTime: &datetime,
+		IsGoing:  &defaultIsGoing,
+	}
+
+	return event, nil
+}
+
+func CreateGroupPost(groupId, userId int, text string) (*models.CreatePostEventResponse, error) {
+	if text == "" {
+		return nil, eh.NewErrorResponse(eh.ErrEmptyInput, "no input provided")
+	}
+
+	sqlStmt, err := db.Prepare(`INSERT INTO posts (
+        groupId,
+        userId,
+        text,
+        creationDate,
+        privacy
+    ) VALUES (?, ?, ?, ?, ?)`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	creationDate := time.Now().UnixMilli()
+
+	sqlResult, err := sqlStmt.Exec(groupId, userId, text, creationDate, 3)
+	if err != nil {
+		return nil, err
+	}
+	postId, err := sqlResult.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	event := &models.CreatePostEventResponse{
+		Id:     int(postId),
+		UserId: userId,
+		Text:   text,
+	}
+
+	return event, nil
+}
+
+func GetAllPosts(groupId int) ([]models.CreatePostEventResponse, error) {
+	rows, err := db.Query(`
+	SELECT 
+		id,
+		text,
+		userId
+	FROM posts
+	WHERE groupId = ?`, groupId)
+	if err != nil {
+		return nil, err
+	}
+
+	posts := make([]models.CreatePostEventResponse, 0)
+
+	for rows.Next() {
+		temp := models.CreatePostEventResponse{}
+		err = rows.Scan(&temp.Id, &temp.Text, &temp.UserId)
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, temp)
+	}
+
+	return posts, nil
+}
+
+func GetAllEvents(groupId int) ([]models.CreatePostEventResponse, error) {
+	rows, err := db.Query(`
+	SELECT 
+		id,
+		text,
+		userId,
+		title,
+		datetime
+	FROM events
+	WHERE groupId = ?`, groupId)
+	if err != nil {
+		return nil, err
+	}
+
+	events := make([]models.CreatePostEventResponse, 0)
+	defaultIsGoing := 1
+
+	for rows.Next() {
+		temp := models.CreatePostEventResponse{IsGoing: &defaultIsGoing} // TODO: complete isGoing to get actual status
+		err = rows.Scan(&temp.Id, &temp.Text, &temp.UserId, &temp.Title, &temp.DateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		events = append(events, temp)
+	}
+
+	return events, nil
 }

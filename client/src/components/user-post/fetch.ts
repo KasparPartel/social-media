@@ -1,6 +1,6 @@
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { Dispatch, SetStateAction } from "react"
-import { Post, PostComment } from "../models"
+import { Post } from "../models"
 
 /**
  *  Fetches all post ids related to user

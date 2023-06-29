@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import useUserInfo from "../../hooks/userInfo"
 import UserPost from "./UserPost"
 import "./userPost.css"
-import checkParamId from "../../additional-functions/userId"
 import { getPostIds } from "./fetch"
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import { User } from "../models"
+
+interface PostListParams {
+    user: User
+    isMyProfile: boolean
+}
 
 /*
  * Parent component for rendering posts created by specific user
  */
-export default function PostList() {
+export default function PostList({ user, isMyProfile }: PostListParams) {
+    if (!user || (!isMyProfile && !user.isPublic && user.followStatus != 3)) {
+        return null
+    }
+
     const [idList, setIdList] = useState<number[]>([])
     const [err, setErr] = useState<Error>(null)
-    const { paramId } = useParams()
-    const navigate = useNavigate()
-    const myProfile = checkParamId(paramId)
-    const [user, isLoading] = useUserInfo(paramId)
 
     useEffect(() => {
         if (user && user.id) {
@@ -24,17 +26,7 @@ export default function PostList() {
         }
     }, [user])
 
-    useEffect(() => {
-        if (!isLoading) {
-            if (!user || (!myProfile && !user.isPublic && user.followStatus != 3)) {
-                navigate(`/user/${paramId}`)
-                return
-            }
-        }
-    }, [isLoading, myProfile, user])
-
-    if (isLoading) return <LoadingSkeleton dataName="posts" />
-    return UserPosts({ idList, err })
+    if (idList || err) return UserPosts({ idList, err })
 }
 
 const UserPosts = ({ idList, err }: { idList: number[]; err: Error }) => {

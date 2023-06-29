@@ -1,13 +1,12 @@
-import { ProfileSettingsUpdateFormFields, ProfileSettingsUpdateRequestProps } from "../components/models"
+import {
+    ProfileSettingsUpdateFormFields,
+    ProfileSettingsUpdateRequestProps,
+} from "../components/models"
 import fetchHandler from "./fetchHandler"
 import { formDataExtractor } from "./form"
 import { updateImage } from "./images"
 
-export function ProfileSettingsUpdateRequest({
-    e,
-    id,
-    avatar,
-}: ProfileSettingsUpdateRequestProps) {
+export function ProfileSettingsUpdateRequest({ e, id, avatar }: ProfileSettingsUpdateRequestProps) {
     e.preventDefault()
     const formFields: ProfileSettingsUpdateFormFields = {
         avatar: "",

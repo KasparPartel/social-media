@@ -4,7 +4,7 @@ import {
     RegistrationRequest,
     AdditionalInfoRequest,
 } from "../../additional-functions/authorization"
-import ErrorWindow from "../error-window/error-window"
+import ErrorWindow from "../error-window/ErrorWindow"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImageUpload } from "../../additional-functions/images"

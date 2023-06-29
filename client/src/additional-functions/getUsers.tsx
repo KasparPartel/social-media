@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react"
-import { NavigateFunction } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ErrorResponse, ServerResponse, User } from "../components/models"
 import { fetchErrorChecker } from "./fetchErr"
 import fetchHandler from "./fetchHandler"
 
 interface followersProps {
     id: number
-    navigate: NavigateFunction
     endpoint: string
 }
 
-export function getUsersList({ id, navigate, endpoint }: followersProps): User[] {
+export function getUsersList({ id, endpoint }: followersProps): User[] {
+    const navigate = useNavigate()
+
     const [userList, setUserList] = useState<User[]>([])
 
     useEffect(() => {

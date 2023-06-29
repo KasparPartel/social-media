@@ -40,9 +40,7 @@ export default function CreateGroup() {
                         }}
                     />
                     <textarea
-                        rows={10}
-                        cols={40}
-                        className="create-group-form__textinput"
+                        className="create-group-form__textinput create-group-form__textarea"
                         placeholder="Description"
                         value={formData.description}
                         onChange={(e) => {
@@ -58,16 +56,13 @@ export default function CreateGroup() {
                             type="button"
                             className="button button_red"
                             value="Cancel"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault()
                                 setFormOpen(false)
                                 setFormData(defaultGroupFormData)
                             }}
                         />
-                        <input
-                            type="submit"
-                            className="button"
-                            value="Submit"
-                        />
+                        <input type="submit" className="button" value="Submit" />
                     </div>
                 </form>
             ) : (
@@ -94,8 +89,8 @@ function handleSubmit(data: MakeGroupFormFields, navigate: NavigateFunction): Pr
             alert(`${data.title} has been created`)
             return true
         })
-        .catch((err) => {
-            navigate('/internal-error')
+        .catch(() => {
+            navigate("/internal-error")
             return false
         })
 }

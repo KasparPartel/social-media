@@ -1,4 +1,4 @@
-import { followProps } from "../components/user-information/user-information"
+import { followProps } from "../components/user-information/UserInformation"
 import fetchHandler from "./fetchHandler"
 
 export function followRequest(id: number, set: (arg: followProps) => void) {

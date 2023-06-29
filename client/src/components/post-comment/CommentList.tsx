@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import useUserInfo from "../../hooks/userInfo"
+import useUserInfo from "../../hooks/useEntityInfo"
 import { getCommentsIds } from "./fetch"
 import Comment from "./Comment"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
@@ -14,7 +14,7 @@ export default function CommentList({ postId }: CommentListProps) {
     const [commentsIdList, setCommentsIdList] = useState<number[]>(null)
     const [err, setErr] = useState<Error>(null)
     const [isLoading, setIsLoading] = useState(true)
-    const [myUser] = useUserInfo(localStorage.getItem("id"))
+    const [myUser] = useUserInfo(Number(localStorage.getItem("id")))
 
     useEffect(() => {
         const fetchCommentIds = async () => {
@@ -39,7 +39,7 @@ export default function CommentList({ postId }: CommentListProps) {
                 <AddComment postId={postId} myUser={myUser} setCommentsIdList={setCommentsIdList} />
             )}
             {commentsIdList && commentsIdList.length > 0 ? (
-                commentsIdList.map((id, i) => <Comment commentId={id} key={id} />)
+                commentsIdList.map((id, i) => <Comment commentId={id} key={i} />)
             ) : (
                 <p>No comments yet...</p>
             )}

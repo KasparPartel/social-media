@@ -2,8 +2,9 @@ import { useNavigate } from "react-router-dom"
 import altAvatar from "../../assets/default-avatar.png"
 import settingsIcon from "../../assets/settings_icon.svg"
 import toggleHook from "../../hooks/useToggle"
-import { ProfileSettings } from "../profile-settings/settings"
+import { ProfileSettings } from "../profile-settings/Settings"
 import { User } from "../models"
+import "./short-info.css"
 
 interface shortInfoProps {
     user: User
@@ -13,7 +14,13 @@ interface shortInfoProps {
     setUser: React.Dispatch<React.SetStateAction<User>>
 }
 
-export default function ShortInfo({ user, isMyProfile, openText, height, setUser }: shortInfoProps) {
+export default function ShortInfo({
+    user,
+    isMyProfile,
+    openText,
+    height,
+    setUser,
+}: shortInfoProps) {
     const avatarImg = user.avatar !== "" ? user.avatar : altAvatar
     const { toggle: toggleProfileSettings, toggleChange } = toggleHook(false)
     const navigate = useNavigate
@@ -21,7 +28,9 @@ export default function ShortInfo({ user, isMyProfile, openText, height, setUser
     return (
         <div className="short-info">
             <img className="short-info__avatar" src={avatarImg} alt="avatar" />
-            <div className="short-info__name">{user.login ? user.login : `${user.firstName} ${user.lastName}`}</div>
+            <div className="short-info__name">
+                {user.login ? user.login : `${user.firstName} ${user.lastName}`}
+            </div>
             {user.isPublic || isMyProfile || user.followStatus == 3 ? (
                 <>
                     <button
@@ -46,7 +55,7 @@ export default function ShortInfo({ user, isMyProfile, openText, height, setUser
                                         user,
                                         setUser,
                                         navigate,
-                                        toggleChange
+                                        toggleChange,
                                     }}
                                 />
                             ) : null}
