@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import useUserInfo from "../../hooks/useUserInfo"
+import useUserInfo from "../../hooks/useEntityInfo"
 import { getCommentsIds } from "./fetch"
 import Comment from "./Comment"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"

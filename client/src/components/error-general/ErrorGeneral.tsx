@@ -1,7 +1,7 @@
-import { Astronaut } from "./astronaut";
-import { Planet } from "./planet";
-import { Shuttle } from "./shuttle";
-import './error-general.css'
+import { Astronaut } from "./astronaut"
+import { Planet } from "./planet"
+import { Shuttle } from "./shuttle"
+import "./error-general.css"
 
 export function ErrorGeneral() {
     return (
@@ -11,9 +11,7 @@ export function ErrorGeneral() {
                 <Shuttle />
                 <Astronaut />
             </div>
-            <p className="MainTitle">
-                Houston, we have a problem.
-            </p>
+            <p className="MainTitle">Houston, we have a problem.</p>
         </div>
     )
 }
