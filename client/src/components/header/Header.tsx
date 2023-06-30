@@ -1,12 +1,7 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Logout } from "../../additional-functions/logout"
 import { useEffect, useState } from "react"
 import "./header.css"
-import useParamId from "../../hooks/useParamId"
-
-interface entryButton {
-    buttonIndex?: number
-}
 
 interface buttonProps {
     name: string
@@ -25,18 +20,22 @@ const customButtonInfo = [
 ]
 const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
 
-export function Header({ buttonIndex }: entryButton) {
-    const { isMyProfile } = useParamId()
+export function Header() {
+    const { pathname } = useLocation()
     const navigate = useNavigate()
-
     const [buttonState, setButtonState] = useState<boolean[]>(defaultState)
+
     useEffect(() => {
-        setButtonState((prevState) => {
-            const temp = Object.assign({}, prevState)
-            temp[buttonIndex] = isMyProfile || buttonIndex != 0
-            return temp
+        const index = customButtonInfo.findIndex(defaultState => defaultState.path === pathname)
+        setButtonState(() => {
+            const temp = Object.assign({}, defaultState)
+            if (index > -1 && index < customButtonInfo.length) {
+                temp[index] = true
+                return temp
+            }
+            return defaultState
         })
-    }, [isMyProfile])
+    }, [pathname])
 
     return (
         <header className="header">

@@ -82,7 +82,6 @@ function handleSubmit(data: MakeGroupFormFields, navigate: NavigateFunction): Pr
         .then((r) => r.json())
         .then((r) => {
             if (r.errors) {
-                console.log(r.errors)
                 r.errors.forEach((err) => alert(`Problem creating group: ${err.description}`))
                 return false
             }

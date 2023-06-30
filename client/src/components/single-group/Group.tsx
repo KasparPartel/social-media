@@ -4,6 +4,7 @@ import { useGroupInfo } from "../../hooks/useEntityInfo"
 import { useNavigate } from "react-router-dom"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import { InviteButton } from "./InviteButton"
+import { leaveGroup } from "../groups/fetch"
 
 const groupJoinStatus = {
     1: "Not joined",
@@ -14,7 +15,7 @@ const groupJoinStatus = {
 export function GroupPage() {
     const navigate = useNavigate()
     const { paramId } = useParamId()
-    const [group, isLoading] = useGroupInfo(paramId)
+    const [group, isLoading, setGroup] = useGroupInfo(paramId)
 
     return (
         <>
@@ -31,7 +32,12 @@ export function GroupPage() {
                                     <button className="button group__button">Group chat</button>
                                     <div className="group__buttons-container">
                                         <InviteButton {...{ paramId }} />
-                                        <button className="button button_red group__button">
+                                        <button
+                                            onClick={() => {
+                                                leaveGroup(paramId, navigate, setGroup)
+                                            }}
+                                            className="button button_red group__button"
+                                        >
                                             Leave
                                         </button>
                                     </div>

@@ -5,7 +5,7 @@ import "./main-container.css"
 export default function MainContainer() {
     return (
         <div className="main-container">
-            <Header buttonIndex={0} />
+            <Header />
             <Outlet />
         </div>
     )
