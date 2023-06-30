@@ -5,7 +5,7 @@ export function fetchErrorChecker(
     errArr: ErrorResponse[],
     navigate: NavigateFunction,
 ): ErrorResponse[] | void {
-    if (errArr.length < 1) {
+    if (!errArr.length || errArr.length < 1) {
         navigate("/internal-error")
         return
     }

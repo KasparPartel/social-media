@@ -1,10 +1,12 @@
 #groups-main {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
   width: auto;
-  margin: 30px 160px 30px 160px;
+  height: fit-content;
+  padding: 0px 30px 0px 30px;
+  margin: 30px 100px 30px 100px;
   background-color: var(--main-orange);
+  border-radius: 12px;
   overflow-y: scroll;
 }
 
@@ -12,14 +14,14 @@
   display: none;
 }
 
-#create-group-button-container {
+.create-group__button_wrapper {
   display: flex;
   justify-content: center;
   width: 100%;
   height: fit-content;
 }
 
-#create-group-button {
+.create-group__button {
   color: var(--white);
   text-align: center;
   justify-items: center;
@@ -33,11 +35,10 @@
   background-color: var(--main-green);
   border-radius: 12px;
 
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 700;
   font-size: 28px;
-  /* line-height: 30px; */
 
   display: flex;
 
@@ -48,20 +49,25 @@
   cursor: pointer;
 }
 
-#group-list {
+.group-list {
   display: grid;
   margin: 20px 80px;
-  /* grid-template-columns: 1fr 1fr 1fr; */
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
   column-gap: 30px;
 }
 
-/* .groups-list-column {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  gap: 10px;
-} */
+@media screen and (max-width: 1760px) {
+  .group-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 1290px) {
+  .group-list {
+    grid-template-columns: 1fr;
+  }
+}
 
 .group-card {
   display: flex;
@@ -73,7 +79,7 @@
   width: 100%;
 }
 
-.group-card-title {
+.group-card__title {
   display: flex;
   width: fit-content;
 
@@ -86,7 +92,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 700;
   font-size: 26px;
@@ -96,12 +102,24 @@
   flex-grow: 0;
 }
 
-.group-card-space {
+.group-card__space {
   display: flex;
   flex-grow: 1;
 }
 
-.group-card-button {
+.group-interaction-list {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  gap: 5px;
+}
+
+.group-interaction-list:last-child {
+  margin-right: 10px;
+}
+
+.group-card__button {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -112,19 +130,23 @@
   border-radius: 100px;
   flex-grow: 0;
 
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 700;
   font-size: 26px;
   line-height: 26px;
-  margin: 5px 10px;
-
-  /* display: flex;
-  align-items: center;
-  text-align: center; */
 
   color: var(--white);
 
   border: none;
   cursor: pointer;
+}
+
+.group-card__button_requested {
+  background-color: var(--grey);
+  cursor: not-allowed;
+}
+
+.group-card__button_leave {
+  background-color: var(--main-red);
 }

@@ -5,6 +5,7 @@ export default async function fetchHandler(
     method: string,
     formFields?: FormFields,
 ): Promise<Response> {
+    console.log(`---------------------> ${inputURL}`)
     const request: RequestInit = {
         method,
         credentials: "include",
