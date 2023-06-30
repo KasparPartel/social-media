@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import "./groups.css"
-import { JoinGroupButtons } from "./joinGroupButtons"
+import { JoinGroupButtons } from "./JoinGroupButtons"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 

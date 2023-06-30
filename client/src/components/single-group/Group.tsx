@@ -7,12 +7,9 @@ import { InviteButton } from "./InviteButton"
 import { leaveGroup } from "../groups/fetch"
 
 const groupJoinStatus = {
-    null: "It is null",
     1: "Not joined",
     2: "Reqested to join",
     3: "Joined",
-    5: "Error 1",
-    6: "Error 2",
 }
 
 export function GroupPage() {

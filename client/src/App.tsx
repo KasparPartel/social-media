@@ -8,7 +8,7 @@ import { UserProfile } from "./components/user-information/UserInformation"
 import { ErrorNotFound } from "./components/error-404/ErrorNotFound"
 import { ErrorGeneral } from "./components/error-general/ErrorGeneral"
 import { GroupPage } from "./components/single-group/Group"
-import { GroupsPage } from "./components/groups/groupsPage"
+import { GroupsPage } from "./components/groups/GroupsPage"
 
 export default function App() {
     return (
