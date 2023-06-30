@@ -1,4 +1,5 @@
 .create-new-group__button {
+    box-sizing: border-box;
     padding: 13px 50px;
     font-weight: bold;
     color: var(--white);
@@ -9,6 +10,7 @@
     width: 50%;
     height: 50%;
     border-radius: 12px;
+    box-sizing: border-box;
     padding: 20px 40px;
     display: flex;
     flex-direction: column;
@@ -23,6 +25,7 @@
 
 .create-group-form__textinput {
     width: 100%;
+    box-sizing: border-box;
     padding: 10px;
     align-items: center;
     text-align: center;
