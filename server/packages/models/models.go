@@ -62,6 +62,7 @@ type CreateGroupResponse struct {
 type GetGroupInfoResponse struct {
 	Id         int    `json:"id"`         // group id
 	Title      string `json:"title"`      // group title
+	IsOwner    bool   `json:"isOwner"`    // boolean
 	JoinStatus int    `json:"joinStatus"` // 1 - not joined, 2 - requested, 3 - joined
 }
 
@@ -70,6 +71,7 @@ type GetGroupResponse struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	JoinStatus  int    `json:"joinStatus"`
+	IsOwner     bool   `json:"isOwner"`
 }
 
 type InviteToGroup struct {

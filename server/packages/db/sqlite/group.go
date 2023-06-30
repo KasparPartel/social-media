@@ -81,6 +81,8 @@ func GetAllGroups(userId int) ([]models.GetGroupInfoResponse, error) {
 			tempGroup.JoinStatus = 1
 		}
 
+		tempGroup.IsOwner = ownerId == userId
+
 		groups = append(groups, tempGroup)
 	}
 
@@ -130,6 +132,8 @@ func GetGroupById(groupId, userId int) (*models.GetGroupResponse, error) {
 	default:
 		group.JoinStatus = 1
 	}
+
+	group.IsOwner = ownerId == userId
 
 	return group, nil
 }
