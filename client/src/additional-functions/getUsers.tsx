@@ -30,7 +30,7 @@ export function getUsersList({ id, endpoint }: followersProps): User[] {
                     )
                         .then((r) => r.json())
                         .then((r: ServerResponse<User>) => {
-                            if (r.errors) throw (r.errors)
+                            if (r.errors) throw r.errors
                             return r.data
                         })
                         .catch(() => null)

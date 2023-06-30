@@ -27,7 +27,14 @@ export default function PrivacyOverlay({
                         : PrivateUserList(userList, indexList, setIndexList)}
                 </div>
                 <div className="add-users__button-container">
-                    <button className="button" type="button" onClick={toggleModal}>
+                    <button
+                        className="button"
+                        type="button"
+                        onClick={() => {
+                            setIndexList([])
+                            toggleModal()
+                        }}
+                    >
                         Close
                     </button>
                     {children}
