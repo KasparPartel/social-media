@@ -26,6 +26,11 @@
     min-width: min-content;
     padding: 1em;
     background: var(--main-orange);
+    font-size: 28px;
+}
+
+.post-form__wrapper_auto-height {
+    height: auto;
 }
 
 .post-form {
@@ -76,6 +81,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.post-form__bar_reverse-flex {
+    flex-direction: row-reverse;
 }
 
 .post-form__options {
