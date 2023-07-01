@@ -36,7 +36,6 @@ func main() {
 	r.NewRoute("GET", `/post/(?P<id>\d+)`, controllers.GetPost)
 	r.NewRoute("GET", `/post/(?P<id>\d+)/comments`, controllers.GetComments)
 	r.NewRoute("POST", `/post/(?P<id>\d+)/comments`, controllers.CreateComment)
-	r.NewRoute("PUT", `/post/(?P<id>\d+)`, controllers.UpdatePost)
 
 	r.NewRoute("GET", `/comment/(?P<id>\d+)`, controllers.GetComment)
 
@@ -52,6 +51,8 @@ func main() {
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)/feed`, controllers.GetGroupFeed)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/feed`, controllers.CreatePostEvent)
+
+	r.NewRoute("POST", `/event/(?P<id>\d+)/action`, controllers.SelectEventAction)
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
 

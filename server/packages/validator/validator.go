@@ -78,10 +78,14 @@ func (v *ValidationBuilder) ValidateLastName(name string) *ValidationBuilder {
 	return v
 }
 
-func (v *ValidationBuilder) ValidatePrivacyOption(privacy int) *ValidationBuilder {
-	if privacy != 1 && privacy != 2 && privacy != 3 {
-		v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrWrongPrivacy, "wrong privacy setting"))
+func (v *ValidationBuilder) ValidateHaveInvalidOption(option int, validValues []int) *ValidationBuilder {
+	for _, validOption := range validValues {
+		if option == validOption {
+			return v
+		}
 	}
+
+	v.errs = append(v.errs, eh.NewErrorResponse(eh.ErrWrongPrivacy, "wrong option setting"))
 
 	return v
 }

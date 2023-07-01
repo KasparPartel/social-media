@@ -318,7 +318,7 @@ func GetGroupFeed(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	events, err := sqlite.GetAllEvents(groupId)
+	events, err := sqlite.GetAllEvents(groupId, requestUserId)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

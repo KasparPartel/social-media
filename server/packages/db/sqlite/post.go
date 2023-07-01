@@ -151,3 +151,91 @@ func GetPostAttachments(postId int) ([]string, error) {
 
 	return attachments, nil
 }
+
+func GetEventById(eventId, userId int) (*models.CreatePostEventResponse, error) {
+	event := &models.CreatePostEventResponse{}
+	var isGoing *bool
+
+	err := db.QueryRow(`SELECT id,
+	userId,
+	text,
+	title,
+	datetime,
+	groupId,
+	(
+		SELECT isGoing
+		FROM events_actions
+		WHERE eventId = events.id
+			AND userId = ?
+	)
+	FROM events
+	WHERE id = ?;`, userId, eventId).
+		Scan(&event.Id, &event.UserId, &event.Text, &event.Title, &event.DateTime, &event.GroupId, &isGoing)
+	if err == sql.ErrNoRows {
+		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	if isGoing == nil {
+		event.IsGoing = setIsGoing(1)
+	} else if !*isGoing {
+		event.IsGoing = setIsGoing(2)
+	} else if *isGoing {
+		event.IsGoing = setIsGoing(3)
+	}
+
+	return event, nil
+}
+
+func setIsGoing(status int) *int {
+	return &status
+}
+
+func AddEventStatus(eventId, userId, statusToSet int) (int, error) {
+	sqlStmt, err := db.Prepare(`INSERT INTO events_actions(eventId, userId, isGoing)
+		VALUES(?, ?, ?)`)
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = sqlStmt.Exec(eventId, userId, statusToSet == 3) // 3 = going
+	if err != nil {
+		return 0, err
+	}
+
+	return statusToSet, nil
+}
+
+func UpdateEventStatus(eventId, userId, statusToSet int) (int, error) {
+	sqlStmt, err := db.Prepare(`UPDATE events_actions
+		SET isGoing = ?
+		WHERE eventId = ?
+		AND userId = ?`)
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = sqlStmt.Exec(statusToSet == 3, eventId, userId) // 3 = going
+	if err != nil {
+		return 0, err
+	}
+
+	return statusToSet, nil
+}
+
+func DeleteEventStatus(eventId, userId, statusToSet int) (int, error) {
+	sqlStmt, err := db.Prepare(`DELETE FROM events_actions
+		WHERE eventId = ? AND userId = ?`)
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = sqlStmt.Exec(eventId, userId)
+	if err != nil {
+		return 0, err
+	}
+
+	return statusToSet, nil
+}
