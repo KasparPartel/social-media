@@ -96,9 +96,14 @@ type CreatePostEventResponse struct {
 	Title    *string `json:"title,omitempty"`
 	DateTime *int    `json:"datetime,omitempty"` // milliseconds
 	IsGoing  *int    `json:"isGoing,omitempty"`  // always 1 if isEvent
+	GroupId  int     `json:"-"`
 }
 
 type GetGroupFeedResponse struct {
 	Posts  []CreatePostEventResponse `json:"posts"`
 	Events []CreatePostEventResponse `json:"events"`
+}
+
+type ChangeEventAction struct {
+	IsGoing int `json:"isGoing"`
 }

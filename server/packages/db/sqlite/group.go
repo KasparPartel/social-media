@@ -318,28 +318,41 @@ func GetAllPosts(groupId int) ([]models.CreatePostEventResponse, error) {
 	return posts, nil
 }
 
-func GetAllEvents(groupId int) ([]models.CreatePostEventResponse, error) {
+func GetAllEvents(groupId, userId int) ([]models.CreatePostEventResponse, error) {
 	rows, err := db.Query(`
 	SELECT 
 		id,
 		text,
 		userId,
 		title,
-		datetime
+		datetime,
+		(
+			SELECT isGoing
+			FROM events_actions
+			WHERE eventId = events.id
+				AND userId = ?
+		)
 	FROM events
-	WHERE groupId = ?`, groupId)
+	WHERE groupId = ?`, userId, groupId)
 	if err != nil {
 		return nil, err
 	}
 
 	events := make([]models.CreatePostEventResponse, 0)
-	defaultIsGoing := 1
 
 	for rows.Next() {
-		temp := models.CreatePostEventResponse{IsGoing: &defaultIsGoing} // TODO: complete isGoing to get actual status
-		err = rows.Scan(&temp.Id, &temp.Text, &temp.UserId, &temp.Title, &temp.DateTime)
+		temp := models.CreatePostEventResponse{}
+		err = rows.Scan(&temp.Id, &temp.Text, &temp.UserId, &temp.Title, &temp.DateTime, &temp.IsGoing)
 		if err != nil {
 			return nil, err
+		}
+
+		if temp.IsGoing == nil {
+			temp.IsGoing = setIsGoing(1)
+		} else if *temp.IsGoing != 1 {
+			temp.IsGoing = setIsGoing(2)
+		} else if *temp.IsGoing == 1 {
+			temp.IsGoing = setIsGoing(3)
 		}
 
 		events = append(events, temp)
