@@ -7,6 +7,7 @@ import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { GroupFetchedEvent, GroupFetchedPost } from "../models"
 import { GroupEvent } from "./GroupEvent"
+import { CreateGroupContent } from "../create-group-content/CreateGroupContent"
 
 interface GroupContentProp {
     groupId: number
@@ -35,9 +36,7 @@ export function GroupContent({ groupId }: GroupContentProp) {
         <div className="group-content">
             <div className="group-content__buttons-wrapper">
                 <div className="group-content__buttons">
-                    <button className="button group__button" type="button">
-                        Create {isPosts ? "post" : "event"}
-                    </button>
+                    <CreateGroupContent {...{ isPosts, groupId }} />
                     <button className="button group__button" type="button" onClick={switchPosts}>
                         Go to {isPosts ? "events" : "posts"}
                     </button>
