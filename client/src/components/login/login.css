@@ -46,6 +46,10 @@
     background: var(--main-white);
 }
 
+.form__field_white {
+    background-color: var(--white);
+}
+
 .switch-button {
     height: 4%;
 

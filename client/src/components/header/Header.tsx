@@ -26,7 +26,7 @@ export function Header() {
     const [buttonState, setButtonState] = useState<boolean[]>(defaultState)
 
     useEffect(() => {
-        const index = customButtonInfo.findIndex(defaultState => defaultState.path === pathname)
+        const index = customButtonInfo.findIndex((defaultState) => defaultState.path === pathname)
         setButtonState(() => {
             const temp = Object.assign({}, defaultState)
             if (index > -1 && index < customButtonInfo.length) {

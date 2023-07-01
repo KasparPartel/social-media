@@ -7,6 +7,7 @@ export type FormFields =
     | PostFormFields
     | MakeGroupFormFields
     | GroupUserInvitations
+    | GroupFormFields
 
 interface GroupUserInvitations {
     users: number[]
@@ -42,6 +43,13 @@ export interface PostFormFields {
     text: string
     attachments: string[]
     authorizedFollowers?: number[]
+}
+
+export interface GroupFormFields {
+    text: string
+    isEvent: boolean
+    title?: string
+    datetime?: number // milliseconds
 }
 
 export interface RequestProps {
