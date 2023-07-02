@@ -33,14 +33,16 @@ export function GroupPage() {
                                     <div className="group__buttons-container">
                                         <button className="button group__button">Group chat</button>
                                         <InviteButton {...{ paramId }} />
-                                        <button
-                                            onClick={() => {
-                                                leaveGroup(paramId, navigate, setGroup)
-                                            }}
-                                            className="button button_red group__button"
-                                        >
-                                            Leave
-                                        </button>
+                                        {!group.isOwner && (
+                                            <button
+                                                onClick={() => {
+                                                    leaveGroup(paramId, navigate, setGroup)
+                                                }}
+                                                className="button button_red group__button"
+                                            >
+                                                Leave
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

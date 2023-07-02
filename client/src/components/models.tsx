@@ -108,6 +108,7 @@ export interface Group {
     title: string
     description: string
     joinStatus: number // 1 - not joined, 2 - requested, 3 - joined
+    isOwner: boolean
 }
 
 export interface PostComment {
@@ -136,5 +137,5 @@ export interface GroupFetchedEvent {
 }
 
 export interface EventStatus {
-    isGoing: boolean
+    isGoing: number
 }

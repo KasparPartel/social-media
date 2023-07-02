@@ -36,10 +36,6 @@
     border-radius: 0px 100px 100px 0px;
 }
 
-.event__button_disabled {
-    cursor: default;
-}
-
 .event_aligned {
     align-items: center;
 }
