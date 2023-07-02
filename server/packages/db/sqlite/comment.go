@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	"social-network/packages/errorHandler"
+	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
 	"time"
 )
@@ -75,16 +75,26 @@ func GetCommentById(commentId int, userId int) (*models.CreateCommentResponse, e
 		Scan(&comment.Id, &comment.PostId, &comment.UserId, &comment.Text, &comment.CreationDate)
 
 	if err == sql.ErrNoRows {
-		return nil, errorHandler.NewErrorResponse(errorHandler.ErrNotFound, "wrong variable(s) in request")
+		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
 	}
 
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = GetPostById(comment.PostId, userId)
+	post, err := GetPostById(comment.PostId, userId)
 	if err != nil {
 		return nil, err
+	}
+
+	if post.GroupId != 0 {
+		group, err := GetGroupById(post.GroupId, userId)
+		if err != nil {
+			return nil, err
+		}
+		if group.JoinStatus != 3 {
+			return nil, eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")
+		}
 	}
 
 	attachments, err := GetCommentAttachments(comment.Id)

@@ -37,11 +37,29 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+
+	if post.GroupId != 0 {
+		group, err := sqlite.GetGroupById(post.GroupId, requestId)
+		if errRes, ok := err.(*eh.ErrorResponse); ok {
+			response.Errors = []*eh.ErrorResponse{errRes}
+			json.NewEncoder(w).Encode(response)
+			return
+		} else if group.JoinStatus != 3 {
+			response.Errors = []*eh.ErrorResponse{
+				eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")}
+			json.NewEncoder(w).Encode(response)
+			return
+		}
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	commentsId, err := sqlite.GetCommentsByPostId(post.Id)
@@ -89,11 +107,29 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+
+	if post.GroupId != 0 {
+		group, err := sqlite.GetGroupById(post.GroupId, requestId)
+		if errRes, ok := err.(*eh.ErrorResponse); ok {
+			response.Errors = []*eh.ErrorResponse{errRes}
+			json.NewEncoder(w).Encode(response)
+			return
+		} else if group.JoinStatus != 3 {
+			response.Errors = []*eh.ErrorResponse{
+				eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")}
+			json.NewEncoder(w).Encode(response)
+			return
+		}
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	comment.Text = strings.TrimSpace(comment.Text)

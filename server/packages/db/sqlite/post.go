@@ -87,6 +87,7 @@ func GetPostById(postId, followerId int) (*models.GetPostResponse, error) {
 
 	q := `SELECT id,
 			userId,
+			groupId,
 			text,
 			creationDate,
 			privacy,
@@ -99,7 +100,7 @@ func GetPostById(postId, followerId int) (*models.GetPostResponse, error) {
 		FROM posts
 		WHERE id = ?;`
 
-	err := db.QueryRow(q, followerId, postId).Scan(&post.Id, &post.UserId, &post.Text, &post.CreationDate, &privacy, &allowed)
+	err := db.QueryRow(q, followerId, postId).Scan(&post.Id, &post.UserId, &post.GroupId, &post.Text, &post.CreationDate, &privacy, &allowed)
 	if err == sql.ErrNoRows {
 		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
 	}
@@ -118,7 +119,7 @@ func GetPostById(postId, followerId int) (*models.GetPostResponse, error) {
 		return nil, err
 	}
 
-	if (u.Id != followerId) && (!u.IsPublic || privacy != 1) &&
+	if (post.GroupId == 0) && (u.Id != followerId) && (!u.IsPublic || privacy != 1) &&
 		(u.FollowStatus != 3 || (privacy != 1 && privacy != 2 && (privacy != 3 || !allowed))) {
 		return nil, eh.NewErrorResponse(eh.ErrNotFound, "wrong variable(s) in request")
 	}
