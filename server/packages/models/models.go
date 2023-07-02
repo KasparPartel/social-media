@@ -25,8 +25,9 @@ type CreatePostRequest struct {
 }
 
 type GetPostResponse struct {
-	Id           int      `json:"id"`     // post id
-	UserId       int      `json:"userId"` // creator post id
+	Id           int      `json:"id"`                // post id
+	UserId       int      `json:"userId"`            // creator post id
+	GroupId      int      `json:"groupId,omitempty"` // group post id
 	Text         string   `json:"text"`
 	Attachments  []string `json:"attachments"` // of image/gif encoded with base64
 	CreationDate int      `json:"creationDate"`
