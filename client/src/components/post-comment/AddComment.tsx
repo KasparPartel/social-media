@@ -75,19 +75,21 @@ export default function AddComment({ postId, myUser, setCommentsIdList }: AddCom
                     onChange={(e) => setInputText(e.target.value)}
                     required={attachmentData.length == 0}
                 />
-                <AttachmentInput
-                    {...{
-                        setFileLoading,
-                        setAttachmentData,
-                    }}
-                >
-                    {attachmentData.length > 0 && (
-                        <span className="attachment_count">{attachmentData.length}</span>
-                    )}
-                </AttachmentInput>
-                <button type="submit" className="comment__btn" disabled={isFileLoading}>
-                    <img src={sendIcon} alt="send" className="comment__img" />
-                </button>
+                <div className="comment-posting__buttons">
+                    <AttachmentInput
+                        {...{
+                            setFileLoading,
+                            setAttachmentData,
+                        }}
+                    >
+                        {attachmentData.length > 0 && (
+                            <span className="attachment_count">{attachmentData.length}</span>
+                        )}
+                    </AttachmentInput>
+                    <button type="submit" className="comment__btn" disabled={isFileLoading}>
+                        <img src={sendIcon} alt="send" className="comment__img" />
+                    </button>
+                </div>
             </div>
             {attachmentData.length > 0 && <hr className="attachments__separator" />}
             <AddedAttachmentsList {...{ attachmentData, setAttachmentData }} />

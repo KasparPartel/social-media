@@ -12,6 +12,10 @@
     background-color: var(--main-orange);
 }
 
+.post_darker-gray {
+    background-color: var(--main-lighter-gray);
+}
+
 .post__info {
     display: flex;
     align-items: baseline;

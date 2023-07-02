@@ -1,14 +1,14 @@
 .group__wrapper {
     display: flex;
-
+    box-sizing: border-box;
     padding: 1em 4em;
 }
 
 .group {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    box-sizing: border-box;
     padding: 40px 60px;
     gap: 3em;
 
@@ -18,12 +18,6 @@
 
 .group_centered {
     grid-template-columns: auto;
-}
-
-.group__right {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .group__info-section {

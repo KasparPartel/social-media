@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import { InviteButton } from "./InviteButton"
 import { leaveGroup } from "../groups/fetch"
+import { GroupContent } from "./GroupContent"
 
 const groupJoinStatus = {
     1: "Not joined",
@@ -29,21 +30,23 @@ export function GroupPage() {
                                 <p className="group__title">{group.title}</p>
                                 <p className="group__description">{group.description}</p>
                                 <div className="group__buttons-container  group__buttons-container_vertical">
-                                    <button className="button group__button">Group chat</button>
                                     <div className="group__buttons-container">
+                                        <button className="button group__button">Group chat</button>
                                         <InviteButton {...{ paramId }} />
-                                        <button
-                                            onClick={() => {
-                                                leaveGroup(paramId, navigate, setGroup)
-                                            }}
-                                            className="button button_red group__button"
-                                        >
-                                            Leave
-                                        </button>
+                                        {!group.isOwner && (
+                                            <button
+                                                onClick={() => {
+                                                    leaveGroup(paramId, navigate, setGroup)
+                                                }}
+                                                className="button button_red group__button"
+                                            >
+                                                Leave
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
-                            <div className="group__right">Right side</div>
+                            {<GroupContent {...{ groupId: paramId }} />}
                         </div>
                     </div>
                 ) : (

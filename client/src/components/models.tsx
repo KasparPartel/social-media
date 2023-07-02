@@ -8,6 +8,7 @@ export type FormFields =
     | MakeGroupFormFields
     | GroupUserInvitations
     | GroupFormFields
+    | EventStatus
 
 interface GroupUserInvitations {
     users: number[]
@@ -107,6 +108,7 @@ export interface Group {
     title: string
     description: string
     joinStatus: number // 1 - not joined, 2 - requested, 3 - joined
+    isOwner: boolean
 }
 
 export interface PostComment {
@@ -117,4 +119,23 @@ export interface PostComment {
     text: string
     userId: number
     attachments: string[]
+}
+
+export interface GroupFetchedPost {
+    id: number
+    userId: number
+    text: string
+}
+
+export interface GroupFetchedEvent {
+    id: number
+    userId: number
+    text: string
+    title: string
+    datetime: number
+    isGoing: number
+}
+
+export interface EventStatus {
+    isGoing: number
 }

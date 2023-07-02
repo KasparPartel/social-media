@@ -22,6 +22,14 @@
     color: var(--white);
 }
 
+.button_green {
+    background-color: var(--main-green);
+}
+
+.button_grey {
+    background-color: var(--main-darker-gray);
+}
+
 .button_non-stretched {
     width: min-content;
 }

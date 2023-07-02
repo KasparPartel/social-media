@@ -12,9 +12,10 @@ import { Attachment, AttachmentsList, AttachmentsToggler } from "../attachments/
 
 interface UserPostProps {
     postId: number
+    background?: string
 }
 
-export default function UserPost({ postId }: UserPostProps) {
+export default function UserPost({ postId, background }: UserPostProps) {
     const [post, setPost] = useState<Post>(null)
     const [err, setErr] = useState<Error>(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -22,6 +23,7 @@ export default function UserPost({ postId }: UserPostProps) {
     const [isAttachmentsOpen, setIsAttachmentsOpen] = useState(false)
     const { style, refText, openText } = useOpenText(215)
     const attachmentsCount = post?.attachments.length
+    background = background ? ` ${background}` : ""
 
     useEffect(() => {
         getPostData(postId, setPost, setErr, setIsLoading)
@@ -32,7 +34,7 @@ export default function UserPost({ postId }: UserPostProps) {
     if (err) return <ErrorSkeleton message={err.message} />
     if (isLoading) return <LoadingSkeleton color="orange" dataName="post" />
     return (
-        <article className="post">
+        <article className={"post" + background}>
             <p className="post__info">
                 {`${post.login ? post.login : `${post.firstName} ${post.lastName}`}`}
 

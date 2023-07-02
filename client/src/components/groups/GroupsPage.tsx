@@ -5,28 +5,12 @@ import "./groups.css"
 import { JoinGroupButtons } from "./JoinGroupButtons"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-
-export type groupsFetchData = {
-    id: number // group id
-    title: string // group title
-    joinStatus: number // 1 - not joined, 2 - requested, 3 - joined
-    isOwner: boolean
-}
-
-export type fetchErrorsData = {
-    code: number
-    description: string
-}
-
-export type fetchGroupsResponse = {
-    data: groupsFetchData[]
-    errors: fetchErrorsData[]
-}
+import { Group } from "../models"
 
 export function GroupsPage() {
     const navigate = useNavigate()
     const [isLoading, setLoading] = useState(true)
-    const [groupList, setGroupList] = useState<groupsFetchData[]>([])
+    const [groupList, setGroupList] = useState<Group[]>([])
 
     useEffect(() => {
         getAllGroups(setGroupList, setLoading, navigate)
@@ -65,7 +49,7 @@ export function GroupsPage() {
 }
 
 function getAllGroups(
-    setGroupList: React.Dispatch<React.SetStateAction<groupsFetchData[]>>,
+    setGroupList: React.Dispatch<React.SetStateAction<Group[]>>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     navigate: NavigateFunction,
 ) {

@@ -7,7 +7,7 @@ import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
 interface CreateGroupContentProp {
     isPosts: boolean
-    paramId: number
+    groupId: number
 }
 
 interface GroupContentFormProps {
@@ -16,17 +16,15 @@ interface GroupContentFormProps {
     groupId: number
 }
 
-export function CreateGroupContent({ isPosts, paramId }: CreateGroupContentProp) {
+export function CreateGroupContent({ isPosts, groupId }: CreateGroupContentProp) {
     const { toggle: modalOpen, toggleChange: toggleModal } = toggleHook(false)
 
     return (
         <>
-            <button className="button" onClick={toggleModal}>
+            <button className="button group__button" onClick={toggleModal}>
                 {isPosts ? "Create post" : "Create event"}
             </button>
-            {modalOpen ? (
-                <GroupContentForm {...{ isPosts, toggleModal, groupId: paramId }} />
-            ) : null}
+            {modalOpen ? <GroupContentForm {...{ isPosts, toggleModal, groupId }} /> : null}
         </>
     )
 }

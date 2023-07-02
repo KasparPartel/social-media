@@ -28,8 +28,8 @@ export default function App() {
             <Route path="/additional-registration" element={<AdditionalInfo />} />
             <Route element={<MainContainer />}>
                 <Route path="/user/:paramId" element={<UserProfile />} />
-                <Route path="/group/:paramId" element={<GroupPage />} />
                 <Route path="/groups" element={<GroupsPage />} />
+                <Route path="/group/:paramId" element={<GroupPage />} />
             </Route>
             <Route path="/internal-error" element={<ErrorGeneral />} />
             <Route path="/error-not-found" element={<ErrorNotFound />} />

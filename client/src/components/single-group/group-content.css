@@ -1,0 +1,39 @@
+.group-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.group-content__buttons-wrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.group-content__buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.group-content__posts,
+.group-content__events {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.group-content__no-data-template {
+    display: flex;
+    width: 100%;
+    height: 3em;
+    border: 1px dashed var(--black);
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 40px;
+    font-weight: 700;
+    font-variant: all-small-caps;
+}
