@@ -6,6 +6,7 @@ import { JoinGroupButtons } from "./JoinGroupButtons"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { Group } from "../models"
+import CreateGroup from "../create-group/CreateGroup"
 
 export function GroupsPage() {
     const navigate = useNavigate()
@@ -23,11 +24,9 @@ export function GroupsPage() {
     }
 
     return (
-        <main id="groups-main">
+        <main className="groups-main">
             <div className="create-group__button_wrapper">
-                <button type="button" className="create-group__button">
-                    Create New Group
-                </button>
+                <CreateGroup />
             </div>
             <div className="group-list">
                 {groupList.map((group, key) => {
