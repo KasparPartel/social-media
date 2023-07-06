@@ -43,8 +43,8 @@ func GetOrCreatePrivateChat(userId1, userId2 int) (*models.Chat, error) {
 		return nil, err
 	}
 
-	result, err := db.Exec(`INSERT INTO chat (groupId)
-	VALUES (?);`, userId1)
+	result, err := db.Exec(`INSERT INTO chat (user_1, user_2)
+	VALUES (?, ?);`, userId1, userId2)
 	if err != nil {
 		return nil, err
 	}
