@@ -2,7 +2,6 @@ package websocketchat
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	eh "social-network/packages/errorHandler"
@@ -11,12 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Client struct {
-	conn   *websocket.Conn
-	userId int
-}
-
-var connectionList map[int]*Client
+var connections RealTimeConnections
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -45,31 +39,16 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &Client{
-		conn:   ws,
-		userId: requestUserId,
-	}
-
-	connectionList[requestUserId] = client
+	client := connections.AddConnection(requestUserId, ws)
 
 	log.Printf("User with id %d connected via WebSocket\n", requestUserId)
 
 	readMessage(client)
 }
 
-func readMessage(client *Client) {
-	for client != nil && client.conn != nil {
-		_, p, err := client.conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			// connectionClose(userId)
-			return
-		}
-
-		fmt.Println(string(p))
-	}
-}
-
 func init() {
-	connectionList = make(map[int]*Client)
+	connections = RealTimeConnections{
+		connectionList: make(map[int]*Client),
+		chats:          make(map[int]*Chat),
+	}
 }
