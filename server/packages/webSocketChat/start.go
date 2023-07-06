@@ -55,6 +55,7 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 	})
 
 	log.Printf("User with id %d connected via WebSocket\n", requestUserId)
+	ws.WriteMessage(websocket.TextMessage, []byte("User connected via WebSocket"))
 
 	readMessage(client)
 }

@@ -32,7 +32,7 @@ export function GroupPage() {
                                 <p className="group__description">{group.description}</p>
                                 <div className="group__buttons-container  group__buttons-container_vertical">
                                     <div className="group__buttons-container">
-                                        <GroupChat />
+                                        <GroupChat {...{ groupId: group.id }} />
                                         <InviteButton {...{ paramId }} />
                                         {!group.isOwner && (
                                             <button
