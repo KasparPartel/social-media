@@ -150,6 +150,6 @@
     cursor: not-allowed;
 }
 
-.group-card__button_leave {
+.group-card__button_red {
     background-color: var(--main-red);
 }

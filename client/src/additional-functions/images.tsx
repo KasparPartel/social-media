@@ -17,6 +17,7 @@ export async function updateImage(formFields: ProfileSettingsUpdateFormFields, i
         formFields.avatar = r
     })
     // TODO: handle reject needed
+    alert("Add me")
 }
 
 export async function toBase64(file: Blob): Promise<string> {

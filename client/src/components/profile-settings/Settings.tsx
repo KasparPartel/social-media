@@ -3,22 +3,25 @@ import { useState } from "react"
 import { ImageUpload } from "../../additional-functions/images"
 import avatar_default from "../../assets/default-avatar.png"
 import { ProfileSettingsUpdateRequest } from "../../additional-functions/profileSettings"
-import { NavigateFunction } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { User } from "../models"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
 interface ProfileSettingsProps {
     user: User
     setUser: React.Dispatch<React.SetStateAction<User>>
-    navigate: NavigateFunction
     toggleChange: () => void
 }
 
 export function ProfileSettings({
     user: { id, login, aboutMe, avatar, isPublic },
     setUser,
-    navigate,
     toggleChange,
 }: ProfileSettingsProps) {
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
+
     const [currentAvatar, setCurrentAvatar] = useState<Blob>(null)
     const [aboutMeText, setAboutMeText] = useState<string>(aboutMe)
     const [loginText, setLoginText] = useState<string>(login)
@@ -28,9 +31,9 @@ export function ProfileSettings({
             <form
                 className="settings"
                 onSubmit={(e) => {
-                    ProfileSettingsUpdateRequest({ e, id, navigate, avatar: currentAvatar })
+                    ProfileSettingsUpdateRequest({ e, id, avatar: currentAvatar })
                         .then((r) => {
-                            if (!r.data) throw "No data"
+                            if (r.errors) throw r.errors
 
                             setUser((prevValue) => {
                                 const temp = Object.assign({}, prevValue)
@@ -42,8 +45,10 @@ export function ProfileSettings({
 
                                 return temp
                             })
+                        }).catch((errArr) => {
+                            fetchErrorChecker(errArr, navigate, displayErrors)
+                            // navigate("/internal-error")
                         })
-                        .catch(() => navigate("/internal-error"))
                         .finally(toggleChange)
                 }}
             >
@@ -113,8 +118,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                ? avatar
-                                : avatar_default
+                                    ? avatar
+                                    : avatar_default
                         }
                         alt="attachment"
                     />

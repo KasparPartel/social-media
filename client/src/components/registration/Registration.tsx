@@ -8,9 +8,11 @@ import ErrorWindow from "../error-window/ErrorWindow"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImageUpload } from "../../additional-functions/images"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 export function Registration() {
     const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext();
     const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     return (
@@ -18,7 +20,7 @@ export function Registration() {
             <div className="registration">
                 <form
                     className="form"
-                    onSubmit={(e) => RegistrationRequest({ e, setErrorArr, navigate })}
+                    onSubmit={(e) => RegistrationRequest({ e, setErrorArr, navigate, displayErrors })}
                 >
                     <input name="email" placeholder="Email" type="email" className="form__field" />
                     <input
@@ -61,7 +63,8 @@ export function Registration() {
 }
 
 export function AdditionalInfo() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
     const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     const [image, setImage] = useState<Blob>(null)
@@ -77,6 +80,7 @@ export function AdditionalInfo() {
                             id: localStorage.getItem("id"),
                             setErrorArr,
                             navigate,
+                            displayErrors,
                             image,
                         })
                     }}

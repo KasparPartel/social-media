@@ -6,6 +6,7 @@ import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import { InviteButton } from "./InviteButton"
 import { leaveGroup } from "../groups/fetch"
 import { GroupContent } from "./GroupContent"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 const groupJoinStatus = {
     1: "Not joined",
@@ -14,7 +15,9 @@ const groupJoinStatus = {
 }
 
 export function GroupPage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
+
     const { paramId } = useParamId()
     const [group, isLoading, setGroup] = useGroupInfo(paramId)
 
@@ -36,7 +39,7 @@ export function GroupPage() {
                                         {!group.isOwner && (
                                             <button
                                                 onClick={() => {
-                                                    leaveGroup(paramId, navigate, setGroup)
+                                                    leaveGroup(paramId, navigate, displayErrors, setGroup)
                                                 }}
                                                 className="button button_red group__button"
                                             >

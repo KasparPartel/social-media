@@ -8,27 +8,33 @@ import { NavigateFunction, useNavigate } from "react-router-dom"
 import { GroupFetchedEvent, GroupFetchedPost } from "../models"
 import { GroupEvent } from "./GroupEvent"
 import { CreateGroupContent } from "../create-group-content/CreateGroupContent"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface GroupContentProp {
     groupId: number
 }
 
 export function GroupContent({ groupId }: GroupContentProp) {
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
+
     const { toggle: isPosts, toggleChange: switchPosts } = toggleHook(true)
     const [fetchedPosts, setFetchedPosts] = useState<GroupFetchedPost[]>([])
     const [fetchedEvents, setFetchedEvents] = useState<GroupFetchedEvent[]>([])
-    const navigate = useNavigate()
 
     useEffect(() => {
         fetchHandler(`http://localhost:8080/group/${groupId}/feed`, "GET")
-            .then((r) => r.json())
             .then((r) => {
+                if (!r.ok) {
+                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                }
+                return r.json()
+            }).then((r) => {
                 if (r.errors) throw r.errors
                 setFetchedPosts(r.data.posts)
                 setFetchedEvents(r.data.events)
-            })
-            .catch((err) => {
-                fetchErrorChecker(err, navigate)
+            }).catch((err) => {
+                fetchErrorChecker(err, navigate, displayErrors)
             })
     }, [groupId])
 

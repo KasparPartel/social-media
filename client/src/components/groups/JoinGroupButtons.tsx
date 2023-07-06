@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom"
 import { ReactElement, useState } from "react"
 import { sendJoinRequest, leaveGroupInGroupList } from "./fetch"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
 export function JoinGroupButtons({
     initJoinStatus,
@@ -11,34 +13,39 @@ export function JoinGroupButtons({
     isOwner: boolean
     groupId: number
 }): ReactElement {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
 
     const [joinStatus, setJoinStatus] = useState<number>(initJoinStatus)
 
-    function onClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    function onClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, wantsToBeInGroup?: boolean) {
         event.preventDefault()
         switch (joinStatus) {
             case 1: // not joined
-                sendJoinRequest(groupId, navigate, setJoinStatus)
-                break
+                sendJoinRequest(groupId, navigate, displayErrors, setJoinStatus);
+                break;
             case 2: // requested
-                // cancel request can be here if we want it
-                break
-            case 3: // open
-                navigate(`/group/${groupId}`)
-                break
+                alert("Cancel join request endpoint/logic not added, yet")
+                // sendCancelRequest(groupId, navigate, displayErrors, setJoinStatus)
+                break;
+            case 3: // joined
+                wantsToBeInGroup ? navigate(`/group/${groupId}`) : leaveGroupInGroupList(groupId, navigate, displayErrors, setJoinStatus);
+                break;
+            case 4: // Invited
+                wantsToBeInGroup ?
+                    alert("Accept request endpoint/logic not added, yet") :
+                    alert("Decline request endpoint/logic not added, yet");
+                // wantsToBeInGroup ?
+                //     sendAcceptRequest(groupId, navigate, displayErrors, setJoinStatus) :
+                //     sendDeclineRequest(groupId, navigate, displayErrors, setJoinStatus);
+                break;
             default:
-                alert("unknown joinStatus: joinStatus: " + joinStatus)
+                fetchErrorChecker([{ code: 0, description: "Unknown/Invalid joinStatus" }], navigate, displayErrors);
         }
     }
 
-    function leaveGroupHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        event.preventDefault()
-        leaveGroupInGroupList(groupId, navigate, setJoinStatus)
-    }
-
     if (joinStatus > 3 || joinStatus < 1) {
-        ;<h1>Error: Not existing joinStatus {joinStatus}</h1>
+        ; <h1>Error: Not existing joinStatus {joinStatus}</h1>
     }
 
     return (
@@ -57,15 +64,15 @@ export function JoinGroupButtons({
                     type="button"
                     onClick={(event) => onClickHandler(event)}
                     className=" group-card__button group-card__button_requested"
-                    disabled
+                    disabled // Remove this if cancel request gets added
                 >
-                    sent
+                    sent/cancel
                 </button>
             )}
             {joinStatus === 3 && (
                 <button
                     type="button"
-                    onClick={(event) => onClickHandler(event)}
+                    onClick={(event) => onClickHandler(event, true)}
                     className="group-card__button"
                 >
                     open
@@ -74,13 +81,29 @@ export function JoinGroupButtons({
             {joinStatus === 3 && !isOwner && (
                 <button
                     type="button"
-                    onClick={(event) => leaveGroupHandler(event)}
-                    className=" group-card__button group-card__button_leave"
+                    onClick={(event) => onClickHandler(event, false)}
+                    className=" group-card__button group-card__button_red"
                 >
                     leave
                 </button>
             )}
-            {!(joinStatus >= 1 && joinStatus <= 3) && (
+            {joinStatus === 4 && (
+                <button
+                    type="button"
+                    onClick={(event) => onClickHandler(event, true)}
+                    className=" group-card__button">
+                    accept
+                </button>
+            )}
+            {joinStatus === 4 && (
+                <button
+                    type="button"
+                    onClick={(event) => onClickHandler(event, false)}
+                    className=" group-card__button group-card__button_red">
+                    decline
+                </button>
+            )}
+            {!(joinStatus >= 1 && joinStatus <= 4) && (
                 <button type="button" disabled className="groups-card-error">
                     Error: {joinStatus}
                 </button>

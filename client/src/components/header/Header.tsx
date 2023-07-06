@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Logout } from "../../additional-functions/logout"
 import { useEffect, useState } from "react"
 import "./header.css"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface buttonProps {
     name: string
@@ -21,8 +22,10 @@ const customButtonInfo = [
 const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
 
 export function Header() {
-    const { pathname } = useLocation()
-    const navigate = useNavigate()
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
+
     const [buttonState, setButtonState] = useState<boolean[]>(defaultState)
 
     useEffect(() => {
@@ -59,7 +62,7 @@ export function Header() {
                 className="button button_red header__button header__button_right-side"
                 value="Logout"
                 onClick={() => {
-                    Logout(navigate)
+                    Logout(navigate, displayErrors);
                 }}
             />
         </header>

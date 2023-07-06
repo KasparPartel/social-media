@@ -1,14 +1,20 @@
+import { NavigateFunction } from "react-router-dom"
+import { fetchErrorChecker } from "./fetchErr"
 import fetchHandler from "./fetchHandler"
+import { ErrorsDisplayType } from "../components/error-display/ErrorDisplay"
 
-export function Logout(navigate: (path: string) => void) {
+export function Logout(navigate: NavigateFunction, displayErrors: ErrorsDisplayType) {
     fetchHandler(`http://localhost:8080/logout`, "POST")
         .then((r) => {
-            if (r.status === 200) {
-                localStorage.removeItem("id")
-                navigate("/login")
-                return
+            if (!r.ok) {
+                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
             }
-            throw new Error()
+            localStorage.removeItem("id")
+            navigate("/login")
+            return r.json()
         })
-        .catch(() => navigate("/internal-error"))
+        .catch((errArr) => {
+            fetchErrorChecker(errArr, navigate, displayErrors)
+            navigate("/internal-error")
+        })
 }

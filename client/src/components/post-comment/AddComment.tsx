@@ -6,6 +6,7 @@ import { AttachmentInput } from "../attachments/AttachmentInput"
 import AddedAttachmentsList from "../attachments/AddedAttachmentsList"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { useNavigate } from "react-router-dom"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface AddCommentProps {
     postId: number
@@ -14,7 +15,9 @@ interface AddCommentProps {
 }
 
 export default function AddComment({ postId, myUser, setCommentsIdList }: AddCommentProps) {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
+
     const [inputText, setInputText] = useState("")
     const [attachmentData, setAttachmentData] = useState<{ name: string; value: string }[]>([])
     const [isFileLoading, setFileLoading] = useState(false)
@@ -44,7 +47,7 @@ export default function AddComment({ postId, myUser, setCommentsIdList }: AddCom
             try {
                 const data = await postComment(postId, comment)
                 if (data.errors) {
-                    fetchErrorChecker(data.errors, navigate)
+                    fetchErrorChecker(data.errors, navigate, displayErrors)
                     return
                 }
                 setCommentsIdList((prevState) => [...prevState, data.data.id])

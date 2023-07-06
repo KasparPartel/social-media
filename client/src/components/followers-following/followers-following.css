@@ -14,7 +14,7 @@
     background-color: var(--main-orange);
 }
 
-.following-followers + .following-followers {
+.following-followers+.following-followers {
     border-top: 2px solid var(--black);
 }
 

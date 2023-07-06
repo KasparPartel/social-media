@@ -1,4 +1,5 @@
 import { NavigateFunction } from "react-router-dom"
+import { ErrorsDisplayType } from "./error-display/ErrorDisplay"
 
 export type FormFields =
     | LoginFormFields
@@ -57,6 +58,7 @@ export interface RequestProps {
     e?: React.FormEvent<HTMLFormElement>
     setErrorArr?: (errs: ErrorResponse[]) => void
     navigate: NavigateFunction
+    displayErrors: ErrorsDisplayType
     image?: Blob
     id?: string
 }
@@ -64,7 +66,6 @@ export interface RequestProps {
 export interface ProfileSettingsUpdateRequestProps {
     e: React.FormEvent<HTMLFormElement>
     id: number
-    navigate: NavigateFunction
     avatar: Blob
 }
 

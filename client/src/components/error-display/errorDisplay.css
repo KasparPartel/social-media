@@ -1,0 +1,78 @@
+.errors-display {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 1;
+  gap: 10px;
+  padding: 10px 0;
+  border-radius: 12px;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  height: 340px;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.errors-display::-webkit-scrollbar {
+  display: none;
+}
+
+.errors-display_card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+
+  width: 300px;
+  height: 80px;
+  border-radius: 12px;
+
+  background-color: var(--main-green);
+  opacity: 0.95;
+
+  animation: 1s linear slide-in-with-bounce;
+}
+
+.errors-display_card__close-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  width: fit-content;
+
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.errors-display_card__code {
+  text-align: center;
+}
+
+.errors-display_card__description {
+  text-align: center;
+}
+
+@keyframes slide-in-with-bounce {
+
+  0% {
+    opacity: 0;
+    transform: scale(.3) translateX(300px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  70% {
+    transform: scale(.9);
+  }
+
+  100% {
+    transform: scale(1) translateX(0px);
+  }
+}

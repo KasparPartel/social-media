@@ -9,6 +9,8 @@ import { getPostData } from "./fetch"
 import moment from "moment"
 import { ErrorSkeleton } from "../render-states/ErrorSkeleton"
 import { Attachment, AttachmentsList, AttachmentsToggler } from "../attachments/Attachments"
+import { useNavigate } from "react-router-dom"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface UserPostProps {
     postId: number
@@ -16,6 +18,7 @@ interface UserPostProps {
 }
 
 export default function UserPost({ postId, background }: UserPostProps) {
+    const navigate = useNavigate();
     const [post, setPost] = useState<Post>(null)
     const [err, setErr] = useState<Error>(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -26,7 +29,7 @@ export default function UserPost({ postId, background }: UserPostProps) {
     background = background ? ` ${background}` : ""
 
     useEffect(() => {
-        getPostData(postId, setPost, setErr, setIsLoading)
+        getPostData(postId, setPost, setErr, setIsLoading, navigate, useErrorsContext)
     }, [])
 
     const toggleAttachments = () => setIsAttachmentsOpen(!isAttachmentsOpen)

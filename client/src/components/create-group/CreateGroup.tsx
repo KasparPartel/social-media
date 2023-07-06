@@ -3,6 +3,8 @@ import React, { useState } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { MakeGroupFormFields } from "../models"
 import { NavigateFunction, useNavigate } from "react-router-dom"
+import { fetchErrorChecker } from "../../additional-functions/fetchErr"
+import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
 
 const defaultGroupFormData: MakeGroupFormFields = {
     title: "",
@@ -12,6 +14,7 @@ export default function CreateGroup() {
     const [isFormOpen, setFormOpen] = React.useState(false)
     const [formData, setFormData] = useState<MakeGroupFormFields>(defaultGroupFormData)
     const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext();
 
     return (
         <>
@@ -20,7 +23,7 @@ export default function CreateGroup() {
                     className="create-group-form"
                     onSubmit={(e) => {
                         e.preventDefault()
-                        handleSubmit(formData, navigate).then((r) => {
+                        handleSubmit(formData, navigate, displayErrors).then((r) => {
                             if (r) {
                                 setFormOpen(false)
                                 setFormData(defaultGroupFormData)
@@ -77,19 +80,23 @@ export default function CreateGroup() {
     )
 }
 
-function handleSubmit(data: MakeGroupFormFields, navigate: NavigateFunction): Promise<boolean> {
+function handleSubmit(data: MakeGroupFormFields, navigate: NavigateFunction, displayErrors: ErrorsDisplayType): Promise<boolean> {
     return fetchHandler(`http://localhost:8080/groups`, "POST", data)
-        .then((r) => r.json())
+        .then((r) => {
+            if (!r.ok) {
+                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+            }
+            return r.json()
+        })
         .then((r) => {
             if (r.errors) {
-                r.errors.forEach((err) => alert(`Problem creating group: ${err.description}`))
-                return false
+                throw r.errors
             }
-            alert(`${data.title} has been created`)
             return true
         })
-        .catch(() => {
-            navigate("/internal-error")
+        .catch((errArr) => {
+            // navigate("/internal-error")
+            fetchErrorChecker(errArr, navigate, displayErrors)
             return false
         })
 }

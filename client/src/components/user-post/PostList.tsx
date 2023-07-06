@@ -3,6 +3,8 @@ import UserPost from "./UserPost"
 import "./userPost.css"
 import { getPostIds } from "./fetch"
 import { User } from "../models"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useNavigate } from "react-router-dom"
 
 interface PostListParams {
     user: User
@@ -19,10 +21,12 @@ export default function PostList({ user, isMyProfile }: PostListParams) {
 
     const [idList, setIdList] = useState<number[]>([])
     const [err, setErr] = useState<Error>(null)
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
 
     useEffect(() => {
         if (user && user.id) {
-            getPostIds(user.id, setIdList, setErr)
+            getPostIds(user.id, setIdList, setErr, navigate, displayErrors)
         }
     }, [user])
 

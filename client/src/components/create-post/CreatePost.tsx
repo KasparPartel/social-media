@@ -9,6 +9,7 @@ import { PostPrivacy, PrivacySettings } from "./PostPrivacy"
 import PostText from "./PostText"
 import AddedAttachmentsList from "../attachments/AddedAttachmentsList"
 import { AttachmentInput } from "../attachments/AttachmentInput"
+import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
 
 export default function CreatePost() {
     const { toggle: modalOpen, toggleChange: toggleModal } = toggleHook(false)
@@ -28,7 +29,8 @@ interface ModalProp {
 }
 
 function Modal({ toggleModal }: ModalProp) {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { displayErrors } = useErrorsContext();
     const defaultFormData: PostFormFields = {
         privacy: PrivacySettings.Public,
         text: "",
@@ -47,12 +49,13 @@ function Modal({ toggleModal }: ModalProp) {
                     onSubmit={(e) => {
                         e.preventDefault()
                         formData.attachments = attachmentData.map((attachment) => attachment.value)
-                        const result = handleSubmit(formData, navigate)
-                        if (result) {
-                            setFormData(defaultFormData)
-                            setAttachmentData([])
-                            toggleModal()
-                        }
+                        handleSubmit(formData, navigate, displayErrors).then((result) => {
+                            if (result) {
+                                setFormData(defaultFormData)
+                                setAttachmentData([])
+                                toggleModal()
+                            }
+                        })
                     }}
                 >
                     <PostText
@@ -103,27 +106,30 @@ function Modal({ toggleModal }: ModalProp) {
     )
 }
 
-function handleSubmit(formData: PostFormFields, navigate: NavigateFunction): boolean {
+function handleSubmit(formData: PostFormFields, navigate: NavigateFunction, displayErrors: ErrorsDisplayType): Promise<boolean> {
     if (
         formData.privacy >= 1 &&
         formData.privacy <= 3 &&
         (formData.text != "" || formData.attachments.length > 0)
     ) {
-        fetchHandler(
+        return fetchHandler(
             `http://localhost:8080/user/${localStorage.getItem("id")}/posts`,
             "POST",
             formData,
-        )
-            .then((r) => r.json())
-            .then((r) => {
-                if (r.errors) {
-                    const errors = fetchErrorChecker(r.errors, navigate)
-                    if (errors) errors.forEach((err) => alert(err.description))
-                    return false
-                }
-                alert("Post created successfully!")
-            })
-        return true
+        ).then((r) => {
+            if (!r.ok) {
+                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+            }
+            return r.json()
+        }).then((r) => {
+            if (r.errors) {
+                throw r.errors
+            }
+            return true
+        }).catch((errArr) => {
+            // navigate("/internal-error")
+            fetchErrorChecker(errArr, navigate, displayErrors)
+            return false
+        })
     }
-    alert("No user input or privacy setting is wrong")
 }
