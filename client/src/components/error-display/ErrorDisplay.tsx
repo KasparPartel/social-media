@@ -3,16 +3,6 @@ import PropTypes from 'prop-types';
 import { ErrorResponse } from "../models";
 import "./errorDisplay.css";
 
-const mockErrors: ErrorResponse[] = [
-  //   { code: 4000, description: "This is error" },
-  //   { code: 4001, description: "This is a longer test error" },
-  //   { code: 4002, description: "This is the longest test error" },
-  //   { code: 4003, description: "This a short test error" },
-  //   { code: 4004, description: "This is a test error" },
-  //   { code: 4005, description: "This is a error for testing purposes" },
-  //   { code: 4006, description: "This is a test error for test" },
-]; // Mock-up
-
 export type ErrorsDisplayType = (errors: ErrorResponse[]) => void
 export type ErrorDisplayType = (errors: ErrorResponse) => void
 
@@ -41,12 +31,7 @@ export function useErrorsContext() {
 
 export function ErrorDisplay({ children }) {
 
-  const [errors, setErrors] = useState<ErrorResponse[]>(mockErrors);
-
-  // // Exists for design testing purposes to create mockErrors <------remove me when merging to develop
-  // useEffect(() => {
-  //   setErrors(mockErrors)
-  // }, [mockErrors])
+  const [errors, setErrors] = useState<ErrorResponse[]>([]);
 
   const displayErrors = (newErrors: ErrorResponse[]) => {
     setErrors((prev) => [...newErrors, ...prev])
