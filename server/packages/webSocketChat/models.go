@@ -2,6 +2,7 @@ package websocketchat
 
 import (
 	"social-network/packages/models"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
@@ -20,6 +21,7 @@ type Chat struct {
 type RealTimeConnections struct {
 	connectionList map[int]map[*Client]bool // key is userId
 	chats          map[int]*Chat            // key is chatId
+	mu             sync.Mutex
 }
 
 type BaseMapPayload map[string]interface{}

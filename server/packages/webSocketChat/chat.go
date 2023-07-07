@@ -19,10 +19,12 @@ func (c *RealTimeConnections) AddChat(chatId int, client *Client) *Chat {
 	return chat
 }
 
-func (c *Client) RemoveClientFromChat() {
-	delete(c.chat.conns, c)
+func (c *RealTimeConnections) RemoveClientFromChat(client *Client) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
-	c.chat = nil
+	delete(client.chat.conns, client)
+	client.chat = nil
 }
 
 func (c *Chat) SendMessageToAllUsers(message models.Message) error {

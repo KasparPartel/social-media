@@ -62,7 +62,7 @@ func readMessage(client *Client) {
 				continue
 			}
 		case "leave":
-			client.RemoveClientFromChat()
+			connections.RemoveClientFromChat(client)
 		case "message":
 			if client.chat == nil {
 				continue
