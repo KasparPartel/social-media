@@ -1,6 +1,10 @@
 package websocketchat
 
-import "github.com/gorilla/websocket"
+import (
+	"social-network/packages/models"
+
+	"github.com/gorilla/websocket"
+)
 
 type Client struct {
 	userId int
@@ -14,22 +18,15 @@ type Chat struct {
 }
 
 type RealTimeConnections struct {
-	connectionList map[int]*Client // key is userId
-	chats          map[int]*Chat   // key is chatId
+	connectionList map[int]map[*Client]bool // key is userId
+	chats          map[int]*Chat            // key is chatId
 }
 
 type BaseMapPayload map[string]interface{}
 
-type BasePayload[T MessageResponse | []MessageResponse] struct {
+type BasePayload[T models.Message | []models.Message] struct {
 	EventType string `json:"eventType"`
 	Payload   T      `json:"payload"`
-}
-
-type MessageResponse struct {
-	UserId    int    `json:"userId"`
-	Content   string `json:"content"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
 }
 
 type MessageRecieve struct {

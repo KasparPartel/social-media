@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"social-network/packages/models"
+	"time"
 )
 
 func GetOrCreateGroupChat(groupId int) (*models.Chat, error) {
@@ -27,7 +28,7 @@ func GetOrCreateGroupChat(groupId int) (*models.Chat, error) {
 		return nil, err
 	}
 	chat.Id = int(id)
-	chat.GroupId = groupId
+	chat.GroupId = &groupId
 
 	return chat, nil
 }
@@ -54,7 +55,68 @@ func GetOrCreatePrivateChat(userId1, userId2 int) (*models.Chat, error) {
 		return nil, err
 	}
 	chat.Id = int(id)
-	chat.GroupId = userId1
+	chat.User1 = &userId1
+	chat.User2 = &userId2
 
 	return chat, nil
+}
+
+func GetMessagesByChatId(chatId int) ([]models.Message, error) {
+	rows, err := db.Query(`SELECT message.id,
+    message.chatId,
+    message.userId,
+    message.text,
+    message.creationDate,
+    users.firstName,
+    users.lastName
+	FROM message,
+		users
+	WHERE chatId = ?
+		AND message.userId = users.id`, chatId)
+	if err != nil {
+		return nil, err
+	}
+
+	messages := []models.Message{}
+
+	for rows.Next() {
+		m := models.Message{}
+		err = rows.Scan(&m.Id, &m.ChatId, &m.UserId, &m.Text, &m.CreationDate, &m.FirstName, &m.LastName)
+		if err != nil {
+			return nil, err
+		}
+
+		messages = append(messages, m)
+	}
+
+	return messages, nil
+}
+
+func CreateMessageByChatId(chatId, userId int, content string) (*models.Message, error) {
+	creationDate := time.Now().UnixMilli()
+	result, err := db.Exec(`INSERT INTO message (chatId, userId, text, creationDate)
+	VALUES (?, ?, ?, ?);`, chatId, userId, content, creationDate)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := GetUserById(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.Message{
+		Id:           int(id),
+		ChatId:       chatId,
+		UserId:       userId,
+		FirstName:    u.FirstName,
+		LastName:     u.LastName,
+		Text:         content,
+		CreationDate: int(creationDate),
+	}, nil
 }

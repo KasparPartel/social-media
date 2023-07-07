@@ -111,7 +111,17 @@ type ChangeEventAction struct {
 
 type Chat struct {
 	Id      int
-	User1   int
-	User2   int
-	GroupId int
+	User1   *int
+	User2   *int
+	GroupId *int
+}
+
+type Message struct {
+	Id           int
+	ChatId       int
+	UserId       int
+	FirstName    string
+	LastName     string
+	Text         string
+	CreationDate int
 }

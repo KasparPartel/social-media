@@ -41,14 +41,27 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 
 	client := connections.AddConnection(requestUserId, ws)
 
+	ws.SetCloseHandler(CloseConnection(client, ws))
+
 	log.Printf("User with id %d connected via WebSocket\n", requestUserId)
 
 	readMessage(client)
 }
 
+func CloseConnection(client *Client, ws *websocket.Conn) func(code int, text string) error {
+	closeHandler := ws.CloseHandler()
+	return func(code int, text string) error {
+		log.Printf("client %v disconnected\n", client)
+		closeHandler(code, text)
+		client.RemoveClientFromChat()
+		connections.RemoveConnection(client)
+		return nil
+	}
+}
+
 func init() {
 	connections = RealTimeConnections{
-		connectionList: make(map[int]*Client),
+		connectionList: make(map[int]map[*Client]bool),
 		chats:          make(map[int]*Chat),
 	}
 }
