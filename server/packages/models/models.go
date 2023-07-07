@@ -117,11 +117,11 @@ type Chat struct {
 }
 
 type Message struct {
-	Id           int
-	ChatId       int
-	UserId       int
-	FirstName    string
-	LastName     string
-	Text         string
-	CreationDate int
+	Id           int    `json:"id"`
+	ChatId       int    `json:"chatId"`
+	UserId       int    `json:"userId"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Text         string `json:"text"`
+	CreationDate int    `json:"creationDare"`
 }
