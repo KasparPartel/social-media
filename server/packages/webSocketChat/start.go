@@ -45,17 +45,17 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	connections.AddConnection(requestUserId, client)
+	closeHandler := ws.CloseHandler()
 
 	ws.SetCloseHandler(func(code int, text string) error {
-		log.Printf("client %v disconnected\n", client)
-		client.conn.CloseHandler()(code, text)
 		connections.RemoveClientFromChat(client)
 		connections.RemoveConnection(client)
+		closeHandler(code, text)
+		log.Printf("[DISCONNECTED] Client with id: %d disconnected. Chats: %+v\nConnections: %+v\n", requestUserId, connections.chats, connections.connectionList)
 		return nil
 	})
 
-	log.Printf("User with id %d connected via WebSocket\n", requestUserId)
-	ws.WriteMessage(websocket.TextMessage, []byte("User connected via WebSocket"))
+	log.Printf("[CONNECTED] Client with id: %d connected. Chats: %+v\nConnections: %+v\n", requestUserId, connections.chats, connections.connectionList)
 
 	readMessage(client)
 }

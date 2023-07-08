@@ -67,7 +67,6 @@ func readMessage(client *Client) {
 			if client.chat == nil {
 				continue
 			}
-
 			action, err := getPayload[MessageRecieve](event)
 			if err != nil {
 				log.Println(event, err)

@@ -1,24 +1,29 @@
-import { useState } from "react"
-import { BasePayload, ServerMessage, ws } from "../../additional-functions/websocket"
+import { useContext, useState } from "react"
+import { WebSocketService } from "../../additional-functions/websocket"
 import toggleHook from "../../hooks/useToggle"
 import sendIcon from "../../assets/send-outline.svg"
 import "./group-chat.css"
+import { BasePayload, Message, ServerMessage } from "../models"
+import { websocketContext } from "../main-container/MainContainer"
 
 interface GroupChatProp {
     groupId: number
 }
 
 export function GroupChat({ groupId }: GroupChatProp) {
+    const groupChatJoin: BasePayload = {
+        eventType: "join",
+        payload: { id: groupId, isGroup: true },
+    }
+    const { wsDataSource, ws } = useContext(websocketContext)
     const { toggle: isChatOpen, toggleChange: toggleChat } = toggleHook(false)
-    const groupChat: BasePayload = { event: "join", payload: { groupId } }
-    const [chatData, setChatData] = useState<ServerMessage[]>(null)
     const [inputText, setInputText] = useState("")
 
     return (
         <>
             <button
                 onClick={() => {
-                    ws.send(JSON.stringify(groupChat))
+                    ws.send(JSON.stringify(groupChatJoin))
                     toggleChat()
                 }}
                 className="button group__button"
@@ -30,16 +35,21 @@ export function GroupChat({ groupId }: GroupChatProp) {
                     <div className="chat">
                         <div className="test">chat top with X</div>
                         <div className="test">
-                            {chatData
-                                ? chatData.map((message: ServerMessage) => {
-                                    return message.text
+                            {wsDataSource ? (
+                                wsDataSource.chat.map((message: ServerMessage, i) => {
+                                    return <li key={i}>{message.text}</li>
                                 })
-                                : null}
+                            ) : (
+                                <p>Something went wrong while trying to receive messages</p>
+                            )}
                         </div>
                         <div className="test">
                             <form
                                 className="comment__form"
-                                onSubmit={(e) => handleSubmit(e, inputText)}
+                                onSubmit={(e) => {
+                                    e.preventDefault()
+                                    handleSubmit(inputText, ws)
+                                }}
                             >
                                 <div className="comment-posting__container">
                                     <input
@@ -70,17 +80,15 @@ export function GroupChat({ groupId }: GroupChatProp) {
     )
 }
 
-function handleSubmit(e: React.FormEvent<HTMLFormElement>, inputText: string) {
-    e.preventDefault()
-
+function handleSubmit(inputText: string, ws: WebSocketService) {
     const text = inputText.trim()
     if (text === "") {
         return
     }
 
-    const message: BasePayload = {
-        event: "message",
-        payload: { text: inputText },
+    const message: BasePayload<Message> = {
+        eventType: "message",
+        payload: { content: inputText },
     }
     ws.send(JSON.stringify(message))
 }

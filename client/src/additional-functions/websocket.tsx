@@ -1,57 +1,92 @@
-export let ws: WebSocket
+import { BasePayload, EventNotification, ServerMessage } from "../components/models"
 
-type EventType = "join" | "leave" | "message" | "eventNotification"
+export const EVENT_TYPES = ["join", "leave", "message", "eventNotification"]
 
-export interface BasePayload {
-    event: EventType
-    payload: Message | ServerMessage | ServerMessage[] | GroupChatJoin | UserChatJoin | EventNotification
+export interface wsDataSourceProps {
+    chat: ServerMessage[]
+    eventNotification: EventNotification[]
 }
 
-interface Message {
-    text: string
-}
+export class WebSocketService {
+    private ws: WebSocket | null = null
+    private wsDataSource: wsDataSourceProps
+    private setWsDataSource: React.Dispatch<React.SetStateAction<wsDataSourceProps>>
+    public isConnected = false
 
-export interface ServerMessage extends Message {
-    firstName: string
-    lastName: string
-    creationDate: number
-}
+    constructor(
+        wsDataState: [wsDataSourceProps, React.Dispatch<React.SetStateAction<wsDataSourceProps>>],
+    ) {
+        this.wsDataSource = wsDataState[0]
+        this.setWsDataSource = wsDataState[1]
+    }
 
-interface GroupChatJoin {
-    groupId: number
-}
+    private connectWebSocket(url: string): void {
+        this.ws = new WebSocket(url)
 
-interface UserChatJoin {
-    userId: number
-}
-
-interface EventNotification {
-    eventName: string
-}
-
-export function CreateWebsocket() {
-    if (!ws || ws.readyState !== 1) {
-        ws = new WebSocket(`ws://localhost:8080/ws`)
-        ws.onopen = (e) => {
-            console.log("[open] Соединение установлено")
+        this.ws.onopen = () => {
+            console.log("WebSocket connected")
+            this.isConnected = true
         }
-        ws.onerror = (error) => {
-            console.log(`${error}`)
-        }
-        ws.onmessage = (event) => {
-            console.log(`[message] Данные получены с сервера: ${event.data}`)
-        }
-        ws.onclose = (event) => {
-            if (event.wasClean) {
-                console.log(
-                    `[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`,
-                )
-            } else {
-                // например, сервер убил процесс или сеть недоступна
-                // обычно в этом случае event.code 1006
-                console.log("[close] Соединение прервано")
+
+        this.ws.onmessage = (e: MessageEvent) => {
+            const data: BasePayload<ServerMessage | ServerMessage[] | EventNotification> = e.data
+                ? JSON.parse(e.data)
+                : {}
+
+            if (data.eventType && EVENT_TYPES.includes(data.eventType)) {
+                switch (data.eventType) {
+                    case EVENT_TYPES[2]: // "message"
+                        handleNewChatMessage(this.setWsDataSource, data.payload)
+                        break
+                    case EVENT_TYPES[3]: // "eventNotification"
+                        this.setWsDataSource((prev) => {
+                            const temp = Object.assign({}, prev)
+                            temp.eventNotification.push(data.payload as EventNotification)
+                            return temp
+                        })
+                        break
+                }
             }
         }
+
+        this.ws.onclose = () => {
+            console.log("WebSocket disconnected")
+            this.isConnected = true
+        }
     }
-    console.log(ws)
+
+    public connect(url: string): void {
+        if (!this.ws || !this.isConnected) {
+            this.connectWebSocket(url)
+        }
+    }
+
+    public send(message: string): void {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(message)
+        } else {
+            console.log("WebSocket connection is not open")
+        }
+    }
+
+    public close(): void {
+        if (this.ws) {
+            this.ws.close()
+        }
+    }
+}
+
+function handleNewChatMessage(
+    setData: React.Dispatch<React.SetStateAction<wsDataSourceProps>>,
+    data: ServerMessage | ServerMessage[] | EventNotification,
+) {
+    setData((prev) => {
+        const temp = Object.assign({}, prev)
+        if (Array.isArray(data)) {
+            temp.chat = data as ServerMessage[]
+            return temp
+        }
+        temp.chat.push(data as ServerMessage)
+        return temp
+    })
 }

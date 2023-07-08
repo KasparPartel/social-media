@@ -139,3 +139,33 @@ export interface GroupFetchedEvent {
 export interface EventStatus {
     isGoing: number
 }
+
+export interface BasePayload<
+    T = Message | ServerMessage | ServerMessage[] | ChatJoin | EventNotification,
+> {
+    eventType: string
+    payload: T
+}
+
+export interface Message {
+    content: string
+}
+
+export interface ServerMessage {
+    id: number
+    userId: number
+    chatId: number
+    creationDate: number
+    firstName: string
+    lastName: string
+    text: string
+}
+
+export interface ChatJoin {
+    id: number
+    isGroup: boolean
+}
+
+export interface EventNotification {
+    eventName: string
+}
