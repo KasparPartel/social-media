@@ -9,18 +9,16 @@ export interface wsDataSourceProps {
 
 export class WebSocketService {
     private ws: WebSocket | null = null
-    private wsDataSource: wsDataSourceProps
     private setWsDataSource: React.Dispatch<React.SetStateAction<wsDataSourceProps>>
     public isConnected = false
 
     constructor(
-        wsDataState: [wsDataSourceProps, React.Dispatch<React.SetStateAction<wsDataSourceProps>>],
+        wsDataState: React.Dispatch<React.SetStateAction<wsDataSourceProps>>,
     ) {
-        this.wsDataSource = wsDataState[0]
-        this.setWsDataSource = wsDataState[1]
+        this.setWsDataSource = wsDataState
     }
 
-    private connectWebSocket(url: string): void {
+    private setUpWebSocket(url: string): void {
         this.ws = new WebSocket(url)
 
         this.ws.onopen = () => {
@@ -51,13 +49,13 @@ export class WebSocketService {
 
         this.ws.onclose = () => {
             console.log("WebSocket disconnected")
-            this.isConnected = true
+            this.isConnected = false
         }
     }
 
     public connect(url: string): void {
         if (!this.ws || !this.isConnected) {
-            this.connectWebSocket(url)
+            this.setUpWebSocket(url)
         }
     }
 

@@ -2,7 +2,7 @@ import { Header } from "../header/Header"
 import { Outlet } from "react-router-dom"
 import { WebSocketService, wsDataSourceProps } from "../../additional-functions/websocket"
 import "./main-container.css"
-import { createContext, useState } from "react"
+import { createContext, useRef, useState } from "react"
 
 interface websocketContextProps {
     wsDataSource: wsDataSourceProps
@@ -21,15 +21,14 @@ export const websocketContext = createContext<websocketContextProps>({
 
 export default function MainContainer() {
     const [wsDataSource, setWsDataSource] = useState<wsDataSourceProps>(deafultWsDataSource)
-    const [webSocketInstance, setWebSocketInstance] = useState(
-        new WebSocketService([wsDataSource, setWsDataSource]),
-    )
-    if (!webSocketInstance.isConnected) {
-        webSocketInstance.connect("ws://localhost:8080/ws")
+    const webSocketInstance = useRef(new WebSocketService(setWsDataSource))
+
+    if (!webSocketInstance.current.isConnected) {
+        webSocketInstance.current.connect("ws://localhost:8080/ws")
     }
 
     return (
-        <websocketContext.Provider value={{ wsDataSource, ws: webSocketInstance }}>
+        <websocketContext.Provider value={{ wsDataSource, ws: webSocketInstance.current }}>
             <div className="main-container">
                 <Header />
                 <Outlet />
