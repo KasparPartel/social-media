@@ -12,9 +12,7 @@ export class WebSocketService {
     private setWsDataSource: React.Dispatch<React.SetStateAction<wsDataSourceProps>>
     public isConnected = false
 
-    constructor(
-        wsDataState: React.Dispatch<React.SetStateAction<wsDataSourceProps>>,
-    ) {
+    constructor(wsDataState: React.Dispatch<React.SetStateAction<wsDataSourceProps>>) {
         this.setWsDataSource = wsDataState
     }
 
@@ -27,6 +25,7 @@ export class WebSocketService {
         }
 
         this.ws.onmessage = (e: MessageEvent) => {
+            console.log(e)
             const data: BasePayload<ServerMessage | ServerMessage[] | EventNotification> = e.data
                 ? JSON.parse(e.data)
                 : {}
@@ -62,9 +61,17 @@ export class WebSocketService {
     public send(message: string): void {
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             this.ws.send(message)
-        } else {
-            console.log("WebSocket connection is not open")
+            return
         }
+        console.log("WebSocket connection is not open")
+    }
+
+    public clearChat(): void {
+        this.setWsDataSource((prev) => {
+            const temp = Object.assign({}, prev)
+            temp.chat = []
+            return temp
+        })
     }
 
     public close(): void {

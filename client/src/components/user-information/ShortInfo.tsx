@@ -29,7 +29,7 @@ export default function ShortInfo({
         <div className="short-info">
             <img className="short-info__avatar" src={avatarImg} alt="avatar" />
             <div className="short-info__name">
-                {user.login ? user.login : `${user.firstName} ${user.lastName}`}
+                {`${user.firstName} ${user.lastName}`}
             </div>
             {user.isPublic || isMyProfile || user.followStatus == 3 ? (
                 <>
