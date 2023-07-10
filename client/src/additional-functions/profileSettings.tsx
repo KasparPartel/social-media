@@ -19,5 +19,10 @@ export function ProfileSettingsUpdateRequest({ e, id, avatar }: ProfileSettingsU
 
     return updateImage(formFields, avatar)
         .then(() => fetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields))
-        .then((r) => r.json())
+        .then((r) => {
+            if (!r.ok) {
+                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+            }
+            return r.json()
+        })
 }

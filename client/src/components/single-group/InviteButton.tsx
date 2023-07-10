@@ -5,6 +5,7 @@ import fetchHandler from "../../additional-functions/fetchHandler"
 import { getUsersList } from "../../additional-functions/getUsers"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { useNavigate } from "react-router-dom"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface InviteButtonParam {
     paramId: number
@@ -12,6 +13,8 @@ interface InviteButtonParam {
 
 export function InviteButton({ paramId }: InviteButtonParam) {
     const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
+
     const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
     const [indexList, setIndexList] = useState<number[]>([])
     const userList = getUsersList({
@@ -40,16 +43,24 @@ export function InviteButton({ paramId }: InviteButtonParam) {
                             fetchHandler(`http://localhost:8080/group/${paramId}/invite`, "POST", {
                                 users: indexList.map((userIndex) => userList[userIndex].id),
                             })
-                                .then((r) => r.json())
                                 .then((r) => {
-                                    if (r.errors) fetchErrorChecker(r.errors, navigate)
-                                    if (r.data.users.length === 0) alert("No users invited")
-                                    if (r.data.users.length > 0)
-                                        alert(
-                                            `${r.data.users.length} ${
-                                                r.data.users.length === 1 ? "user" : "users"
-                                            } invited`,
-                                        )
+                                    if (!r.ok) {
+                                        throw [
+                                            {
+                                                code: r.status,
+                                                description: `HTTP error: status ${r.statusText}`,
+                                            },
+                                        ]
+                                    }
+                                    return r.json()
+                                })
+                                .then((r) => {
+                                    if (r.errors) throw r.errors
+                                    if (r.data.users.length === 0)
+                                        throw [{ code: 0, description: "No users invited" }]
+                                })
+                                .catch((errArr) => {
+                                    fetchErrorChecker(errArr, navigate, displayErrors)
                                 })
                             setIndexList([])
                             toggleOverlay()

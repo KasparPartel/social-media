@@ -8,7 +8,7 @@ import fetchHandler from "./fetchHandler"
 import { formDataExtractor, authReturnHandler } from "./form"
 import { updateImage } from "./images"
 
-export function LoginRequest({ e, setErrorArr, navigate }: RequestProps) {
+export function LoginRequest({ e, navigate, displayErrors }: RequestProps) {
     e.preventDefault()
     const formFields: LoginFormFields = {
         login: "",
@@ -18,11 +18,11 @@ export function LoginRequest({ e, setErrorArr, navigate }: RequestProps) {
     formDataExtractor(new FormData(e.currentTarget), formFields)
 
     fetchHandler(`http://localhost:8080/login`, "POST", formFields)
-        .then((r) => authReturnHandler(r, { setErrorArr, navigate }, false))
+        .then((r) => authReturnHandler(r, { navigate, displayErrors }, false))
         .catch(() => navigate("/internal-error"))
 }
 
-export function RegistrationRequest({ e, setErrorArr, navigate }: RequestProps) {
+export function RegistrationRequest({ e, navigate, displayErrors }: RequestProps) {
     e.preventDefault()
     const formFields: RegistrationFormFields = {
         email: "",
@@ -36,11 +36,11 @@ export function RegistrationRequest({ e, setErrorArr, navigate }: RequestProps) 
     formFields.dateOfBirth = new Date(formFields.dateOfBirth).getTime()
 
     fetchHandler(`http://localhost:8080/register`, "POST", formFields)
-        .then((r) => authReturnHandler(r, { setErrorArr, navigate }, true))
+        .then((r) => authReturnHandler(r, { navigate, displayErrors }, true))
         .catch(() => navigate("/internal-error"))
 }
 
-export function AdditionalInfoRequest({ e, id, setErrorArr, navigate, image }: RequestProps) {
+export function AdditionalInfoRequest({ e, id, navigate, displayErrors, image }: RequestProps) {
     e.preventDefault()
     const formFields: ProfileSettingsUpdateFormFields = {
         avatar: "",
@@ -52,6 +52,6 @@ export function AdditionalInfoRequest({ e, id, setErrorArr, navigate, image }: R
 
     updateImage(formFields, image)
         .then(() => fetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields))
-        .then((r) => authReturnHandler(r, { setErrorArr, navigate }, false))
+        .then((r) => authReturnHandler(r, { navigate, displayErrors }, false))
         .catch(() => navigate("/internal-error"))
 }

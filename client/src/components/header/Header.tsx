@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Logout } from "../../additional-functions/logout"
 import { useEffect, useState } from "react"
 import "./header.css"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface buttonProps {
     name: string
@@ -12,17 +13,18 @@ interface buttonProps {
     setButtonState: (arr: boolean[]) => void
 }
 
-const customButtonInfo = [
-    { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
-    { name: "Groups", path: `/groups` },
-    { name: "Users", path: `/users` },
-    { name: "Notifications", path: `/notifications` },
-]
-const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
-
 export function Header() {
+    const customButtonInfo = [
+        { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
+        { name: "Groups", path: `/groups` },
+        { name: "Users", path: `/users` },
+        { name: "Notifications", path: `/notifications` },
+    ]
+    const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
     const { pathname } = useLocation()
     const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
+
     const [buttonState, setButtonState] = useState<boolean[]>(defaultState)
 
     useEffect(() => {
@@ -59,7 +61,7 @@ export function Header() {
                 className="button button_red header__button header__button_right-side"
                 value="Logout"
                 onClick={() => {
-                    Logout(navigate)
+                    Logout(navigate, displayErrors)
                 }}
             />
         </header>

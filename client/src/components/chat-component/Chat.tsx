@@ -5,7 +5,7 @@ import sendIcon from "../../assets/send-outline.svg"
 import envelope from "../../assets/envelope.svg"
 import { BasePayload, Message, ServerMessage } from "../models"
 import { websocketContext } from "../main-container/MainContainer"
-import EmojiPicker from "emoji-picker-react"
+import EmojiPicker, { EmojiStyle } from "emoji-picker-react"
 import Cross from "../../assets/Cross.svg"
 import Emojis from "../../assets/VectorEmojis.svg"
 import "./chat.css"
@@ -49,7 +49,13 @@ export function Chat({ id, isGroup, children }: GroupChatProp) {
             </button>
             {isChatOpen ? (
                 <div className="chat__wrapper">
-                    {isEmojisOpen ? <EmojiPicker onEmojiClick={handleEmojiClick} /> : null}
+                    {isEmojisOpen ? (
+                        <EmojiPicker
+                            onEmojiClick={handleEmojiClick}
+                            lazyLoadEmojis
+                            emojiStyle={EmojiStyle.GOOGLE}
+                        />
+                    ) : null}
                     <div className="chat">
                         <div className={"chat__info" + (isGroup ? " chat__info_group" : "")}>
                             {isGroup ? null : children}

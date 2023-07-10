@@ -4,6 +4,7 @@ import { useState } from "react"
 import toggleHook from "../../hooks/useToggle"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
+import { useErrorsContext } from "../error-display/ErrorDisplay"
 
 interface CreateGroupContentProp {
     isPosts: boolean
@@ -31,6 +32,7 @@ export function CreateGroupContent({ isPosts, groupId }: CreateGroupContentProp)
 
 function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormProps) {
     const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
     const defaultFormData: GroupFormFields = {
         text: "",
         isEvent: !isPosts,
@@ -47,7 +49,11 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                     onSubmit={(e) => {
                         e.preventDefault()
                         if (!isPosts && !formData.datetime) {
-                            alert("Please select event date")
+                            fetchErrorChecker(
+                                [{ code: 19, description: `no input provided` }],
+                                navigate,
+                                displayErrors,
+                            )
                             return
                         }
 
@@ -56,18 +62,24 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                             "POST",
                             formData,
                         )
-                            .then((r) => r.json())
+                            .then((r) => {
+                                if (!r.ok) {
+                                    throw [
+                                        {
+                                            code: r.status,
+                                            description: `HTTP error: status ${r.statusText}`,
+                                        },
+                                    ]
+                                }
+                                return r.json()
+                            })
                             .then((r) => {
                                 if (r.errors) throw r.errors
                                 setFormData(defaultFormData)
                                 toggleModal()
-                                alert(`${isPosts ? "Post" : "Event"} successfully created`)
                             })
                             .catch((err) => {
-                                const errArr = fetchErrorChecker(err, navigate)
-                                if (errArr) {
-                                    errArr.forEach((err) => alert(err.description))
-                                }
+                                fetchErrorChecker(err, navigate, displayErrors)
                             })
                     }}
                 >

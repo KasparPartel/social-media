@@ -13,10 +13,11 @@ export async function updateImage(formFields: ProfileSettingsUpdateFormFields, i
         delete formFields.avatar
         return
     }
-    await toBase64(image).then((r) => {
-        formFields.avatar = r
-    })
-    // TODO: handle reject needed
+    await toBase64(image)
+        .then((r) => {
+            formFields.avatar = r
+        })
+        .catch(console.log)
 }
 
 export async function toBase64(file: Blob): Promise<string> {

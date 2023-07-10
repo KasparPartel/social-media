@@ -4,6 +4,6 @@ body {
 
 .main-container {
     display: grid;
-    grid-template-rows: 80px auto;
+    grid-template-rows: 80px auto 1fr;
     height: 100vh;
 }

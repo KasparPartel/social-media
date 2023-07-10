@@ -25,7 +25,6 @@ export class WebSocketService {
         }
 
         this.ws.onmessage = (e: MessageEvent) => {
-            console.log(e)
             const data: BasePayload<ServerMessage | ServerMessage[] | EventNotification> = e.data
                 ? JSON.parse(e.data)
                 : {}

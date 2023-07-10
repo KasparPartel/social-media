@@ -106,8 +106,4 @@
     .settings__container {
         height: 600px;
     }
-    .settings__avatar-img {
-        width: auto;
-        height: auto;
-    }
 }
