@@ -6,7 +6,7 @@ import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import { InviteButton } from "./InviteButton"
 import { leaveGroup } from "../groups/fetch"
 import { GroupContent } from "./GroupContent"
-import { Chat } from "./GroupChat"
+import { Chat } from "../chat-component/Chat"
 
 const groupJoinStatus = {
     1: "Not joined",

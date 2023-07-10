@@ -67,3 +67,8 @@
     padding: 0;
     cursor: pointer;
 }
+
+.chat__img {
+    display: flex;
+    justify-content: center;
+}
