@@ -22,9 +22,11 @@ func (c *RealTimeConnections) AddChat(chatId int, client *Client) *Chat {
 func (c *RealTimeConnections) RemoveClientFromChat(client *Client) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
 	if client.chat == nil {
 		return
 	}
+
 	delete(client.chat.conns, client)
 	client.chat = nil
 }

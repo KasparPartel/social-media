@@ -6,6 +6,7 @@ import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import { InviteButton } from "./InviteButton"
 import { leaveGroup } from "../groups/fetch"
 import { GroupContent } from "./GroupContent"
+import { Chat } from "../chat-component/Chat"
 
 const groupJoinStatus = {
     1: "Not joined",
@@ -31,7 +32,7 @@ export function GroupPage() {
                                 <p className="group__description">{group.description}</p>
                                 <div className="group__buttons-container  group__buttons-container_vertical">
                                     <div className="group__buttons-container">
-                                        <button className="button group__button">Group chat</button>
+                                        <Chat {...{ id: group.id, isGroup: true }} />
                                         <InviteButton {...{ paramId }} />
                                         {!group.isOwner && (
                                             <button
