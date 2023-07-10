@@ -12,7 +12,7 @@ interface followersProps {
 
 export function getUsersList({ id, endpoint }: followersProps): User[] {
     const navigate = useNavigate()
-    const { displayErrors } = useErrorsContext();
+    const { displayErrors } = useErrorsContext()
 
     const [userList, setUserList] = useState<User[]>([])
 
@@ -23,26 +23,35 @@ export function getUsersList({ id, endpoint }: followersProps): User[] {
                     throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
                 }
                 return r.json()
-            }).then((r) => {
-                if (r.errors) throw r.errors;
+            })
+            .then((r) => {
+                if (r.errors) throw r.errors
 
                 const promiseArr: Promise<User | null>[] = []
                 r.data.forEach((userId: number) => {
                     const user: Promise<User | null> = fetchHandler(
                         `http://localhost:8080/user/${userId}`,
                         "GET",
-                    ).then((r) => {
-                        if (!r.ok) {
-                            throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
-                        }
-                        return r.json()
-                    }).then((r: ServerResponse<User>) => {
-                        if (r.errors) throw r.errors
-                        return r.data
-                    }).catch((errArr: ErrorResponse[]) => {
-                        fetchErrorChecker(errArr, navigate, displayErrors)
-                        return null
-                    })
+                    )
+                        .then((r) => {
+                            if (!r.ok) {
+                                throw [
+                                    {
+                                        code: r.status,
+                                        description: `HTTP error: status ${r.statusText}`,
+                                    },
+                                ]
+                            }
+                            return r.json()
+                        })
+                        .then((r: ServerResponse<User>) => {
+                            if (r.errors) throw r.errors
+                            return r.data
+                        })
+                        .catch((errArr: ErrorResponse[]) => {
+                            fetchErrorChecker(errArr, navigate, displayErrors)
+                            return null
+                        })
                     promiseArr.push(user)
                 })
 
@@ -50,7 +59,8 @@ export function getUsersList({ id, endpoint }: followersProps): User[] {
                     userArr.filter((user) => user !== null)
                     setUserList(userArr)
                 })
-            }).catch((errArr: ErrorResponse[]) => {
+            })
+            .catch((errArr: ErrorResponse[]) => {
                 fetchErrorChecker(errArr, navigate, displayErrors)
             })
     }, [id])

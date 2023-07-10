@@ -13,8 +13,8 @@ interface GroupEventProp {
 }
 
 export function GroupEvent({ groupEvent }: GroupEventProp) {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
     const [user] = useUserInfo(groupEvent.userId)
     const [isGoing, setIsGoing] = useState(groupEvent.isGoing)
 
@@ -38,11 +38,12 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 id: groupEvent.id,
                                 setIsGoing,
                                 navigate,
-                                displayErrors
+                                displayErrors,
                             })
                         }
-                        className={`event__button event__button_left ${isGoing === 3 ? "button_green" : "button_gray"
-                            }`}
+                        className={`event__button event__button_left ${
+                            isGoing === 3 ? "button_green" : "button_gray"
+                        }`}
                     >
                         GOING
                     </button>
@@ -54,11 +55,12 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 id: groupEvent.id,
                                 setIsGoing,
                                 navigate,
-                                displayErrors
+                                displayErrors,
                             })
                         }
-                        className={`event__button event__button_right ${isGoing === 2 ? "button_red" : "button_gray"
-                            }`}
+                        className={`event__button event__button_right ${
+                            isGoing === 2 ? "button_red" : "button_gray"
+                        }`}
                     >
                         NOT GOING
                     </button>
@@ -83,8 +85,10 @@ function onClickHandler({ eventStatus, id, setIsGoing, navigate, displayErrors }
                 throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
             }
             return r.json()
-        }).then((r) => {
+        })
+        .then((r) => {
             if (r.errors) throw r.errors
             setIsGoing(r.data.isGoing)
-        }).catch((err) => fetchErrorChecker(err, navigate, displayErrors))
+        })
+        .catch((err) => fetchErrorChecker(err, navigate, displayErrors))
 }

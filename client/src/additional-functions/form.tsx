@@ -19,18 +19,13 @@ export async function authReturnHandler(
     if (!r.ok) {
         throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
     }
-    await r.json()
+    await r
+        .json()
         .then((r: ServerResponse<User>) => {
-            if (r.errors) {
-                const errArr = fetchErrorChecker(r.errors, navigate, displayErrors)
-                if (errArr) setErrorArr(errArr)
-                throw r.errors
-            }
+            if (r.errors) throw r.errors
             if (r.data && r.data.id) localStorage.setItem("id", String(r.data.id))
             navigate(
-                isRegistration
-                    ? `/additional-registration`
-                    : `/user/${localStorage.getItem("id")}`,
+                isRegistration ? `/additional-registration` : `/user/${localStorage.getItem("id")}`,
             )
         })
         .catch((errArr) => {

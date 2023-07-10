@@ -18,7 +18,7 @@ interface UserPostProps {
 }
 
 export default function UserPost({ postId, background }: UserPostProps) {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const [post, setPost] = useState<Post>(null)
     const [err, setErr] = useState<Error>(null)
     const [isLoading, setIsLoading] = useState(true)

@@ -9,8 +9,8 @@ import { Group } from "../models"
 import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
 
 export function GroupsPage() {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     const [isLoading, setLoading] = useState(true)
     const [groupList, setGroupList] = useState<Group[]>([])
@@ -63,11 +63,13 @@ function getAllGroups(
                 throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
             }
             return r.json()
-        }).then((response) => {
-            if (response.errors) throw response.errors
-            setGroupList(response.data)
+        })
+        .then((r) => {
+            if (r.errors) throw r.errors
+            setGroupList(r.data)
             setLoading(() => false)
-        }).catch((errArr) => {
+        })
+        .catch((errArr) => {
             fetchErrorChecker(errArr, navigate, displayErrors)
             setLoading(false)
         })

@@ -10,8 +10,8 @@ interface followButtonProps {
 }
 
 export default function FollowButton({ id, followPorps, setFollowPorps }: followButtonProps) {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     return (
         <button

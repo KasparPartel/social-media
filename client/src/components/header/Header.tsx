@@ -13,18 +13,17 @@ interface buttonProps {
     setButtonState: (arr: boolean[]) => void
 }
 
-const customButtonInfo = [
-    { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
-    { name: "Groups", path: `/groups` },
-    { name: "Users", path: `/users` },
-    { name: "Notifications", path: `/notifications` },
-]
-const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
-
 export function Header() {
-    const { pathname } = useLocation();
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const customButtonInfo = [
+        { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
+        { name: "Groups", path: `/groups` },
+        { name: "Users", path: `/users` },
+        { name: "Notifications", path: `/notifications` },
+    ]
+    const defaultState = Array<boolean>(customButtonInfo.length).fill(false)
+    const { pathname } = useLocation()
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     const [buttonState, setButtonState] = useState<boolean[]>(defaultState)
 
@@ -62,7 +61,7 @@ export function Header() {
                 className="button button_red header__button header__button_right-side"
                 value="Logout"
                 onClick={() => {
-                    Logout(navigate, displayErrors);
+                    Logout(navigate, displayErrors)
                 }}
             />
         </header>

@@ -18,7 +18,7 @@ export const sendJoinRequest = (
     groupId: number,
     navigate: NavigateFunction,
     displayErrors: ErrorsDisplayType,
-    setJoinStatus: React.Dispatch<React.SetStateAction<number>>
+    setJoinStatus: React.Dispatch<React.SetStateAction<number>>,
 ) => {
     fetchHandler(`http://localhost:8080/group/${groupId}/join`, "POST")
         .then((r) => {
@@ -28,9 +28,7 @@ export const sendJoinRequest = (
             return r.json()
         })
         .then((r: joinLeaveResponse) => {
-            if (r.errors) {
-                throw r.errors
-            }
+            if (r.errors) throw r.errors
             setJoinStatus(() => r.data.joinStatus)
         })
         .catch((errArr) => {
@@ -42,12 +40,17 @@ export const leaveGroupInGroupList = (
     groupId: number,
     navigate: NavigateFunction,
     displayErrors: ErrorsDisplayType,
-    setJoinStatus?: React.Dispatch<React.SetStateAction<number>>
+    setJoinStatus?: React.Dispatch<React.SetStateAction<number>>,
 ) => {
     fetchHandler(`http://localhost:8080/group/${groupId}/leave`, "POST")
         .then((response) => {
             if (!response.ok) {
-                throw [{ code: response.status, description: `HTTP error: status ${response.statusText}` }]
+                throw [
+                    {
+                        code: response.status,
+                        description: `HTTP error: status ${response.statusText}`,
+                    },
+                ]
             }
             return response.json()
         })
@@ -66,12 +69,17 @@ export const leaveGroup = (
     groupId: number,
     navigate: NavigateFunction,
     displayErrors: ErrorsDisplayType,
-    setGroup?: React.Dispatch<React.SetStateAction<Group>>
+    setGroup?: React.Dispatch<React.SetStateAction<Group>>,
 ) => {
     fetchHandler(`http://localhost:8080/group/${groupId}/leave`, "POST")
         .then((response) => {
             if (!response.ok) {
-                throw [{ code: response.status, description: `HTTP error: status ${response.statusText}` }]
+                throw [
+                    {
+                        code: response.status,
+                        description: `HTTP error: status ${response.statusText}`,
+                    },
+                ]
             }
             return response.json()
         })

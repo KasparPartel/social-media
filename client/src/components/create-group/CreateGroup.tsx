@@ -14,7 +14,7 @@ export default function CreateGroup() {
     const [isFormOpen, setFormOpen] = React.useState(false)
     const [formData, setFormData] = useState<MakeGroupFormFields>(defaultGroupFormData)
     const navigate = useNavigate()
-    const { displayErrors } = useErrorsContext();
+    const { displayErrors } = useErrorsContext()
 
     return (
         <>
@@ -80,7 +80,11 @@ export default function CreateGroup() {
     )
 }
 
-function handleSubmit(data: MakeGroupFormFields, navigate: NavigateFunction, displayErrors: ErrorsDisplayType): Promise<boolean> {
+function handleSubmit(
+    data: MakeGroupFormFields,
+    navigate: NavigateFunction,
+    displayErrors: ErrorsDisplayType,
+): Promise<boolean> {
     return fetchHandler(`http://localhost:8080/groups`, "POST", data)
         .then((r) => {
             if (!r.ok) {
@@ -89,9 +93,7 @@ function handleSubmit(data: MakeGroupFormFields, navigate: NavigateFunction, dis
             return r.json()
         })
         .then((r) => {
-            if (r.errors) {
-                throw r.errors
-            }
+            if (r.errors) throw r.errors
             return true
         })
         .catch((errArr) => {

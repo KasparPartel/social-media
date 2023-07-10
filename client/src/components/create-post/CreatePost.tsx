@@ -29,8 +29,8 @@ interface ModalProp {
 }
 
 function Modal({ toggleModal }: ModalProp) {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
     const defaultFormData: PostFormFields = {
         privacy: PrivacySettings.Public,
         text: "",
@@ -106,7 +106,11 @@ function Modal({ toggleModal }: ModalProp) {
     )
 }
 
-function handleSubmit(formData: PostFormFields, navigate: NavigateFunction, displayErrors: ErrorsDisplayType): Promise<boolean> {
+function handleSubmit(
+    formData: PostFormFields,
+    navigate: NavigateFunction,
+    displayErrors: ErrorsDisplayType,
+): Promise<boolean> {
     if (
         formData.privacy >= 1 &&
         formData.privacy <= 3 &&
@@ -116,20 +120,21 @@ function handleSubmit(formData: PostFormFields, navigate: NavigateFunction, disp
             `http://localhost:8080/user/${localStorage.getItem("id")}/posts`,
             "POST",
             formData,
-        ).then((r) => {
-            if (!r.ok) {
-                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
-            }
-            return r.json()
-        }).then((r) => {
-            if (r.errors) {
-                throw r.errors
-            }
-            return true
-        }).catch((errArr) => {
-            // navigate("/internal-error")
-            fetchErrorChecker(errArr, navigate, displayErrors)
-            return false
-        })
+        )
+            .then((r) => {
+                if (!r.ok) {
+                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                }
+                return r.json()
+            })
+            .then((r) => {
+                if (r.errors) throw r.errors
+                return true
+            })
+            .catch((errArr) => {
+                // navigate("/internal-error")
+                fetchErrorChecker(errArr, navigate, displayErrors)
+                return false
+            })
     }
 }

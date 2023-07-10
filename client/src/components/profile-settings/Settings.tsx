@@ -45,7 +45,8 @@ export function ProfileSettings({
 
                                 return temp
                             })
-                        }).catch((errArr) => {
+                        })
+                        .catch((errArr) => {
                             fetchErrorChecker(errArr, navigate, displayErrors)
                             // navigate("/internal-error")
                         })
@@ -118,8 +119,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                    ? avatar
-                                    : avatar_default
+                                ? avatar
+                                : avatar_default
                         }
                         alt="attachment"
                     />

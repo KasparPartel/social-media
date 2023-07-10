@@ -7,14 +7,14 @@ export function fetchErrorChecker(
     navigate: NavigateFunction,
     displayErrors: ErrorsDisplayType,
 ): ErrorResponse[] | void {
-    if (errArr) {
-        displayErrors(errArr)
-        // navigate("/internal-error")
-    }
-
     if (!errArr.length || errArr.length < 1) {
         navigate("/internal-error")
         return
+    }
+
+    if (errArr) {
+        displayErrors(errArr)
+        // navigate("/internal-error")
     }
 
     const resErrs = errArr.filter((err) => err.code === 13 || err.code === 14)

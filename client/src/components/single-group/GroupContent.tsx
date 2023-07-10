@@ -15,8 +15,8 @@ interface GroupContentProp {
 }
 
 export function GroupContent({ groupId }: GroupContentProp) {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     const { toggle: isPosts, toggleChange: switchPosts } = toggleHook(true)
     const [fetchedPosts, setFetchedPosts] = useState<GroupFetchedPost[]>([])
@@ -29,11 +29,13 @@ export function GroupContent({ groupId }: GroupContentProp) {
                     throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
                 }
                 return r.json()
-            }).then((r) => {
+            })
+            .then((r) => {
                 if (r.errors) throw r.errors
                 setFetchedPosts(r.data.posts)
                 setFetchedEvents(r.data.events)
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 fetchErrorChecker(err, navigate, displayErrors)
             })
     }, [groupId])

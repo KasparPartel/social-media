@@ -13,7 +13,7 @@ interface InviteButtonParam {
 
 export function InviteButton({ paramId }: InviteButtonParam) {
     const navigate = useNavigate()
-    const { displayErrors } = useErrorsContext();
+    const { displayErrors } = useErrorsContext()
 
     const { toggle: overlayOpen, toggleChange: toggleOverlay } = toggleHook(false)
     const [indexList, setIndexList] = useState<number[]>([])
@@ -45,14 +45,21 @@ export function InviteButton({ paramId }: InviteButtonParam) {
                             })
                                 .then((r) => {
                                     if (!r.ok) {
-                                        throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                                        throw [
+                                            {
+                                                code: r.status,
+                                                description: `HTTP error: status ${r.statusText}`,
+                                            },
+                                        ]
                                     }
                                     return r.json()
                                 })
                                 .then((r) => {
-                                    if (r.errors) throw r.errors, navigate, displayErrors
-                                    if (r.data.users.length === 0) throw [{ code: 0, description: "No users invited" }]
-                                }).catch((errArr) => {
+                                    if (r.errors) throw r.errors
+                                    if (r.data.users.length === 0)
+                                        throw [{ code: 0, description: "No users invited" }]
+                                })
+                                .catch((errArr) => {
                                     fetchErrorChecker(errArr, navigate, displayErrors)
                                 })
                             setIndexList([])

@@ -13,7 +13,7 @@ export default function useUserInfo(
     paramId: number,
 ): [User, boolean, React.Dispatch<React.SetStateAction<User>>] {
     const navigate = useNavigate()
-    const { displayErrors } = useErrorsContext();
+    const { displayErrors } = useErrorsContext()
 
     const [user, setUser] = useState<User>(null)
     const [isLoading, setLoading] = useState(true)
@@ -25,13 +25,13 @@ export default function useUserInfo(
                     throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
                 }
                 return r.json()
-            }).then((r: ServerResponse<User>) => {
-                if (r.errors) {
-                    throw r.errors
-                }
+            })
+            .then((r: ServerResponse<User>) => {
+                if (r.errors) throw r.errors
                 setUser(r.data)
                 setLoading(false)
-            }).catch((errArr) => fetchErrorChecker(errArr, navigate, displayErrors))
+            })
+            .catch((errArr) => fetchErrorChecker(errArr, navigate, displayErrors))
     }, [paramId])
 
     return [user, isLoading, setUser]
@@ -41,7 +41,7 @@ export function useGroupInfo(
     paramId: number,
 ): [Group, boolean, React.Dispatch<React.SetStateAction<Group>>] {
     const navigate = useNavigate()
-    const { displayErrors } = useErrorsContext();
+    const { displayErrors } = useErrorsContext()
 
     const [group, setGroup] = useState<Group>(null)
     const [isLoading, setLoading] = useState(true)
@@ -55,7 +55,7 @@ export function useGroupInfo(
                 return r.json()
             })
             .then((r: ServerResponse<Group>) => {
-                if (r.errors) { throw r.errors }
+                if (r.errors) throw r.errors
                 setGroup(r.data)
                 setLoading(false)
             })

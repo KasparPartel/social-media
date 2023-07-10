@@ -13,7 +13,7 @@ export const getPostIds = (
     setIdList: Dispatch<SetStateAction<number[]>>,
     setErr: Dispatch<SetStateAction<Error>>,
     navigate: NavigateFunction,
-    displayErrors: ErrorsDisplayType
+    displayErrors: ErrorsDisplayType,
 ) => {
     fetchHandler(`http://localhost:8080/user/${userId}/posts`, "GET")
         .then((res) => {
@@ -21,12 +21,14 @@ export const getPostIds = (
                 throw [{ code: res.status, description: `HTTP error: status ${res.statusText}` }]
             }
             return res.json()
-        }).then((response) => {
-            if (response.errors) {
-                throw response.errors
+        })
+        .then((r) => {
+            if (r.errors) {
+                throw r.errors
             }
-            setIdList(response.data)
-        }).catch((errArr) => {
+            setIdList(r.data)
+        })
+        .catch((errArr) => {
             setErr(errArr)
             fetchErrorChecker(errArr, navigate, displayErrors)
         })
@@ -41,7 +43,7 @@ export const getPostData = (
     setErr: Dispatch<SetStateAction<Error>>,
     setIsLoading: Dispatch<SetStateAction<boolean>>,
     navigate: NavigateFunction,
-    displayErrors: ErrorsDisplayType
+    displayErrors: ErrorsDisplayType,
 ) => {
     fetchHandler(`http://localhost:8080/post/${postId}`, "GET")
         .then((res) => {
@@ -54,17 +56,21 @@ export const getPostData = (
             fetchHandler(`http://localhost:8080/user/1`, `GET`)
                 .then((r) => {
                     if (!r.ok) {
-                        throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                        throw [
+                            { code: r.status, description: `HTTP error: status ${r.statusText}` },
+                        ]
                     }
                     return r.json()
-                }).then((r) => {
+                })
+                .then((r) => {
                     if (r.errors) throw r.errors
                     data.data.login = r.data.login
                     data.data.firstName = r.data.firstName
                     data.data.lastName = r.data.lastName
                     setPost(data.data)
                     setIsLoading(false)
-                }).catch((errArr) => {
+                })
+                .catch((errArr) => {
                     fetchErrorChecker(errArr, navigate, displayErrors)
                 })
         })

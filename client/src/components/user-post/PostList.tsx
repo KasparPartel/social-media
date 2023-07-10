@@ -21,8 +21,8 @@ export default function PostList({ user, isMyProfile }: PostListParams) {
 
     const [idList, setIdList] = useState<number[]>([])
     const [err, setErr] = useState<Error>(null)
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     useEffect(() => {
         if (user && user.id) {

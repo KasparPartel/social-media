@@ -40,7 +40,14 @@ export function RegistrationRequest({ e, setErrorArr, navigate, displayErrors }:
         .catch(() => navigate("/internal-error"))
 }
 
-export function AdditionalInfoRequest({ e, id, setErrorArr, navigate, displayErrors, image }: RequestProps) {
+export function AdditionalInfoRequest({
+    e,
+    id,
+    setErrorArr,
+    navigate,
+    displayErrors,
+    image,
+}: RequestProps) {
     e.preventDefault()
     const formFields: ProfileSettingsUpdateFormFields = {
         avatar: "",

@@ -4,7 +4,12 @@ import { fetchErrorChecker } from "./fetchErr"
 import fetchHandler from "./fetchHandler"
 import { ErrorsDisplayType } from "../components/error-display/ErrorDisplay"
 
-export function followRequest(id: number, set: (arg: followProps) => void, navigate: NavigateFunction, displayErrors: ErrorsDisplayType) {
+export function followRequest(
+    id: number,
+    set: (arg: followProps) => void,
+    navigate: NavigateFunction,
+    displayErrors: ErrorsDisplayType,
+) {
     // 1 - not followed, 2 - requested, 3 - followed
     fetchHandler(`http://localhost:8080/user/${id}/followers`, "PUT")
         .then((r) => {
@@ -12,14 +17,14 @@ export function followRequest(id: number, set: (arg: followProps) => void, navig
                 throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
             }
             return r.json()
-        }).then((r) => {
-            if (r.errors) {
-                throw r.errors
-            }
+        })
+        .then((r) => {
+            if (r.errors) throw r.errors
             if (r.data.followStatus) {
                 set(followStatusHandler(r.data.followStatus))
             }
-        }).catch((errArr) => {
+        })
+        .catch((errArr) => {
             fetchErrorChecker(errArr, navigate, displayErrors)
         })
 }

@@ -13,39 +13,48 @@ export function JoinGroupButtons({
     isOwner: boolean
     groupId: number
 }): ReactElement {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     const [joinStatus, setJoinStatus] = useState<number>(initJoinStatus)
 
-    function onClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, wantsToBeInGroup?: boolean) {
+    function onClickHandler(
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        wantsToBeInGroup?: boolean,
+    ) {
         event.preventDefault()
         switch (joinStatus) {
             case 1: // not joined
-                sendJoinRequest(groupId, navigate, displayErrors, setJoinStatus);
-                break;
+                sendJoinRequest(groupId, navigate, displayErrors, setJoinStatus)
+                break
             case 2: // requested
                 alert("Cancel join request endpoint/logic not added, yet")
                 // sendCancelRequest(groupId, navigate, displayErrors, setJoinStatus)
-                break;
+                break
             case 3: // joined
-                wantsToBeInGroup ? navigate(`/group/${groupId}`) : leaveGroupInGroupList(groupId, navigate, displayErrors, setJoinStatus);
-                break;
+                wantsToBeInGroup
+                    ? navigate(`/group/${groupId}`)
+                    : leaveGroupInGroupList(groupId, navigate, displayErrors, setJoinStatus)
+                break
             case 4: // Invited
-                wantsToBeInGroup ?
-                    alert("Accept request endpoint/logic not added, yet") :
-                    alert("Decline request endpoint/logic not added, yet");
+                wantsToBeInGroup
+                    ? alert("Accept request endpoint/logic not added, yet")
+                    : alert("Decline request endpoint/logic not added, yet")
                 // wantsToBeInGroup ?
                 //     sendAcceptRequest(groupId, navigate, displayErrors, setJoinStatus) :
                 //     sendDeclineRequest(groupId, navigate, displayErrors, setJoinStatus);
-                break;
+                break
             default:
-                fetchErrorChecker([{ code: 0, description: "Unknown/Invalid joinStatus" }], navigate, displayErrors);
+                fetchErrorChecker(
+                    [{ code: 0, description: "Unknown/Invalid joinStatus" }],
+                    navigate,
+                    displayErrors,
+                )
         }
     }
 
     if (joinStatus > 3 || joinStatus < 1) {
-        ; <h1>Error: Not existing joinStatus {joinStatus}</h1>
+        ;<h1>Error: Not existing joinStatus {joinStatus}</h1>
     }
 
     return (
@@ -91,7 +100,8 @@ export function JoinGroupButtons({
                 <button
                     type="button"
                     onClick={(event) => onClickHandler(event, true)}
-                    className=" group-card__button">
+                    className=" group-card__button"
+                >
                     accept
                 </button>
             )}
@@ -99,7 +109,8 @@ export function JoinGroupButtons({
                 <button
                     type="button"
                     onClick={(event) => onClickHandler(event, false)}
-                    className=" group-card__button group-card__button_red">
+                    className=" group-card__button group-card__button_red"
+                >
                     decline
                 </button>
             )}

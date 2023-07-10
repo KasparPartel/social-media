@@ -31,8 +31,8 @@ export function CreateGroupContent({ isPosts, groupId }: CreateGroupContentProp)
 }
 
 function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormProps) {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
     const defaultFormData: GroupFormFields = {
         text: "",
         isEvent: !isPosts,
@@ -49,7 +49,11 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                     onSubmit={(e) => {
                         e.preventDefault()
                         if (!isPosts && !formData.datetime) {
-                            fetchErrorChecker([{ code: 19, description: `no input provided` }], navigate, displayErrors)
+                            fetchErrorChecker(
+                                [{ code: 19, description: `no input provided` }],
+                                navigate,
+                                displayErrors,
+                            )
                             return
                         }
 
@@ -60,7 +64,12 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                         )
                             .then((r) => {
                                 if (!r.ok) {
-                                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                                    throw [
+                                        {
+                                            code: r.status,
+                                            description: `HTTP error: status ${r.statusText}`,
+                                        },
+                                    ]
                                 }
                                 return r.json()
                             })
@@ -102,7 +111,9 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                         className="post-form__text"
                     />
                     <div
-                        className={`post-form__bar${!isPosts ? "" : " post-form__bar_reverse-flex"}`}
+                        className={`post-form__bar${
+                            !isPosts ? "" : " post-form__bar_reverse-flex"
+                        }`}
                     >
                         {!isPosts ? (
                             <input

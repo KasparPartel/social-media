@@ -36,7 +36,7 @@ export function UserProfile() {
             {isLoading ? (
                 <LoadingSkeleton dataName="user profile" />
             ) : user ? (
-                <div className="information-wrapper">
+                <>
                     <div className="information">
                         <div className="information__short-container">
                             <ShortInfo
@@ -80,7 +80,7 @@ export function UserProfile() {
                         <FollowingFollowers />
                         <PostList {...{ user, isMyProfile }} />
                     </div>
-                </div>
+                </>
             ) : (
                 navigate("/error-not-found")
             )}

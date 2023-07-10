@@ -15,8 +15,8 @@ interface AddCommentProps {
 }
 
 export default function AddComment({ postId, myUser, setCommentsIdList }: AddCommentProps) {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     const [inputText, setInputText] = useState("")
     const [attachmentData, setAttachmentData] = useState<{ name: string; value: string }[]>([])

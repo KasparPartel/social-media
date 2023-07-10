@@ -15,8 +15,8 @@ const groupJoinStatus = {
 }
 
 export function GroupPage() {
-    const navigate = useNavigate();
-    const { displayErrors } = useErrorsContext();
+    const navigate = useNavigate()
+    const { displayErrors } = useErrorsContext()
 
     const { paramId } = useParamId()
     const [group, isLoading, setGroup] = useGroupInfo(paramId)
@@ -39,7 +39,12 @@ export function GroupPage() {
                                         {!group.isOwner && (
                                             <button
                                                 onClick={() => {
-                                                    leaveGroup(paramId, navigate, displayErrors, setGroup)
+                                                    leaveGroup(
+                                                        paramId,
+                                                        navigate,
+                                                        displayErrors,
+                                                        setGroup,
+                                                    )
                                                 }}
                                                 className="button button_red group__button"
                                             >
