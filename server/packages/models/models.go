@@ -123,5 +123,5 @@ type Message struct {
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
 	Text         string `json:"text"`
-	CreationDate int    `json:"creationDare"`
+	CreationDate int    `json:"creationDate"`
 }
