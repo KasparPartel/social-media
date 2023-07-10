@@ -13,7 +13,7 @@ export function formDataExtractor(formData: FormData, formFields: FormFields) {
 
 export async function authReturnHandler(
     r: Response,
-    { setErrorArr, navigate, displayErrors }: RequestProps,
+    { navigate, displayErrors }: RequestProps,
     isRegistration: boolean,
 ) {
     if (!r.ok) {

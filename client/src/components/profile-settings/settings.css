@@ -94,3 +94,16 @@
     width: 588px;
     clip-path: circle();
 }
+
+@media screen and (max-width: 1410px) {
+    .settings__wrapper {
+        overflow-y: scroll;
+    }
+    .settings {
+        grid-template-columns: none;
+        grid-template-rows: 1fr auto;
+    }
+    .settings__container {
+        height: 600px;
+    }
+}

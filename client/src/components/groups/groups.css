@@ -1,25 +1,11 @@
-#groups-main {
+.groups-main {
     display: flex;
     flex-direction: column;
-    width: auto;
-    height: fit-content;
     box-sizing: border-box;
     padding: 0px 30px 0px 30px;
     margin: 30px 100px 30px 100px;
-    background-color: var(--main-orange);
     border-radius: 12px;
-    overflow-y: scroll;
-}
-
-#groups-main::-webkit-scrollbar {
-    display: none;
-}
-
-.create-group__button_wrapper {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: fit-content;
+    background-color: var(--main-orange);
 }
 
 .create-group__button {
@@ -75,7 +61,6 @@
     display: flex;
     background-color: var(--main-white);
     flex-direction: row;
-    flex-grow: 1;
     border-radius: 12px;
     height: 60px;
     width: 100%;
@@ -85,17 +70,11 @@
     display: flex;
     width: fit-content;
 
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: flex-start;
     font-variant: all-small-caps;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 
     font-family: "Roboto";
-    font-style: normal;
     font-weight: 700;
     font-size: 26px;
 

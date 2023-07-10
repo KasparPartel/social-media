@@ -108,3 +108,20 @@ type GetGroupFeedResponse struct {
 type ChangeEventAction struct {
 	IsGoing int `json:"isGoing"`
 }
+
+type Chat struct {
+	Id      int
+	User1   *int
+	User2   *int
+	GroupId *int
+}
+
+type Message struct {
+	Id           int    `json:"id"`
+	ChatId       int    `json:"chatId"`
+	UserId       int    `json:"userId"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Text         string `json:"text"`
+	CreationDate int    `json:"creationDate"`
+}

@@ -46,16 +46,13 @@ export default function AddComment({ postId, myUser, setCommentsIdList }: AddCom
         const fetchPostComment = async () => {
             try {
                 const data = await postComment(postId, comment)
-                if (data.errors) {
-                    fetchErrorChecker(data.errors, navigate, displayErrors)
-                    return
-                }
+                if (data.errors) throw data.errors
                 setCommentsIdList((prevState) => [...prevState, data.data.id])
 
                 setInputText(() => "")
                 setAttachmentData(() => [])
-            } catch (e) {
-                console.log(e as Error)
+            } catch (err) {
+                fetchErrorChecker(err, navigate, displayErrors)
             } finally {
                 setFileLoading(false)
                 setSubmitting(false)

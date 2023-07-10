@@ -18,64 +18,67 @@ export default function CreateGroup() {
 
     return (
         <>
+            <input
+                type="button"
+                className="create-new-group__button button create-group__button"
+                value="CREATE NEW GROUP"
+                onClick={() => setFormOpen(true)}
+            />
             {isFormOpen ? (
-                <form
-                    className="create-group-form"
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        handleSubmit(formData, navigate, displayErrors).then((r) => {
-                            if (r) {
-                                setFormOpen(false)
-                                setFormData(defaultGroupFormData)
-                            }
-                        })
-                    }}
-                >
-                    <input
-                        className="create-group-form__textinput"
-                        placeholder="TITLE"
-                        value={formData.title}
-                        onChange={(e) => {
-                            setFormData((prev) => ({
-                                ...prev,
-                                ["title"]: e.target.value,
-                            }))
-                        }}
-                    />
-                    <textarea
-                        className="create-group-form__textinput create-group-form__textarea"
-                        placeholder="Description"
-                        value={formData.description}
-                        onChange={(e) => {
-                            setFormData((prev) => ({
-                                ...prev,
-                                ["description"]: e.target.value,
-                            }))
-                        }}
-                    />
-
-                    <div className="create-group-form__buttons">
-                        <input
-                            type="button"
-                            className="button button_red"
-                            value="Cancel"
-                            onClick={(e) => {
+                <div className="create-group-form__absolute-wrapper">
+                    <div className="create-group-form__flex-wrapper">
+                        <form
+                            className="create-group-form"
+                            onSubmit={(e) => {
                                 e.preventDefault()
-                                setFormOpen(false)
-                                setFormData(defaultGroupFormData)
+                                handleSubmit(formData, navigate, displayErrors).then((r) => {
+                                    if (r) {
+                                        setFormOpen(false)
+                                        setFormData(defaultGroupFormData)
+                                    }
+                                })
                             }}
-                        />
-                        <input type="submit" className="button" value="Submit" />
+                        >
+                            <input
+                                className="create-group-form__textinput"
+                                placeholder="TITLE"
+                                value={formData.title}
+                                onChange={(e) => {
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        ["title"]: e.target.value,
+                                    }))
+                                }}
+                            />
+                            <textarea
+                                className="create-group-form__textinput create-group-form__textarea"
+                                placeholder="Description"
+                                value={formData.description}
+                                onChange={(e) => {
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        ["description"]: e.target.value,
+                                    }))
+                                }}
+                            />
+
+                            <div className="create-group-form__buttons">
+                                <input
+                                    type="button"
+                                    className="button button_red"
+                                    value="Cancel"
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        setFormOpen(false)
+                                        setFormData(defaultGroupFormData)
+                                    }}
+                                />
+                                <input type="submit" className="button" value="Submit" />
+                            </div>
+                        </form>
                     </div>
-                </form>
-            ) : (
-                <input
-                    type="button"
-                    className="create-new-group__button button"
-                    value="CREATE NEW GROUP"
-                    onClick={() => setFormOpen(true)}
-                />
-            )}
+                </div>
+            ) : null}
         </>
     )
 }

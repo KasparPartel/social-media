@@ -1,10 +1,8 @@
 import "./registration.css"
-import { ErrorResponse } from "../models"
 import {
     RegistrationRequest,
     AdditionalInfoRequest,
 } from "../../additional-functions/authorization"
-import ErrorWindow from "../error-window/ErrorWindow"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImageUpload } from "../../additional-functions/images"
@@ -13,16 +11,13 @@ import { useErrorsContext } from "../error-display/ErrorDisplay"
 export function Registration() {
     const navigate = useNavigate()
     const { displayErrors } = useErrorsContext()
-    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     return (
         <div className="registration-page">
             <div className="registration">
                 <form
                     className="form"
-                    onSubmit={(e) =>
-                        RegistrationRequest({ e, setErrorArr, navigate, displayErrors })
-                    }
+                    onSubmit={(e) => RegistrationRequest({ e, navigate, displayErrors })}
                 >
                     <input name="email" placeholder="Email" type="email" className="form__field" />
                     <input
@@ -49,7 +44,6 @@ export function Registration() {
                         type="date"
                         className="form__field"
                     />
-                    <ErrorWindow errorArr={errorArr} />
                     <input type="submit" className="button form__button" value="Register" />
                     <input
                         type="button"
@@ -67,7 +61,6 @@ export function Registration() {
 export function AdditionalInfo() {
     const navigate = useNavigate()
     const { displayErrors } = useErrorsContext()
-    const [errorArr, setErrorArr] = useState<ErrorResponse[]>([])
 
     const [image, setImage] = useState<Blob>(null)
 
@@ -80,7 +73,6 @@ export function AdditionalInfo() {
                         AdditionalInfoRequest({
                             e,
                             id: localStorage.getItem("id"),
-                            setErrorArr,
                             navigate,
                             displayErrors,
                             image,
@@ -127,7 +119,6 @@ export function AdditionalInfo() {
                         type="text"
                         className="form__field"
                     />
-                    <ErrorWindow errorArr={errorArr} />
                     <div className="form__button-container">
                         <input
                             type="button"
