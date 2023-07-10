@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS chat (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_1 INTEGER,
+    user_2 INTEGER,
+    groupId INTEGER,
+    FOREIGN KEY(groupId) REFERENCES groups(id)
+);

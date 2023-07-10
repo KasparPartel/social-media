@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"social-network/packages/controllers"
 	"social-network/packages/httpRouting"
+	websocketchat "social-network/packages/webSocketChat"
 )
 
 func main() {
@@ -53,6 +54,8 @@ func main() {
 	r.NewRoute("POST", `/group/(?P<id>\d+)/feed`, controllers.CreatePostEvent)
 
 	r.NewRoute("POST", `/event/(?P<id>\d+)/action`, controllers.SelectEventAction)
+
+	r.NewRoute("GET", `/ws`, websocketchat.WebSocket)
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
 
