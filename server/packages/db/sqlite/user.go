@@ -116,3 +116,23 @@ func UpdateProfileColumn(columnName, value string, id int) error {
 
 	return nil
 }
+
+func GetAllUsers() ([]int, error) {
+	rows, err := db.Query(`SELECT id FROM users`)
+	if err != nil {
+		return nil, err
+	}
+
+	userIds := make([]int, 0)
+	for rows.Next() {
+		id := 0
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+
+		userIds = append(userIds, id)
+	}
+
+	return userIds, nil
+}

@@ -27,6 +27,7 @@ func main() {
 	r.NewRoute("GET", `/user/(?P<id>\d+)/posts`, controllers.GetPosts)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followers`, controllers.GetFollowers)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followings`, controllers.GetFollowings)
+	r.NewRoute("GET", `/users`, controllers.GetAllUsers)
 
 	r.NewRoute("POST", `/user/(?P<id>\d+)/posts`, controllers.CreatePost)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)/followers`, controllers.UpdateFollowers)

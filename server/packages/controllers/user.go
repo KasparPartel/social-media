@@ -161,3 +161,25 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	s.SessionRemove()
 	session.SessionProvider.RemoveToken(w)
 }
+
+func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	_, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	allUsers, err := sqlite.GetAllUsers()
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response.Data = allUsers
+	json.NewEncoder(w).Encode(response)
+}
