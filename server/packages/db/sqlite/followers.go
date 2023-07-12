@@ -113,3 +113,27 @@ func ChangeFollow(id, followerId int) (int, error) {
 
 	return 1, nil
 }
+
+func GetAllFollowers(userId int) ([]int, error) {
+	rows, err := db.Query(`SELECT followerId
+		FROM followers
+		WHERE userId = ?
+			AND isAccepted = 0`, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	followers := make([]int, 0)
+
+	for rows.Next() {
+		followerId := 0
+		err = rows.Scan(&followerId)
+		if err != nil {
+			return nil, err
+		}
+
+		followers = append(followers, followerId)
+	}
+
+	return followers, nil
+}

@@ -125,3 +125,14 @@ type Message struct {
 	Text         string `json:"text"`
 	CreationDate int    `json:"creationDate"`
 }
+
+type GroupJoinRequests struct {
+	GroupId int `json:"groupId"` // group id in which user want to join
+	UserId  int `json:"userId"`  // user id who wants to join
+}
+
+type GetAllNotificationsResponse struct {
+	FollowRequest []int               `json:"followRequest"` // id of requsted followers
+	InviteRequest []int               `json:"inviteRequest"` // id of groups who invited current user
+	JoinRequest   []GroupJoinRequests `json:"joinRequest"`   // only owner of a group gets this
+}
