@@ -2,6 +2,7 @@ import altAvatar from "../../assets/default-avatar.png";
 import { useState } from "react";
 import { User } from "../models";
 import "./userList.css";
+import { useNavigate } from "react-router-dom";
 
 const followStatuses = {
 	1: "FOLLOWED",
@@ -13,11 +14,13 @@ type UserListProps = {
 }
 
 export function UserList({ userList }: UserListProps) {
+	const navigate = useNavigate();
+
 	return (
 		<>
 			{userList.map((user, key) => {
 				return (
-					<li className="user-list__item" key={key} >
+					<li className="user-list__item" key={key} onClick={(e) => { e.preventDefault(); navigate(`/user/${user.id}`) }} >
 						<AvatarSection src={user.avatar} alt="avatar" />
 						<UserInfoSection name={`${user.firstName} ${user.lastName}`} followStatus={followStatuses[user.followStatus]} />
 					</li>
