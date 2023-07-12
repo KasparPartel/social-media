@@ -22,7 +22,7 @@ export default function useUserInfo(
         fetchHandler(`http://localhost:8080/user/${paramId}`, `GET`)
             .then((r) => {
                 if (!r.ok) {
-                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                    throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
                 }
                 return r.json()
             })
@@ -50,7 +50,7 @@ export function useGroupInfo(
         fetchHandler(`http://localhost:8080/group/${paramId}`, `GET`)
             .then((r) => {
                 if (!r.ok) {
-                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                    throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
                 }
                 return r.json()
             })

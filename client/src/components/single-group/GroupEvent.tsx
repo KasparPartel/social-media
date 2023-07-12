@@ -41,9 +41,8 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 displayErrors,
                             })
                         }
-                        className={`event__button event__button_left ${
-                            isGoing === 3 ? "button_green" : "button_gray"
-                        }`}
+                        className={`event__button event__button_left ${isGoing === 3 ? "button_green" : "button_gray"
+                            }`}
                     >
                         GOING
                     </button>
@@ -58,9 +57,8 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 displayErrors,
                             })
                         }
-                        className={`event__button event__button_right ${
-                            isGoing === 2 ? "button_red" : "button_gray"
-                        }`}
+                        className={`event__button event__button_right ${isGoing === 2 ? "button_red" : "button_gray"
+                            }`}
                     >
                         NOT GOING
                     </button>
@@ -82,7 +80,7 @@ function onClickHandler({ eventStatus, id, setIsGoing, navigate, displayErrors }
     fetchHandler(`http://localhost:8080/event/${id}/action`, "POST", eventStatus)
         .then((r) => {
             if (!r.ok) {
-                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
             }
             return r.json()
         })

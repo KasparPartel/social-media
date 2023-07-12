@@ -48,7 +48,7 @@ export function InviteButton({ paramId }: InviteButtonParam) {
                                         throw [
                                             {
                                                 code: r.status,
-                                                description: `HTTP error: status ${r.statusText}`,
+                                                description: `HTTP error: ${r.statusText}`,
                                             },
                                         ]
                                     }

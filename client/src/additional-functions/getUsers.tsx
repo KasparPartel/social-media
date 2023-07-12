@@ -20,7 +20,7 @@ export function getUsersList({ id, endpoint }: followersProps): User[] {
         fetchHandler(`http://localhost:8080/user/${id}/${endpoint}`, "GET")
             .then((r) => {
                 if (!r.ok) {
-                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                    throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
                 }
                 return r.json()
             })
@@ -38,7 +38,7 @@ export function getUsersList({ id, endpoint }: followersProps): User[] {
                                 throw [
                                     {
                                         code: r.status,
-                                        description: `HTTP error: status ${r.statusText}`,
+                                        description: `HTTP error: ${r.statusText}`,
                                     },
                                 ]
                             }

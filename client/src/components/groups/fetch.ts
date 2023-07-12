@@ -23,7 +23,7 @@ export const sendJoinRequest = (
     fetchHandler(`http://localhost:8080/group/${groupId}/join`, "POST")
         .then((r) => {
             if (!r.ok) {
-                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
             }
             return r.json()
         })
@@ -48,7 +48,7 @@ export const leaveGroupInGroupList = (
                 throw [
                     {
                         code: response.status,
-                        description: `HTTP error: status ${response.statusText}`,
+                        description: `HTTP error: ${response.statusText}`,
                     },
                 ]
             }
@@ -77,7 +77,7 @@ export const leaveGroup = (
                 throw [
                     {
                         code: response.status,
-                        description: `HTTP error: status ${response.statusText}`,
+                        description: `HTTP error: ${response.statusText}`,
                     },
                 ]
             }
