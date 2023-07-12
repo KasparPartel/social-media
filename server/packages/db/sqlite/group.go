@@ -422,3 +422,53 @@ func RejectInvitationGroup(groupId, userId int) error {
 
 	return nil
 }
+
+func GetAllInvitationByUserId(userId int) ([]int, error) {
+	rows, err := db.Query(`SELECT groupId
+		FROM group_invitation
+		WHERE userId = ?`, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	groupIds := make([]int, 0)
+
+	for rows.Next() {
+		groupId := 0
+		err = rows.Scan(&groupId)
+		if err != nil {
+			return nil, err
+		}
+
+		groupIds = append(groupIds, groupId)
+	}
+
+	return groupIds, nil
+}
+
+func GetAllJoinRequests(userId int) ([]models.GroupJoinRequests, error) {
+	rows, err := db.Query(`SELECT groupId,
+		group_members.userId
+	FROM group_members,
+		groups
+	WHERE groupId = groups.id
+		AND groups.userId = ?
+		AND isAccepted = 0`, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	groupJoinRequests := make([]models.GroupJoinRequests, 0)
+
+	for rows.Next() {
+		temp := models.GroupJoinRequests{}
+		err = rows.Scan(&temp.GroupId, &temp.UserId)
+		if err != nil {
+			return nil, err
+		}
+
+		groupJoinRequests = append(groupJoinRequests, temp)
+	}
+
+	return groupJoinRequests, nil
+}
