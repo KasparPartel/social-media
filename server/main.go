@@ -25,12 +25,10 @@ func main() {
 
 	r.NewRoute("GET", `/user/(?P<id>\d+)`, controllers.GetUserInfo)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/posts`, controllers.GetPosts)
-	r.NewRoute("GET", `/user/(?P<id>\d+)/chats`, controllers.GetChats)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followers`, controllers.GetFollowers)
 	r.NewRoute("GET", `/user/(?P<id>\d+)/followings`, controllers.GetFollowings)
 
 	r.NewRoute("POST", `/user/(?P<id>\d+)/posts`, controllers.CreatePost)
-	r.NewRoute("POST", `/user/(?P<id>\d+)/chats`, controllers.CreateChat)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)/followers`, controllers.UpdateFollowers)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)`, controllers.UpdateUserInfo)
 
@@ -39,9 +37,6 @@ func main() {
 	r.NewRoute("POST", `/post/(?P<id>\d+)/comments`, controllers.CreateComment)
 
 	r.NewRoute("GET", `/comment/(?P<id>\d+)`, controllers.GetComment)
-
-	r.NewRoute("GET", `/chat/(?P<id>\d+)`, controllers.GetChat)
-	r.NewRoute("POST", `/chat/(?P<id>\d+)`, controllers.CreateMessage)
 
 	r.NewRoute("GET", `/groups`, controllers.GetAllGroups)
 	r.NewRoute("POST", `/groups`, controllers.CreateGroup)
@@ -56,6 +51,7 @@ func main() {
 	r.NewRoute("POST", `/event/(?P<id>\d+)/action`, controllers.SelectEventAction)
 
 	r.NewRoute("GET", `/ws`, websocketchat.WebSocket)
+	r.NewRoute("GET", `/notifications`, controllers.GetAllNotifications)
 
 	http.HandleFunc("/", r.ServeWithCORS(c))
 
