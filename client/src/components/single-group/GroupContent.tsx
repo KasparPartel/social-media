@@ -26,7 +26,7 @@ export function GroupContent({ groupId }: GroupContentProp) {
         fetchHandler(`http://localhost:8080/group/${groupId}/feed`, "GET")
             .then((r) => {
                 if (!r.ok) {
-                    throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                    throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
                 }
                 return r.json()
             })

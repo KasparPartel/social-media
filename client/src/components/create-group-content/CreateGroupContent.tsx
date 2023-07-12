@@ -67,7 +67,7 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                                     throw [
                                         {
                                             code: r.status,
-                                            description: `HTTP error: status ${r.statusText}`,
+                                            description: `HTTP error: ${r.statusText}`,
                                         },
                                     ]
                                 }
@@ -111,9 +111,8 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                         className="post-form__text"
                     />
                     <div
-                        className={`post-form__bar${
-                            !isPosts ? "" : " post-form__bar_reverse-flex"
-                        }`}
+                        className={`post-form__bar${!isPosts ? "" : " post-form__bar_reverse-flex"
+                            }`}
                     >
                         {!isPosts ? (
                             <input

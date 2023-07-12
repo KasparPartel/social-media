@@ -21,7 +21,7 @@ export function ProfileSettingsUpdateRequest({ e, id, avatar }: ProfileSettingsU
         .then(() => fetchHandler(`http://localhost:8080/user/${id}`, "PUT", formFields))
         .then((r) => {
             if (!r.ok) {
-                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
             }
             return r.json()
         })

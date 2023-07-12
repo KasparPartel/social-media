@@ -18,7 +18,7 @@ export const getPostIds = (
     fetchHandler(`http://localhost:8080/user/${userId}/posts`, "GET")
         .then((res) => {
             if (!res.ok) {
-                throw [{ code: res.status, description: `HTTP error: status ${res.statusText}` }]
+                throw [{ code: res.status, description: `HTTP error: ${res.statusText}` }]
             }
             return res.json()
         })
@@ -48,7 +48,7 @@ export const getPostData = (
     fetchHandler(`http://localhost:8080/post/${postId}`, "GET")
         .then((res) => {
             if (!res.ok) {
-                throw [{ code: res.status, description: `HTTP error: status ${res.statusText}` }]
+                throw [{ code: res.status, description: `HTTP error: ${res.statusText}` }]
             }
             return res.json()
         })
@@ -57,7 +57,7 @@ export const getPostData = (
                 .then((r) => {
                     if (!r.ok) {
                         throw [
-                            { code: r.status, description: `HTTP error: status ${r.statusText}` },
+                            { code: r.status, description: `HTTP error: ${r.statusText}` },
                         ]
                     }
                     return r.json()
