@@ -1,12 +1,12 @@
 import altAvatar from "../../assets/default-avatar.png";
-import { useState } from "react";
 import { User } from "../models";
 import "./userList.css";
 import { useNavigate } from "react-router-dom";
 
 const followStatuses = {
-	1: "FOLLOWED",
-	2: "NOT FOLLOWED"
+	1: "NOT FOLLOWED",
+	2: "REQUESTED",
+	3: "FOLLOWED"
 }
 
 type UserListProps = {
@@ -22,7 +22,7 @@ export function UserList({ userList }: UserListProps) {
 				return (
 					<li className="user-list__item" key={key} onClick={(e) => { e.preventDefault(); navigate(`/user/${user.id}`) }} >
 						<AvatarSection src={user.avatar} alt="avatar" />
-						<UserInfoSection name={`${user.firstName} ${user.lastName}`} followStatus={followStatuses[user.followStatus]} />
+						<UserInfoSection username={user.login} name={`${user.firstName} ${user.lastName}`} followStatus={followStatuses[user.followStatus]} />
 					</li>
 				)
 			}
@@ -47,14 +47,15 @@ const AvatarSection = ({ src, alt, width, height }: AvatarProps) => {
 }
 
 type UserInfoSectionProps = {
+	username: string,
 	name: string,
 	followStatus: string
 }
 
-const UserInfoSection = ({ name, followStatus }: UserInfoSectionProps) => {
+const UserInfoSection = ({ username, name, followStatus }: UserInfoSectionProps) => {
 	return (
 		<div className="info_section">
-			<div className="info_section__name">{name}</div>
+			<div className="info_section__name">{name} {username === null ? "" : `(${username})`}</div>
 			<div className="info_section__follow-status">{followStatus}</div>
 		</div>
 	)
