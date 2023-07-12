@@ -64,7 +64,7 @@ export function GroupPage() {
                             <div className="group__info-section">
                                 <p className="group__title">{group.title}</p>
                                 <p className="group__description">{group.description}</p>
-                                <p className="group__description group__descriptio_not-stretched">
+                                <p className="group__description group__description_not-stretched">
                                     Your status: {groupJoinStatus[group.joinStatus]}
                                 </p>
                             </div>
