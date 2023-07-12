@@ -25,10 +25,10 @@ export function UserProfile() {
 
     const [user, isLoading, setUser] = useUserInfo(paramId)
     const { height, style, refText, openText } = useOpenText(0)
-    const [followPorps, setFollowPorps] = useState<followProps>(followStatusHandler(0))
+    const [followProps, setFollowProps] = useState<followProps>(followStatusHandler(0))
 
     useEffect(() => {
-        if (user) setFollowPorps(followStatusHandler(user.followStatus))
+        if (user && user.followStatus !== 0) setFollowProps(followStatusHandler(user.followStatus))
     }, [user])
 
     return (
@@ -51,8 +51,8 @@ export function UserProfile() {
                             {!isMyProfile ? (
                                 <FollowButton
                                     id={user.id}
-                                    followPorps={followPorps}
-                                    setFollowPorps={setFollowPorps}
+                                    followPorps={followProps}
+                                    setFollowPorps={setFollowProps}
                                 />
                             ) : (
                                 <CreatePost />
@@ -76,10 +76,12 @@ export function UserProfile() {
                             </div>
                         </div>
                     </div>
-                    <div className="b">
-                        <FollowingFollowers />
-                        <PostList {...{ user, isMyProfile }} />
-                    </div>
+                    {isMyProfile || user.isPublic || user.followStatus === 3 ? (
+                        <div className="b">
+                            <FollowingFollowers />
+                            <PostList {...{ user, isMyProfile }} />
+                        </div>
+                    ) : null}
                 </>
             ) : (
                 navigate("/error-not-found")

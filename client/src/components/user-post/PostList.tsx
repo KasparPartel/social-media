@@ -34,12 +34,14 @@ export default function PostList({ user, isMyProfile }: PostListParams) {
 }
 
 const UserPosts = ({ idList, err }: { idList: number[]; err: Error }) => {
+    if (idList && idList.length != 0) {
+        return (
+            <section className="postList">
+                {idList.map((postId, i) => (
+                    <UserPost postId={postId} key={i} />
+                ))}
+            </section>
+        )
+    }
     if (err) return <div>Cannot load posts - {err.message}</div>
-    return (
-        <section className="postList">
-            {idList.map((postId, i) => (
-                <UserPost postId={postId} key={i} />
-            ))}
-        </section>
-    )
 }
