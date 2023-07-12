@@ -47,7 +47,6 @@ export function getUsersWithExceptionList({ idException, setUserList, setLoading
 
       Promise.all(promiseArr).then((userArr) => {
         userArr.filter((user) => user !== null);
-        console.log(JSON.stringify(userArr))
         setUserList(userArr);
         setLoading(false);
       })
