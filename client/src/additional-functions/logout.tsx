@@ -8,7 +8,7 @@ export function Logout(navigate: NavigateFunction, displayErrors: ErrorsDisplayT
         .then((r) => {
             localStorage.removeItem("id")
             if (!r.ok) {
-                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
             }
             navigate("/login")
             return

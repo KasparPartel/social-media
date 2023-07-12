@@ -17,7 +17,7 @@ export async function authReturnHandler(
     isRegistration: boolean,
 ) {
     if (!r.ok) {
-        throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+        throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
     }
     await r
         .json()

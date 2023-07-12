@@ -17,7 +17,7 @@ export function Header() {
     const customButtonInfo = [
         { name: "Profile", path: `/user/${localStorage.getItem("id")}` },
         { name: "Groups", path: `/groups` },
-        { name: "Users", path: `/users` },
+        { name: "Users", path: `/userlist` },
         { name: "Notifications", path: `/notifications` },
     ]
     const defaultState = Array<boolean>(customButtonInfo.length).fill(false)

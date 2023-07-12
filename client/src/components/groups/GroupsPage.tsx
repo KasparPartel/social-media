@@ -59,7 +59,7 @@ function getAllGroups(
     fetchHandler(`http://localhost:8080/groups`, "GET")
         .then((r) => {
             if (!r.ok) {
-                throw [{ code: r.status, description: `HTTP error: status ${r.statusText}` }]
+                throw [{ code: r.status, description: `HTTP error: ${r.statusText}` }]
             }
             return r.json()
         })

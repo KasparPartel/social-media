@@ -8,7 +8,7 @@ export const getCommentsIds = async (postId: number): Promise<ServerResponse<num
     const url = `http://localhost:8080/post/${postId}/comments`
 
     const res = await fetchHandler(url, "GET")
-    if (!res.ok) throw [{ code: res.status, description: `HTTP error: status ${res.statusText}` }]
+    if (!res.ok) throw [{ code: res.status, description: `HTTP error: ${res.statusText}` }]
 
     return await res.json()
 }
@@ -20,7 +20,7 @@ export const getCommentData = async (commentId: number): Promise<ServerResponse<
     const url = `http://localhost:8080/comment/${commentId}`
 
     const res = await fetchHandler(url, "GET")
-    if (!res.ok) throw [{ code: res.status, description: `HTTP error: status ${res.statusText}` }]
+    if (!res.ok) throw [{ code: res.status, description: `HTTP error: ${res.statusText}` }]
 
     return await res.json()
 }
@@ -40,7 +40,7 @@ export const postComment = async (
         },
         body: JSON.stringify(comment),
     })
-    if (!res.ok) throw [{ code: res.status, description: `HTTP error: status ${res.statusText}` }]
+    if (!res.ok) throw [{ code: res.status, description: `HTTP error: ${res.statusText}` }]
 
     return await res.json()
 }
