@@ -360,3 +360,65 @@ func GetAllEvents(groupId, userId int) ([]models.CreatePostEventResponse, error)
 
 	return events, nil
 }
+
+func AcceptJoinGroup(groupId, userId int) error {
+	_, err := db.Exec(`UPDATE group_members
+		SET isAccepted = 1
+		WHERE groupId = ?
+			AND userId = ?`, groupId, userId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RejectJoinGroup(groupId, userId int) error {
+	_, err := db.Exec(`DELETE FROM group_members
+		WHERE groupId = ?
+			AND userId = ?
+			AND isAccepted = 0`, groupId, userId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func AcceptInvitationGroup(groupId, userId int) error {
+	result, err := db.Exec(`DELETE FROM group_invitation
+		WHERE groupId = ?
+			AND userId = ?`)
+	if err != nil {
+		return err
+	}
+	countRows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if countRows < 1 {
+		return nil
+	}
+
+	_, err = db.Exec(`INSERT INTO group_members(groupId, userId, isAccepted) 
+		VALUES(?, ?, 1) `, groupId, userId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RejectInvitationGroup(groupId, userId int) error {
+	_, err := db.Exec(`DELETE FROM group_invitation
+		WHERE groupId = ?
+			AND userId = ?`)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
