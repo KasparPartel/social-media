@@ -9,6 +9,7 @@ import { ErrorNotFound } from "./components/error-404/ErrorNotFound"
 import { ErrorGeneral } from "./components/error-general/ErrorGeneral"
 import { GroupPage } from "./components/single-group/Group"
 import { GroupsPage } from "./components/groups/GroupsPage"
+import { UserListPage } from "./components/user-list/UserListPage"
 
 export default function App() {
     return (
@@ -30,6 +31,7 @@ export default function App() {
                 <Route path="/user/:paramId" element={<UserProfile />} />
                 <Route path="/groups" element={<GroupsPage />} />
                 <Route path="/group/:paramId" element={<GroupPage />} />
+                <Route path="/userlist" element={<UserListPage />} />
             </Route>
             <Route path="/internal-error" element={<ErrorGeneral />} />
             <Route path="/error-not-found" element={<ErrorNotFound />} />
