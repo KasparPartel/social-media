@@ -115,3 +115,51 @@ func UpdateFollowers(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(response)
 }
+
+func AcceptFollowRequest(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	paramUserId, _ := strconv.Atoi(inputId)
+
+	requestUserId := s.GetUID()
+
+	err = sqlite.AcceptFollow(requestUserId, paramUserId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func RejectFollowRequest(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	paramUserId, _ := strconv.Atoi(inputId)
+
+	requestUserId := s.GetUID()
+
+	err = sqlite.RejectFollow(requestUserId, paramUserId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

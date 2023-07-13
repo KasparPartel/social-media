@@ -137,3 +137,29 @@ func GetAllFollowers(userId int) ([]int, error) {
 
 	return followers, nil
 }
+
+func AcceptFollow(userId, followerId int) error {
+	_, err := db.Exec(`UPDATE followers
+		SET isAccepted = 1
+		WHERE userId = ?
+			AND followerId = ?`, userId, followerId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RejectFollow(userId, followerId int) error {
+	_, err := db.Exec(`DELETE FROM followers
+		WHERE userId = ?
+			AND followerId = ? 
+			AND isAccepted = 0`, userId, followerId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

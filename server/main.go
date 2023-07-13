@@ -31,6 +31,8 @@ func main() {
 
 	r.NewRoute("POST", `/user/(?P<id>\d+)/posts`, controllers.CreatePost)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)/followers`, controllers.UpdateFollowers)
+	r.NewRoute("POST", `/user/(?P<id>\d+)/followings/accept`, controllers.AcceptFollowRequest)
+	r.NewRoute("POST", `/user/(?P<id>\d+)/followings/reject`, controllers.RejectFollowRequest)
 	r.NewRoute("PUT", `/user/(?P<id>\d+)`, controllers.UpdateUserInfo)
 
 	r.NewRoute("GET", `/post/(?P<id>\d+)`, controllers.GetPost)
@@ -44,7 +46,11 @@ func main() {
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)`, controllers.GetGroup)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/invite`, controllers.InviteToGroup)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/invite/(?P<userId>\d+)/accept`, controllers.AcceptJoinRequest)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/invite/(?P<userId>\d+)/reject`, controllers.RejectJoinRequest)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/(?P<action>leave|join)`, controllers.JoinLeaveGroup)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/join/accept`, controllers.AcceptInvitationRequest)
+	r.NewRoute("POST", `/group/(?P<id>\d+)/join/reject`, controllers.RejectInvitationRequest)
 
 	r.NewRoute("GET", `/group/(?P<id>\d+)/feed`, controllers.GetGroupFeed)
 	r.NewRoute("POST", `/group/(?P<id>\d+)/feed`, controllers.CreatePostEvent)
