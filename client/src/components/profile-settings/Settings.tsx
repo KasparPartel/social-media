@@ -37,6 +37,13 @@ export function ProfileSettings({
 
                             setUser((prevValue) => {
                                 const temp = Object.assign({}, prevValue)
+                                if (Object.hasOwn(r.data, "isPublic"))
+                                    r.data.isPublic =
+                                        r.data.isPublic === "true"
+                                            ? true
+                                            : r.data.isPublic === "false"
+                                            ? false
+                                            : r.data.isPublic
                                 Object.entries(r.data).forEach(([key, value]) => {
                                     if (Object.hasOwn(temp, key)) {
                                         temp[key] = value

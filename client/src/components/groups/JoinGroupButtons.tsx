@@ -4,15 +4,17 @@ import { sendJoinRequest, leaveGroupInGroupList } from "./fetch"
 import { useErrorsContext } from "../error-display/ErrorDisplay"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
+interface JoinGroupButtonsProps {
+    initJoinStatus: number
+    isOwner: boolean
+    groupId: number
+}
+
 export function JoinGroupButtons({
     initJoinStatus,
     isOwner,
     groupId,
-}: {
-    initJoinStatus: number
-    isOwner: boolean
-    groupId: number
-}): ReactElement {
+}: JoinGroupButtonsProps): ReactElement {
     const navigate = useNavigate()
     const { displayErrors } = useErrorsContext()
 
