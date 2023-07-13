@@ -44,11 +44,9 @@ export function UserList({ userList }: UserListProps) {
 type AvatarProps = {
     src: string
     alt: string
-    width?: number
-    height?: number
 }
 
-const AvatarSection = ({ src, alt, width, height }: AvatarProps) => {
+const AvatarSection = ({ src, alt }: AvatarProps) => {
     return (
         <div className="avatar-section">
             {src !== "" ? (

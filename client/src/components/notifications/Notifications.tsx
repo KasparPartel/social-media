@@ -64,12 +64,18 @@ export function Notifications() {
 
     return (
         <div className="notifications-list">
+            {followRequest.length === 0 &&
+            inviteRequest.length === 0 &&
+            joinRequest.length === 0 ? (
+                <p className="notifications-list__empty-message">No notifications yet</p>
+            ) : null}
             {followRequest.length > 0 ? (
                 <div className="user-list-main">
                     <ul className="user-list__wrapper">
                         <FollowsHandler
                             {...{
                                 followRequest,
+                                setFollowRequest,
                             }}
                         />
                     </ul>
@@ -81,6 +87,7 @@ export function Notifications() {
                         <GroupInvitesHandler
                             {...{
                                 inviteRequest,
+                                setInviteRequest,
                             }}
                         />
                     </ul>
@@ -89,7 +96,7 @@ export function Notifications() {
             {joinRequest.length > 0 ? (
                 <div className="user-list-main">
                     <ul className="user-list__wrapper">
-                        <GroupJoinRequestsHandler {...{ joinRequest }} />
+                        <GroupJoinRequestsHandler {...{ joinRequest, setJoinRequest }} />
                     </ul>
                 </div>
             ) : null}

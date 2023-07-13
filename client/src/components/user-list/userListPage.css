@@ -5,7 +5,7 @@
     flex-direction: column;
     width: calc(100% - var(--padding-left) - var(--padding-right));
     height: stretch;
-    padding: 0 var(--padding-left) 0 var(--padding-right);
+    padding: 10px var(--padding-left) 0 var(--padding-right);
 }
 
 .user-list__wrapper {
