@@ -1,17 +1,17 @@
-FROM node:16.20
-
-COPY . /client
+FROM node:18.16 AS builder
 
 WORKDIR /client
 
-COPY package*.json /client/
+COPY . .
 
-RUN npm install -g serve
+RUN npm install && npm run build
 
-RUN npm install
+FROM nginx:alpine
 
-RUN npm run build
+WORKDIR /usr/share/nginx/html
 
-EXPOSE 3000
+RUN rm -rf ./*
 
-CMD ["serve", "-s", "build"]
+COPY --from=builder /client/build .
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

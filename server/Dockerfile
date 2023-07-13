@@ -1,15 +1,21 @@
-FROM golang:1.19-alpine
-
-RUN apk update && apk add --no-cache gcc musl-dev
-
-COPY . /server
+FROM golang:1.19-alpine AS builder
 
 WORKDIR /server
 
-RUN go get ./...
+COPY . .
 
-RUN go build -o main .
+RUN apk update && apk add --no-cache gcc musl-dev
+
+RUN go build -o social-network .
+
+FROM alpine:latest 
+
+WORKDIR /server
+
+COPY --from=builder /server/social-network .
+
+COPY --from=builder /server/packages/db/migrations ./migrations
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["./social-network"]
