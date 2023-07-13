@@ -26,7 +26,7 @@ type RealTimeConnections struct {
 
 type BaseMapPayload map[string]interface{}
 
-type BasePayload[T models.Message | []models.Message] struct {
+type BasePayload[T models.Message | []models.Message | models.CreatePostEventResponse] struct {
 	EventType string `json:"eventType"`
 	Payload   T      `json:"payload"`
 }

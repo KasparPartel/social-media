@@ -410,3 +410,25 @@ func GetAllJoinRequests(userId int) ([]models.GroupJoinRequests, error) {
 
 	return groupJoinRequests, nil
 }
+
+func GetAllGroupMembers(groupId int) ([]int, error) {
+	rows, err := db.Query(`SELECT userId
+		FROM group_members
+		WHERE groupId = ?`, groupId)
+	if err != nil {
+		return nil, err
+	}
+
+	userIds := make([]int, 0)
+	for rows.Next() {
+		userId := 0
+		err = rows.Scan(&userId)
+		if err != nil {
+			return nil, err
+		}
+
+		userIds = append(userIds, userId)
+	}
+
+	return userIds, nil
+}

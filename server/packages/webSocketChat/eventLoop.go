@@ -44,7 +44,7 @@ func readMessage(client *Client) {
 					continue
 				}
 			}
-			currentChat := connections.AddChat(chat.Id, client)
+			currentChat := Connections.AddChat(chat.Id, client)
 			client.chat = currentChat
 
 			messages, err := sqlite.GetMessagesByChatId(currentChat.chatId)
@@ -62,7 +62,7 @@ func readMessage(client *Client) {
 				continue
 			}
 		case "leave":
-			connections.RemoveClientFromChat(client)
+			Connections.RemoveClientFromChat(client)
 		case "message":
 			if client.chat == nil {
 				continue

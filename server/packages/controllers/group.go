@@ -10,6 +10,7 @@ import (
 	"social-network/packages/models"
 	"social-network/packages/session"
 	"social-network/packages/validator"
+	websocketchat "social-network/packages/webSocketChat"
 	"strconv"
 	"strings"
 )
@@ -267,6 +268,21 @@ func CreatePostEvent(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+
+	if post.IsEvent {
+		userIds, err := sqlite.GetAllGroupMembers(groupId)
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = websocketchat.Connections.SendMessageToUsers(userIds, *responsePost)
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	response.Data = responsePost
