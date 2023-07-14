@@ -31,12 +31,12 @@ type User struct {
 
 func openDatabase() *sql.DB {
 	fmt.Println("open db")
-	if _, err := os.Stat("./database"); os.IsNotExist(err) {
-		err := os.Mkdir("./database", fs.ModeDir|0755)
+	if _, err := os.Stat("./db/database"); os.IsNotExist(err) {
+		err := os.MkdirAll("./db/database", fs.ModeDir|0755)
 		eh.LogErrorFatal(err)
 	}
 
-	db, err := sql.Open("sqlite3", "./database/social-network.db")
+	db, err := sql.Open("sqlite3", "./db/database/social-network.db")
 	eh.LogErrorFatal(err, "Failed to open database")
 
 	db.SetMaxOpenConns(1)
@@ -50,7 +50,7 @@ func makeMigration() {
 	eh.LogErrorFatal(err)
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://migrations",
+		"file://db/migrations",
 		"sqlite3", driver)
 
 	eh.LogErrorFatal(err)

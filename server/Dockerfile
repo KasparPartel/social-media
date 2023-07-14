@@ -14,7 +14,7 @@ WORKDIR /server
 
 COPY --from=builder /server/social-network .
 
-COPY --from=builder /server/packages/db/migrations ./migrations
+COPY --from=builder /server/db/migrations ./db/migrations
 
 EXPOSE 8080
 
