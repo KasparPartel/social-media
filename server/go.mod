@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/satori/go.uuid v1.2.0
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/crypto v0.1.0
 )
 
 require (
