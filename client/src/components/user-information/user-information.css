@@ -20,6 +20,11 @@
     min-width: fit-content;
 }
 
+.information__buttons {
+    display: flex;
+    gap: 14px;
+}
+
 .information__detailed-info {
     display: flex;
     flex-direction: column;

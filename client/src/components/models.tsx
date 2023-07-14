@@ -141,7 +141,7 @@ export interface EventStatus {
 }
 
 export interface BasePayload<
-    T = Message | ServerMessage | ServerMessage[] | ChatJoin | EventNotification,
+    T = Message | ServerMessage | ServerMessage[] | ChatJoin | GroupFetchedEvent,
 > {
     eventType: string
     payload: T
@@ -164,8 +164,4 @@ export interface ServerMessage {
 export interface ChatJoin {
     id: number
     isGroup: boolean
-}
-
-export interface EventNotification {
-    eventName: string
 }

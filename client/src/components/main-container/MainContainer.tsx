@@ -11,7 +11,7 @@ interface websocketContextProps {
 
 const deafultWsDataSource = {
     chat: [],
-    eventNotification: [],
+    eventNotification: null,
 }
 
 export const websocketContext = createContext<websocketContextProps>({

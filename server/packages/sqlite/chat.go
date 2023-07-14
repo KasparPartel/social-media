@@ -35,7 +35,7 @@ func GetOrCreateGroupChat(groupId int) (*models.Chat, error) {
 
 func GetOrCreatePrivateChat(userId1, userId2 int) (*models.Chat, error) {
 	chat := &models.Chat{}
-	err := db.QueryRow(`SELECT id, user_1, user_2, groupId FROM chat WHERE (user_1 = ? AND user_2 = ?) OR (user_1 = ? AND user_2 = ?))`, userId1, userId2, userId2, userId1).
+	err := db.QueryRow(`SELECT id, user_1, user_2, groupId FROM chat WHERE (user_1 = ? AND user_2 = ?) OR (user_1 = ? AND user_2 = ?)`, userId1, userId2, userId2, userId1).
 		Scan(&chat.Id, &chat.User1, &chat.User2, &chat.GroupId)
 	if err == nil {
 		return chat, err
@@ -43,7 +43,6 @@ func GetOrCreatePrivateChat(userId1, userId2 int) (*models.Chat, error) {
 	if err != sql.ErrNoRows {
 		return nil, err
 	}
-
 	result, err := db.Exec(`INSERT INTO chat (user_1, user_2)
 	VALUES (?, ?);`, userId1, userId2)
 	if err != nil {
