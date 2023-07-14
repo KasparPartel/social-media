@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
+	"social-network/packages/sqlite"
 	"social-network/packages/utils"
 	"social-network/packages/validator"
 )

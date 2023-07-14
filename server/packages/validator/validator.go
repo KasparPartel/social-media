@@ -2,8 +2,8 @@ package validator
 
 import (
 	"regexp"
-	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
+	"social-network/packages/sqlite"
 	"strings"
 )
 

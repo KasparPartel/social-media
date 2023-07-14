@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"social-network/packages/db/sqlite"
 	"social-network/packages/models"
+	"social-network/packages/sqlite"
 )
 
 func readMessage(client *Client) {
