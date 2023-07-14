@@ -10,6 +10,7 @@ import { ErrorGeneral } from "./components/error-general/ErrorGeneral"
 import { GroupPage } from "./components/single-group/Group"
 import { GroupsPage } from "./components/groups/GroupsPage"
 import { UserListPage } from "./components/user-list/UserListPage"
+import { Notifications } from "./components/notifications/Notifications"
 
 export default function App() {
     return (
@@ -32,6 +33,7 @@ export default function App() {
                 <Route path="/groups" element={<GroupsPage />} />
                 <Route path="/group/:paramId" element={<GroupPage />} />
                 <Route path="/userlist" element={<UserListPage />} />
+                <Route path="/notifications" element={<Notifications />} />
             </Route>
             <Route path="/internal-error" element={<ErrorGeneral />} />
             <Route path="/error-not-found" element={<ErrorNotFound />} />

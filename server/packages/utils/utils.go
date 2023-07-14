@@ -3,10 +3,10 @@ package utils
 import (
 	"database/sql"
 	"net/http"
-	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
 	"social-network/packages/httpRouting"
 	"social-network/packages/session"
+	"social-network/packages/sqlite"
 	"strconv"
 )
 

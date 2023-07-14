@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
 	"social-network/packages/models"
 	"social-network/packages/session"
+	"social-network/packages/sqlite"
 	"social-network/packages/validator"
 
 	"golang.org/x/crypto/bcrypt"

@@ -29,7 +29,6 @@ export function useErrorsContext() {
  * @returns Displays errors in the top right corner of the page
  */
 export function ErrorDisplay({ children }) {
-
     const [errors, setErrors] = useState<ErrorResponse[]>([])
 
     const displayErrors = (newErrors: ErrorResponse[]) => {

@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"social-network/packages/db/sqlite"
 	eh "social-network/packages/errorHandler"
 	"social-network/packages/httpRouting"
 	"social-network/packages/models"
 	"social-network/packages/session"
+	"social-network/packages/sqlite"
 	"social-network/packages/utils"
 	"social-network/packages/validator"
 	websocketchat "social-network/packages/webSocketChat"
@@ -352,4 +352,142 @@ func GetGroupFeed(w http.ResponseWriter, r *http.Request) {
 		Events: events,
 	}
 	json.NewEncoder(w).Encode(response)
+}
+
+func AcceptJoinRequest(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	paramGroupId, _ := strconv.Atoi(inputId)
+
+	requestUserId := s.GetUID()
+
+	group, err := sqlite.GetGroupById(paramGroupId, requestUserId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	} else if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if !group.IsOwner {
+		response.Errors = []*eh.ErrorResponse{
+			eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ = httpRouting.GetField(r, "userId")
+	paramUserId, _ := strconv.Atoi(inputId)
+
+	err = sqlite.AcceptJoinGroup(group.Id, paramUserId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func RejectJoinRequest(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	paramGroupId, _ := strconv.Atoi(inputId)
+
+	requestUserId := s.GetUID()
+
+	group, err := sqlite.GetGroupById(paramGroupId, requestUserId)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	} else if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if !group.IsOwner {
+		response.Errors = []*eh.ErrorResponse{
+			eh.NewErrorResponse(eh.ErrNoAccess, "no access to this action")}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ = httpRouting.GetField(r, "userId")
+	paramUserId, _ := strconv.Atoi(inputId)
+
+	err = sqlite.RejectJoinGroup(group.Id, paramUserId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func AcceptInvitationRequest(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	paramGroupId, _ := strconv.Atoi(inputId)
+
+	requestUserId := s.GetUID()
+
+	err = sqlite.AcceptInvitationGroup(paramGroupId, requestUserId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func RejectInvitationRequest(w http.ResponseWriter, r *http.Request) {
+	response := &eh.Response{}
+	w.Header().Set("Content-Type", "application/json")
+
+	s, err := session.SessionProvider.GetSession(r)
+	if errRes, ok := err.(*eh.ErrorResponse); ok {
+		response.Errors = []*eh.ErrorResponse{errRes}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	inputId, _ := httpRouting.GetField(r, "id")
+	paramGroupId, _ := strconv.Atoi(inputId)
+
+	requestUserId := s.GetUID()
+
+	err = sqlite.RejectInvitationGroup(paramGroupId, requestUserId)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
