@@ -1,10 +1,10 @@
-import { BasePayload, EventNotification, ServerMessage } from "../components/models"
+import { BasePayload, GroupFetchedEvent, ServerMessage } from "../components/models"
 
-export const EVENT_TYPES = ["join", "leave", "message", "eventNotification"]
+export const EVENT_TYPES = ["join", "leave", "message", "notifications"]
 
 export interface wsDataSourceProps {
     chat: ServerMessage[]
-    eventNotification: EventNotification[]
+    eventNotification: GroupFetchedEvent
 }
 
 export class WebSocketService {
@@ -24,7 +24,8 @@ export class WebSocketService {
         }
 
         this.ws.onmessage = (e: MessageEvent) => {
-            const data: BasePayload<ServerMessage | ServerMessage[] | EventNotification> = e.data
+            console.log(e.data)
+            const data: BasePayload<ServerMessage | ServerMessage[] | GroupFetchedEvent> = e.data
                 ? JSON.parse(e.data)
                 : {}
 
@@ -34,9 +35,10 @@ export class WebSocketService {
                         handleNewChatMessage(this.setWsDataSource, data.payload)
                         break
                     case EVENT_TYPES[3]: // "eventNotification"
+                        console.log(data.payload)
                         this.setWsDataSource((prev) => {
                             const temp = Object.assign({}, prev)
-                            temp.eventNotification.push(data.payload as EventNotification)
+                            temp.eventNotification = data.payload as GroupFetchedEvent
                             return temp
                         })
                         break
@@ -80,7 +82,7 @@ export class WebSocketService {
 
 function handleNewChatMessage(
     setData: React.Dispatch<React.SetStateAction<wsDataSourceProps>>,
-    data: ServerMessage | ServerMessage[] | EventNotification,
+    data: ServerMessage | ServerMessage[] | GroupFetchedEvent,
 ) {
     setData((prev) => {
         const temp = Object.assign({}, prev)

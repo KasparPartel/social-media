@@ -13,6 +13,7 @@ import PostList from "../user-post/PostList"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import useParamId from "../../hooks/useParamId"
 import { useNavigate } from "react-router-dom"
+import { Chat } from "../chat-component/Chat"
 
 export interface followProps {
     followClass: string
@@ -48,15 +49,20 @@ export function UserProfile() {
                                     setUser,
                                 }}
                             />
-                            {!isMyProfile ? (
-                                <FollowButton
-                                    id={user.id}
-                                    followPorps={followProps}
-                                    setFollowPorps={setFollowProps}
-                                />
-                            ) : (
-                                <CreatePost />
-                            )}
+                            <div className="information__buttons">
+                                {!isMyProfile && user.followStatus === 3 ? (
+                                    <Chat {...{ id: user.id, isGroup: false }} />
+                                ) : null}
+                                {!isMyProfile ? (
+                                    <FollowButton
+                                        id={user.id}
+                                        followPorps={followProps}
+                                        setFollowPorps={setFollowProps}
+                                    />
+                                ) : (
+                                    <CreatePost />
+                                )}
+                            </div>
                         </div>
                         <div style={style} className="information__detailed-container">
                             <div ref={refText} className="information__detailed-info">

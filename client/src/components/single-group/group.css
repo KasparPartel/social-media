@@ -69,3 +69,7 @@
     font-size: 24px;
     font-weight: 400;
 }
+
+.group__button_small-padding {
+    padding: 10px;
+}

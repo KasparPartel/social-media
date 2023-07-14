@@ -1,3 +1,10 @@
+.groups-empty-display {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
 .groups-main {
     display: flex;
     flex-direction: column;

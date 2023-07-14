@@ -23,7 +23,12 @@ export function GroupsPage() {
     if (isLoading) return <LoadingSkeleton dataName="groups" />
 
     if (groupList.length === 0) {
-        return <p>No Groups, yet!</p>
+        return (
+            <div className="groups-empty-display">
+                <p>No Groups, yet!</p>
+                <CreateGroup />
+            </div>
+        )
     }
 
     return (

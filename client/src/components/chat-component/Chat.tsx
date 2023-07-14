@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useRef } from "react"
+import { useContext, useRef } from "react"
 import { WebSocketService } from "../../additional-functions/websocket"
 import toggleHook from "../../hooks/useToggle"
 import sendIcon from "../../assets/send-outline.svg"
@@ -17,10 +17,9 @@ import useToggle from "../../hooks/useToggle"
 interface GroupChatProp {
     id: number
     isGroup: boolean
-    children?: ReactNode
 }
 
-export function Chat({ id, isGroup, children }: GroupChatProp) {
+export function Chat({ id, isGroup }: GroupChatProp) {
     const groupChatJoin: BasePayload = {
         eventType: "join",
         payload: { id, isGroup },
@@ -43,9 +42,9 @@ export function Chat({ id, isGroup, children }: GroupChatProp) {
                     ws.send(JSON.stringify(groupChatJoin))
                     toggleChat()
                 }}
-                className="button group__button"
+                className="button group__button group__button_small-padding"
             >
-                <img src={envelope} alt="chat" className="comment__img chat__img" />
+                <img src={envelope} alt="chat" className="chat__img chat__img_short" />
             </button>
             {isChatOpen ? (
                 <div className="chat__wrapper">
@@ -57,8 +56,7 @@ export function Chat({ id, isGroup, children }: GroupChatProp) {
                         />
                     ) : null}
                     <div className="chat">
-                        <div className={"chat__info" + (isGroup ? " chat__info_group" : "")}>
-                            {isGroup ? null : children}
+                        <div className="chat__info">
                             <button
                                 className="chat__button"
                                 onClick={() => {
@@ -68,7 +66,7 @@ export function Chat({ id, isGroup, children }: GroupChatProp) {
                                     toggleChat()
                                 }}
                             >
-                                <img src={Cross} alt="close" className="comment__img" />
+                                <img src={Cross} alt="close" className="chat__img" />
                             </button>
                         </div>
                         <div className="chat__conversation-window">
@@ -81,10 +79,10 @@ export function Chat({ id, isGroup, children }: GroupChatProp) {
                                             <div
                                                 key={i}
                                                 className={
-                                                    "post__comment" +
+                                                    "chat__message" +
                                                     (userId === message.userId
-                                                        ? " chat__message-right"
-                                                        : " chat__message-left")
+                                                        ? " chat__message_right"
+                                                        : " chat__message_left")
                                                 }
                                             >
                                                 <div className="comment__info">
