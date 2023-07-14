@@ -61,3 +61,15 @@ func IsOwn(r *http.Request) (int, error) {
 
 	return id, nil
 }
+
+func FilterArray[T any](arr []T, filter func(value T) bool) []T {
+	temp := make([]T, 0)
+
+	for _, v := range arr {
+		if filter(v) {
+			temp = append(temp, v)
+		}
+	}
+
+	return temp
+}

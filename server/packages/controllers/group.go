@@ -9,6 +9,7 @@ import (
 	"social-network/packages/httpRouting"
 	"social-network/packages/models"
 	"social-network/packages/session"
+	"social-network/packages/utils"
 	"social-network/packages/validator"
 	websocketchat "social-network/packages/webSocketChat"
 	"strconv"
@@ -277,6 +278,11 @@ func CreatePostEvent(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+
+		userIds = utils.FilterArray(userIds, func(a int) bool {
+			return a != requestUserId
+		})
+
 		err = websocketchat.Connections.SendMessageToUsers(userIds, *responsePost)
 		if err != nil {
 			log.Println(err)

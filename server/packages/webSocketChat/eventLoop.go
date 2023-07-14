@@ -6,6 +6,8 @@ import (
 	"log"
 	"social-network/packages/db/sqlite"
 	"social-network/packages/models"
+
+	"github.com/gorilla/websocket"
 )
 
 func readMessage(client *Client) {
@@ -14,12 +16,12 @@ func readMessage(client *Client) {
 	for client != nil && client.conn != nil {
 		err := client.conn.ReadJSON(&event)
 		if err != nil {
-			log.Println(err)
+			if !websocket.IsCloseError(err, 1000, 1001) {
+				log.Println(err)
+			}
 			client.conn.Close()
 			return
 		}
-
-		fmt.Printf("event: %v\n", event)
 
 		switch event["eventType"] {
 		case "join":

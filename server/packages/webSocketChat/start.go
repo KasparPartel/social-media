@@ -51,11 +51,8 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 		Connections.RemoveClientFromChat(client)
 		Connections.RemoveConnection(client)
 		closeHandler(code, text)
-		log.Printf("[DISCONNECTED] Client with id: %d disconnected. Chats: %+v\nConnections: %+v\n", requestUserId, Connections.chats, Connections.connectionList)
 		return nil
 	})
-
-	log.Printf("[CONNECTED] Client with id: %d connected. Chats: %+v\nConnections: %+v\n", requestUserId, Connections.chats, Connections.connectionList)
 
 	readMessage(client)
 }
