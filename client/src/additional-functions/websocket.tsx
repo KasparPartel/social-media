@@ -20,7 +20,6 @@ export class WebSocketService {
         this.ws = new WebSocket(url)
 
         this.ws.onopen = () => {
-            console.log("WebSocket connected")
             this.isConnected = true
         }
 
@@ -46,7 +45,6 @@ export class WebSocketService {
         }
 
         this.ws.onclose = () => {
-            console.log("WebSocket disconnected")
             this.isConnected = false
         }
     }

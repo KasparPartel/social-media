@@ -47,5 +47,5 @@ func GetAllNotifications(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Data = allNotifications
-	json.NewEncoder(w).Encode(allNotifications)
+	json.NewEncoder(w).Encode(response)
 }
