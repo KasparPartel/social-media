@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var connections RealTimeConnections
+var Connections RealTimeConnections
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -44,24 +44,21 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 		userId: requestUserId,
 	}
 
-	connections.AddConnection(requestUserId, client)
+	Connections.AddConnection(requestUserId, client)
 	closeHandler := ws.CloseHandler()
 
 	ws.SetCloseHandler(func(code int, text string) error {
-		connections.RemoveClientFromChat(client)
-		connections.RemoveConnection(client)
+		Connections.RemoveClientFromChat(client)
+		Connections.RemoveConnection(client)
 		closeHandler(code, text)
-		log.Printf("[DISCONNECTED] Client with id: %d disconnected. Chats: %+v\nConnections: %+v\n", requestUserId, connections.chats, connections.connectionList)
 		return nil
 	})
-
-	log.Printf("[CONNECTED] Client with id: %d connected. Chats: %+v\nConnections: %+v\n", requestUserId, connections.chats, connections.connectionList)
 
 	readMessage(client)
 }
 
 func init() {
-	connections = RealTimeConnections{
+	Connections = RealTimeConnections{
 		connectionList: make(map[int]map[*Client]bool),
 		chats:          make(map[int]*Chat),
 	}

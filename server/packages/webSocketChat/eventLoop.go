@@ -6,6 +6,8 @@ import (
 	"log"
 	"social-network/packages/models"
 	"social-network/packages/sqlite"
+
+	"github.com/gorilla/websocket"
 )
 
 func readMessage(client *Client) {
@@ -14,12 +16,12 @@ func readMessage(client *Client) {
 	for client != nil && client.conn != nil {
 		err := client.conn.ReadJSON(&event)
 		if err != nil {
-			log.Println(err)
+			if !websocket.IsCloseError(err, 1000, 1001) {
+				log.Println(err)
+			}
 			client.conn.Close()
 			return
 		}
-
-		fmt.Printf("event: %v\n", event)
 
 		switch event["eventType"] {
 		case "join":
@@ -44,7 +46,7 @@ func readMessage(client *Client) {
 					continue
 				}
 			}
-			currentChat := connections.AddChat(chat.Id, client)
+			currentChat := Connections.AddChat(chat.Id, client)
 			client.chat = currentChat
 
 			messages, err := sqlite.GetMessagesByChatId(currentChat.chatId)
@@ -62,7 +64,7 @@ func readMessage(client *Client) {
 				continue
 			}
 		case "leave":
-			connections.RemoveClientFromChat(client)
+			Connections.RemoveClientFromChat(client)
 		case "message":
 			if client.chat == nil {
 				continue
