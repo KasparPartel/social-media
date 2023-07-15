@@ -44,7 +44,7 @@ export function GroupContent({ groupId }: GroupContentProp) {
         <div className="group-content">
             <div className="group-content__buttons-wrapper">
                 <div className="group-content__buttons">
-                    <CreateGroupContent {...{ isPosts, groupId }} />
+                    <CreateGroupContent {...{ isPosts, groupId, setFetchedPosts, setFetchedEvents }} />
                     <button className="button group__button" type="button" onClick={switchPosts}>
                         Go to {isPosts ? "events" : "posts"}
                     </button>

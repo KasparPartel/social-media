@@ -1,23 +1,20 @@
 import { useNavigate } from "react-router-dom"
-import { GroupFormFields } from "../../models"
+import { GroupFetchedEvent, GroupFetchedPost, GroupFormFields } from "../../models"
 import { useState } from "react"
 import toggleHook from "../../hooks/useToggle"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { useErrorsContext } from "../error-display/ErrorDisplay"
 
-interface CreateGroupContentProp {
+interface CreateGroupProps {
     isPosts: boolean
     groupId: number
+    setFetchedPosts: React.Dispatch<React.SetStateAction<GroupFetchedPost[]>>
+    setFetchedEvents: React.Dispatch<React.SetStateAction<GroupFetchedEvent[]>>
+    toggleModal?: () => void
 }
 
-interface GroupContentFormProps {
-    isPosts: boolean
-    toggleModal: () => void
-    groupId: number
-}
-
-export function CreateGroupContent({ isPosts, groupId }: CreateGroupContentProp) {
+export function CreateGroupContent({ isPosts, groupId, setFetchedPosts, setFetchedEvents }: CreateGroupProps) {
     const { toggle: modalOpen, toggleChange: toggleModal } = toggleHook(false)
 
     return (
@@ -25,12 +22,12 @@ export function CreateGroupContent({ isPosts, groupId }: CreateGroupContentProp)
             <button className="button group__button" onClick={toggleModal}>
                 {isPosts ? "Create post" : "Create event"}
             </button>
-            {modalOpen ? <GroupContentForm {...{ isPosts, toggleModal, groupId }} /> : null}
+            {modalOpen ? <GroupContentForm {...{ isPosts, groupId, setFetchedPosts, setFetchedEvents, toggleModal }} /> : null}
         </>
     )
 }
 
-function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormProps) {
+function GroupContentForm({ isPosts, toggleModal, groupId, setFetchedPosts, setFetchedEvents }: CreateGroupProps) {
     const navigate = useNavigate()
     const { displayErrors } = useErrorsContext()
     const defaultFormData: GroupFormFields = {
@@ -75,6 +72,11 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                             })
                             .then((r) => {
                                 if (r.errors) throw r.errors
+                                if (isPosts) {
+                                    setFetchedPosts(prev => [...prev, r.data])
+                                } else {
+                                    setFetchedEvents(prev => [...prev, r.data])
+                                }
                                 setFormData(defaultFormData)
                                 toggleModal()
                             })
@@ -111,9 +113,8 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                         className="post-form__text"
                     />
                     <div
-                        className={`post-form__bar${
-                            !isPosts ? "" : " post-form__bar_reverse-flex"
-                        }`}
+                        className={`post-form__bar${!isPosts ? "" : " post-form__bar_reverse-flex"
+                            }`}
                     >
                         {!isPosts ? (
                             <input
