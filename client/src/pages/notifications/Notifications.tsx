@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
-import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
+import { ErrorsDisplayType, useErrorsContext } from "../../components/error-display/ErrorDisplay"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-import { Group, ServerResponse, User } from "../models"
+import { Group, ServerResponse, User } from "../../models"
 import { FollowsHandler, GroupInvitesHandler, GroupJoinRequestsHandler } from "./Handlers"
 
 interface NotificationsResponse {

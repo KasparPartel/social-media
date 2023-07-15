@@ -1,7 +1,7 @@
 import "./createGroup.css"
 import React, { useState } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
-import { Group, MakeGroupFormFields, ServerResponse } from "../models"
+import { Group, MakeGroupFormFields, ServerResponse } from "../../models"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"

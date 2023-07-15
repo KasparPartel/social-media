@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { GroupFormFields } from "../models"
+import { GroupFormFields } from "../../models"
 import { useState } from "react"
 import toggleHook from "../../hooks/useToggle"
 import fetchHandler from "../../additional-functions/fetchHandler"
@@ -111,9 +111,8 @@ function GroupContentForm({ isPosts, toggleModal, groupId }: GroupContentFormPro
                         className="post-form__text"
                     />
                     <div
-                        className={`post-form__bar${
-                            !isPosts ? "" : " post-form__bar_reverse-flex"
-                        }`}
+                        className={`post-form__bar${!isPosts ? "" : " post-form__bar_reverse-flex"
+                            }`}
                     >
                         {!isPosts ? (
                             <input

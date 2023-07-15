@@ -1,6 +1,6 @@
 import sendIcon from "../../assets/send-outline.svg"
 import { useState } from "react"
-import { PostComment, User } from "../models"
+import { PostComment, User } from "../../models"
 import { postComment } from "./fetch"
 import { AttachmentInput } from "../attachments/AttachmentInput"
 import AddedAttachmentsList from "../attachments/AddedAttachmentsList"

@@ -2,13 +2,13 @@ import "./group-content.css"
 import { useEffect, useState } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import toggleHook from "../../hooks/useToggle"
-import UserPost from "../user-post/UserPost"
+import UserPost from "../../components/user-post/UserPost"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-import { GroupFetchedEvent, GroupFetchedPost } from "../models"
+import { GroupFetchedEvent, GroupFetchedPost } from "../../models"
 import { GroupEvent } from "./GroupEvent"
-import { CreateGroupContent } from "../create-group-content/CreateGroupContent"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { CreateGroupContent } from "../../components/create-group-content/CreateGroupContent"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 interface GroupContentProp {
     groupId: number

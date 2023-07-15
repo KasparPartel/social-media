@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom"
-import { followProps } from "../components/user-information/UserInformation"
+import { followProps } from "../pages/user-information/UserInformation"
 import { fetchErrorChecker } from "./fetchErr"
 import fetchHandler from "./fetchHandler"
 import { ErrorsDisplayType } from "../components/error-display/ErrorDisplay"

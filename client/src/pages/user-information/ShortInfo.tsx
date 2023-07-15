@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom"
 import altAvatar from "../../assets/default-avatar.png"
 import settingsIcon from "../../assets/settings_icon.svg"
 import toggleHook from "../../hooks/useToggle"
-import { ProfileSettings } from "../profile-settings/Settings"
-import { User } from "../models"
+import { ProfileSettings } from "../../components/profile-settings/Settings"
+import { User } from "../../models"
 import "./short-info.css"
 
 interface shortInfoProps {

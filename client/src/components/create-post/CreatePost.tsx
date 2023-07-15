@@ -1,6 +1,6 @@
 import "./create-post.css"
 import { useState } from "react"
-import { PostFormFields } from "../models"
+import { PostFormFields } from "../../models"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import toggleHook from "../../hooks/useToggle"
 import { NavigateFunction, useNavigate } from "react-router-dom"

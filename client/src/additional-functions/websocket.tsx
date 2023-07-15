@@ -1,4 +1,4 @@
-import { BasePayload, GroupFetchedEvent, ServerMessage } from "../components/models"
+import { BasePayload, GroupFetchedEvent, ServerMessage } from "../models"
 
 export const EVENT_TYPES = ["join", "leave", "message", "notifications"]
 

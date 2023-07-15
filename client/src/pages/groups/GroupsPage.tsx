@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import LoadingSkeleton from "../../components/render-states/LoadingSkeleton"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import "./groups.css"
 import { JoinGroupButtons } from "./JoinGroupButtons"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-import { Group } from "../models"
-import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
-import CreateGroup from "../create-group/CreateGroup"
+import { Group } from "../../models"
+import { ErrorsDisplayType, useErrorsContext } from "../../components/error-display/ErrorDisplay"
+import CreateGroup from "../../components/create-group/CreateGroup"
 
 export function GroupsPage() {
     const navigate = useNavigate()

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../additional-functions/fetchErr"
 import fetchHandler from "../additional-functions/fetchHandler"
-import { Group, ServerResponse, User } from "../components/models"
+import { Group, ServerResponse, User } from "../models"
 import { useErrorsContext } from "../components/error-display/ErrorDisplay"
 
 /**

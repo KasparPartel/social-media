@@ -1,4 +1,4 @@
-import { PostFormFields, User } from "../models"
+import { PostFormFields, User } from "../../models"
 import privateAddIcon from "../../assets/private_add.svg"
 import privateResetIcon from "../../assets/Reset.svg"
 import PrivacyOverlay from "./PrivacyOverlay"

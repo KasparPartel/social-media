@@ -1,4 +1,4 @@
-import { ProfileSettingsUpdateFormFields } from "../components/models"
+import { ProfileSettingsUpdateFormFields } from "../models"
 
 export function ImageUpload(
     e: React.ChangeEvent<HTMLInputElement>,

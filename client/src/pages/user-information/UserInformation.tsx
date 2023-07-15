@@ -7,13 +7,13 @@ import FollowButton from "./FollowButton"
 import LabeledParagraph from "./Label"
 import ShortInfo from "./ShortInfo"
 import "./user-information.css"
-import FollowingFollowers from "../followers-following/FollowingFollowers"
-import CreatePost from "../create-post/CreatePost"
-import PostList from "../user-post/PostList"
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import FollowingFollowers from "../../components/followers-following/FollowingFollowers"
+import CreatePost from "../../components/create-post/CreatePost"
+import PostList from "../../components/user-post/PostList"
+import LoadingSkeleton from "../../components/render-states/LoadingSkeleton"
 import useParamId from "../../hooks/useParamId"
 import { useNavigate } from "react-router-dom"
-import { Chat } from "../chat-component/Chat"
+import { Chat } from "../../components/chat-component/Chat"
 
 export interface followProps {
     followClass: string

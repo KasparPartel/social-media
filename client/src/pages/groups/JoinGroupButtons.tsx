@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { ReactElement, useState } from "react"
 import { sendJoinRequest, leaveGroupInGroupList } from "./fetch"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
 interface JoinGroupButtonsProps {
@@ -56,7 +56,7 @@ export function JoinGroupButtons({
     }
 
     if (joinStatus > 3 || joinStatus < 1) {
-        ;<h1>Error: Not existing joinStatus {joinStatus}</h1>
+        ; <h1>Error: Not existing joinStatus {joinStatus}</h1>
     }
 
     return (

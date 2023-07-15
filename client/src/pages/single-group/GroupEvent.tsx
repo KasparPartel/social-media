@@ -1,12 +1,12 @@
 import moment from "moment"
-import { EventStatus, GroupFetchedEvent } from "../models"
+import { EventStatus, GroupFetchedEvent } from "../../models"
 import "./event.css"
 import useUserInfo from "../../hooks/useEntityInfo"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
+import { ErrorsDisplayType, useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 interface GroupEventProp {
     groupEvent: GroupFetchedEvent
@@ -41,9 +41,8 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 displayErrors,
                             })
                         }
-                        className={`event__button event__button_left ${
-                            isGoing === 3 ? "button_green" : "button_gray"
-                        }`}
+                        className={`event__button event__button_left ${isGoing === 3 ? "button_green" : "button_gray"
+                            }`}
                     >
                         GOING
                     </button>
@@ -58,9 +57,8 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 displayErrors,
                             })
                         }
-                        className={`event__button event__button_right ${
-                            isGoing === 2 ? "button_red" : "button_gray"
-                        }`}
+                        className={`event__button event__button_right ${isGoing === 2 ? "button_red" : "button_gray"
+                            }`}
                     >
                         NOT GOING
                     </button>

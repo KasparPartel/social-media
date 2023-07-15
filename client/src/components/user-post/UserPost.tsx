@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import icon from "../../assets/SVGRepo_iconCarrier.svg"
 import { useOpenText } from "../../hooks/useOpenText"
-import { Post } from "../models"
+import { Post } from "../../models"
 import CommentList from "../post-comment/CommentList"
 import LoadingSkeleton from "../render-states/LoadingSkeleton"
 import "./userPost.css"

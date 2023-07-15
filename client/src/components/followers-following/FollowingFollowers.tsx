@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
-import { User } from "../models"
+import { User } from "../../models"
 import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
 import useParamId from "../../hooks/useParamId"
@@ -35,21 +35,21 @@ function FollowingFollowersContainer({ header, userList }: FollowingFollowersCon
                 {userList.length === 0
                     ? placeholderPicker(header)
                     : userList.map((user, i) => {
-                          return (
-                              <div className="user-card" key={i}>
-                                  <img
-                                      className="user-card__avatar"
-                                      src={user.avatar !== "" ? user.avatar : altAvatar}
-                                      alt="avatar"
-                                  />
-                                  <Link to={`/user/${user.id}`} className="link">
-                                      {user.login
-                                          ? user.login
-                                          : `${user.firstName} ${user.lastName}`}
-                                  </Link>
-                              </div>
-                          )
-                      })}
+                        return (
+                            <div className="user-card" key={i}>
+                                <img
+                                    className="user-card__avatar"
+                                    src={user.avatar !== "" ? user.avatar : altAvatar}
+                                    alt="avatar"
+                                />
+                                <Link to={`/user/${user.id}`} className="link">
+                                    {user.login
+                                        ? user.login
+                                        : `${user.firstName} ${user.lastName}`}
+                                </Link>
+                            </div>
+                        )
+                    })}
             </div>
         </div>
     )

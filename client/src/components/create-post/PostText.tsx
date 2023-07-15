@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom"
-import { PostFormFields } from "../models"
+import { PostFormFields } from "../../models"
 
 export interface CommonPostProps {
     formData: PostFormFields

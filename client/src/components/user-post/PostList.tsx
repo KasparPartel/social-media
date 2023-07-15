@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import UserPost from "./UserPost"
 import "./userPost.css"
 import { getPostIds } from "./fetch"
-import { User } from "../models"
+import { User } from "../../models"
 import { useErrorsContext } from "../error-display/ErrorDisplay"
 import { useNavigate } from "react-router-dom"
 

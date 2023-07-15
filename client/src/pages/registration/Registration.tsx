@@ -6,7 +6,7 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImageUpload } from "../../additional-functions/images"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 export function Registration() {
     const navigate = useNavigate()

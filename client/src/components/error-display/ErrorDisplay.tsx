@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import PropTypes from "prop-types"
-import { ErrorResponse } from "../models"
+import { ErrorResponse } from "../../models"
 import "./errorDisplay.css"
 
 export type ErrorsDisplayType = (errors: ErrorResponse[]) => void

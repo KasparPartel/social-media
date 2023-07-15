@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { followRequest } from "../../additional-functions/follow"
 import { followProps } from "./UserInformation"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 interface followButtonProps {
     id: number

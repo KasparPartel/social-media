@@ -1,6 +1,6 @@
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { Dispatch, SetStateAction } from "react"
-import { Post } from "../models"
+import { Post } from "../../models"
 import { NavigateFunction } from "react-router-dom"
 import { ErrorsDisplayType } from "../error-display/ErrorDisplay"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"

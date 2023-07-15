@@ -4,7 +4,7 @@ import { ImageUpload } from "../../additional-functions/images"
 import avatar_default from "../../assets/default-avatar.png"
 import { ProfileSettingsUpdateRequest } from "../../additional-functions/profileSettings"
 import { useNavigate } from "react-router-dom"
-import { User } from "../models"
+import { User } from "../../models"
 import { useErrorsContext } from "../error-display/ErrorDisplay"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 

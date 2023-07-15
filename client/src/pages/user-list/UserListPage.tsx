@@ -1,10 +1,10 @@
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import LoadingSkeleton from "../../components/render-states/LoadingSkeleton"
 import "./userListPage.css"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { User } from "../models"
+import { User } from "../../models"
 import { UserList } from "./UserList"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 import { getUsersWithExceptionList } from "./fetch"
 
 export function UserListPage() {

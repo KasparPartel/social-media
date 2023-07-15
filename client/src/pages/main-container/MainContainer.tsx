@@ -1,4 +1,4 @@
-import { Header } from "../header/Header"
+import { Header } from "../../components/header/Header"
 import { Outlet } from "react-router-dom"
 import { WebSocketService, wsDataSourceProps } from "../../additional-functions/websocket"
 import "./main-container.css"
