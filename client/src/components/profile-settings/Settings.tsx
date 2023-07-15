@@ -42,8 +42,8 @@ export function ProfileSettings({
                                         r.data.isPublic === "true"
                                             ? true
                                             : r.data.isPublic === "false"
-                                                ? false
-                                                : r.data.isPublic
+                                            ? false
+                                            : r.data.isPublic
                                 Object.entries(r.data).forEach(([key, value]) => {
                                     if (Object.hasOwn(temp, key)) {
                                         temp[key] = value
@@ -126,8 +126,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                    ? avatar
-                                    : avatar_default
+                                ? avatar
+                                : avatar_default
                         }
                         alt="attachment"
                     />

@@ -41,8 +41,9 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 displayErrors,
                             })
                         }
-                        className={`event__button event__button_left ${isGoing === 3 ? "button_green" : "button_gray"
-                            }`}
+                        className={`event__button event__button_left ${
+                            isGoing === 3 ? "button_green" : "button_gray"
+                        }`}
                     >
                         GOING
                     </button>
@@ -57,8 +58,9 @@ export function GroupEvent({ groupEvent }: GroupEventProp) {
                                 displayErrors,
                             })
                         }
-                        className={`event__button event__button_right ${isGoing === 2 ? "button_red" : "button_gray"
-                            }`}
+                        className={`event__button event__button_right ${
+                            isGoing === 2 ? "button_red" : "button_gray"
+                        }`}
                     >
                         NOT GOING
                     </button>

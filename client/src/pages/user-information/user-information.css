@@ -54,7 +54,7 @@
     background-color: var(--main-red);
 }
 
-.b {
+.dashboard {
     display: grid;
     overflow-y: hidden;
     grid-template-columns: 1fr 2fr;

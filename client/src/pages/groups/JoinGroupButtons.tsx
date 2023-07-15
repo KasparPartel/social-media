@@ -56,7 +56,7 @@ export function JoinGroupButtons({
     }
 
     if (joinStatus > 3 || joinStatus < 1) {
-        ; <h1>Error: Not existing joinStatus {joinStatus}</h1>
+        ;<h1>Error: Not existing joinStatus {joinStatus}</h1>
     }
 
     return (

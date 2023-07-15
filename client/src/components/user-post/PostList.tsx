@@ -9,17 +9,18 @@ import { useNavigate } from "react-router-dom"
 interface PostListParams {
     user: User
     isMyProfile: boolean
+    idList: number[]
+    setIdList: React.Dispatch<React.SetStateAction<number[]>>
 }
 
 /*
  * Parent component for rendering posts created by specific user
  */
-export default function PostList({ user, isMyProfile }: PostListParams) {
+export default function PostList({ user, isMyProfile, idList, setIdList }: PostListParams) {
     if (!user || (!isMyProfile && !user.isPublic && user.followStatus != 3)) {
         return null
     }
 
-    const [idList, setIdList] = useState<number[]>([])
     const [err, setErr] = useState<Error>(null)
     const navigate = useNavigate()
     const { displayErrors } = useErrorsContext()

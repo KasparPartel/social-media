@@ -27,6 +27,7 @@ export function UserProfile() {
     const [user, isLoading, setUser] = useUserInfo(paramId)
     const { height, style, refText, openText } = useOpenText(0)
     const [followProps, setFollowProps] = useState<followProps>(followStatusHandler(0))
+    const [postIdList, setPostIdList] = useState<number[]>([])
 
     useEffect(() => {
         if (user && user.followStatus !== 0) setFollowProps(followStatusHandler(user.followStatus))
@@ -60,7 +61,7 @@ export function UserProfile() {
                                         setFollowPorps={setFollowProps}
                                     />
                                 ) : (
-                                    <CreatePost />
+                                    <CreatePost setPostIdList={setPostIdList} />
                                 )}
                             </div>
                         </div>
@@ -83,9 +84,16 @@ export function UserProfile() {
                         </div>
                     </div>
                     {isMyProfile || user.isPublic || user.followStatus === 3 ? (
-                        <div className="b">
+                        <div className="dashboard">
                             <FollowingFollowers />
-                            <PostList {...{ user, isMyProfile }} />
+                            <PostList
+                                {...{
+                                    user,
+                                    isMyProfile,
+                                    idList: postIdList,
+                                    setIdList: setPostIdList,
+                                }}
+                            />
                         </div>
                     ) : null}
                 </>
