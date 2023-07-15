@@ -23,16 +23,16 @@ export function UserListPage() {
             navigate,
             displayErrors,
         })
-    }, [isLoading])
+    }, [])
 
     if (isLoading) return <LoadingSkeleton dataName="list of users" />
 
-    if (!(userList && userList.length > 0)) navigate("/error-not-found")
+    // if (!(userList && userList.length > 0)) navigate("/error-not-found")
 
     return (
         <main className="user-list-main">
             <ul className="user-list__wrapper">
-                <UserList userList={userList} />
+                {Array.isArray(userList) && <UserList userList={userList} />}
             </ul>
         </main>
     )

@@ -26,7 +26,7 @@ export function GroupsPage() {
         return (
             <div className="groups-empty-display">
                 <p>No Groups, yet!</p>
-                <CreateGroup />
+                <CreateGroup setGroups={setGroupList} />
             </div>
         )
     }
@@ -34,7 +34,7 @@ export function GroupsPage() {
     return (
         <main className="groups-main">
             <div className="create-group__button_wrapper">
-                <CreateGroup />
+                <CreateGroup setGroups={setGroupList} />
             </div>
             <div className="group-list">
                 {groupList.map((group, key) => {
