@@ -4,7 +4,7 @@ import { ImageUpload } from "../../additional-functions/images"
 import avatar_default from "../../assets/default-avatar.png"
 import { ProfileSettingsUpdateRequest } from "../../additional-functions/profileSettings"
 import { useNavigate } from "react-router-dom"
-import { User } from "../models"
+import { User } from "../../models"
 import { useErrorsContext } from "../error-display/ErrorDisplay"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
@@ -81,7 +81,7 @@ export function ProfileSettings({
                             name="login"
                             placeholder="Username"
                             type="text"
-                            value={loginText}
+                            value={loginText ? loginText : ""}
                             onChange={(e) => setLoginText(e.target.value)}
                         />
                     </label>
@@ -91,7 +91,7 @@ export function ProfileSettings({
                             className="settings__textarea form__field"
                             name="aboutMe"
                             placeholder="Bio here"
-                            value={aboutMeText}
+                            value={aboutMeText ? aboutMeText : ""}
                             onChange={(e) => setAboutMeText(e.target.value)}
                         />
                     </label>

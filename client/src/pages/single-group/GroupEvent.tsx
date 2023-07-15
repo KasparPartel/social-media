@@ -1,12 +1,12 @@
 import moment from "moment"
-import { EventStatus, GroupFetchedEvent } from "../models"
+import { EventStatus, GroupFetchedEvent } from "../../models"
 import "./event.css"
 import useUserInfo from "../../hooks/useEntityInfo"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
+import { ErrorsDisplayType, useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 interface GroupEventProp {
     groupEvent: GroupFetchedEvent

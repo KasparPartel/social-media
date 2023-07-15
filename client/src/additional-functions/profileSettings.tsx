@@ -1,7 +1,4 @@
-import {
-    ProfileSettingsUpdateFormFields,
-    ProfileSettingsUpdateRequestProps,
-} from "../components/models"
+import { ProfileSettingsUpdateFormFields, ProfileSettingsUpdateRequestProps } from "../models"
 import fetchHandler from "./fetchHandler"
 import { formDataExtractor } from "./form"
 import { updateImage } from "./images"

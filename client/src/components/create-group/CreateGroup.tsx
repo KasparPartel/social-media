@@ -1,7 +1,7 @@
 import "./createGroup.css"
 import React, { useState } from "react"
 import fetchHandler from "../../additional-functions/fetchHandler"
-import { MakeGroupFormFields } from "../models"
+import { Group, MakeGroupFormFields, ServerResponse } from "../../models"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
@@ -10,7 +10,7 @@ const defaultGroupFormData: MakeGroupFormFields = {
     title: "",
     description: "",
 }
-export default function CreateGroup() {
+export default function CreateGroup({ setGroups }: { setGroups }) {
     const [isFormOpen, setFormOpen] = React.useState(false)
     const [formData, setFormData] = useState<MakeGroupFormFields>(defaultGroupFormData)
     const navigate = useNavigate()
@@ -35,6 +35,14 @@ export default function CreateGroup() {
                                     if (r) {
                                         setFormOpen(false)
                                         setFormData(defaultGroupFormData)
+                                        setGroups((prev: Group[]) => {
+                                            const temp = prev.slice()
+                                            const { data: group } = r
+                                            group.isOwner = true
+                                            group.joinStatus = 3
+                                            temp.push(group)
+                                            return temp
+                                        })
                                     }
                                 })
                             }}
@@ -87,7 +95,7 @@ function handleSubmit(
     data: MakeGroupFormFields,
     navigate: NavigateFunction,
     displayErrors: ErrorsDisplayType,
-): Promise<boolean> {
+): Promise<ServerResponse<Group> | null> {
     return fetchHandler(`http://localhost:8080/groups`, "POST", data)
         .then((r) => {
             if (!r.ok) {
@@ -97,11 +105,11 @@ function handleSubmit(
         })
         .then((r) => {
             if (r.errors) throw r.errors
-            return true
+            return r
         })
         .catch((errArr) => {
             // navigate("/internal-error")
             fetchErrorChecker(errArr, navigate, displayErrors)
-            return false
+            return null
         })
 }

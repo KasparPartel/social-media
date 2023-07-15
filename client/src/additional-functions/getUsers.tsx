@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ErrorResponse, ServerResponse, User } from "../components/models"
+import { ErrorResponse, ServerResponse, User } from "../models"
 import { fetchErrorChecker } from "./fetchErr"
 import fetchHandler from "./fetchHandler"
 import { useErrorsContext } from "../components/error-display/ErrorDisplay"

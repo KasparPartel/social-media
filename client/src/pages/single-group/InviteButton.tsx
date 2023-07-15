@@ -1,11 +1,11 @@
 import { useState } from "react"
 import toggleHook from "../../hooks/useToggle"
-import PrivacyOverlay from "../create-post/PrivacyOverlay"
+import PrivacyOverlay from "../../components/create-post/PrivacyOverlay"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import { getUsersList } from "../../additional-functions/getUsers"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import { useNavigate } from "react-router-dom"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 interface InviteButtonParam {
     paramId: number

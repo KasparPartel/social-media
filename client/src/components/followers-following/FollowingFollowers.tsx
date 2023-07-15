@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { getUsersList } from "../../additional-functions/getUsers"
-import { User } from "../models"
+import { User } from "../../models"
 import altAvatar from "../../assets/default-avatar.png"
 import "./followers-following.css"
 import useParamId from "../../hooks/useParamId"

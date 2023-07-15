@@ -1,5 +1,5 @@
 import PrivateUserList from "./PrivateUserList"
-import { User } from "../models"
+import { User } from "../../models"
 import { ProfilePlaceholders } from "../followers-following/FollowingFollowers"
 import { ReactNode } from "react"
 

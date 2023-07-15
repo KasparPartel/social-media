@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom"
-import { ErrorResponse } from "../components/models"
+import { ErrorResponse } from "../models"
 import { ErrorsDisplayType } from "../components/error-display/ErrorDisplay"
 
 export function fetchErrorChecker(

@@ -1,10 +1,10 @@
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import LoadingSkeleton from "../../components/render-states/LoadingSkeleton"
 import "./userListPage.css"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { User } from "../models"
+import { User } from "../../models"
 import { UserList } from "./UserList"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 import { getUsersWithExceptionList } from "./fetch"
 
 export function UserListPage() {
@@ -23,16 +23,16 @@ export function UserListPage() {
             navigate,
             displayErrors,
         })
-    }, [isLoading])
+    }, [])
 
     if (isLoading) return <LoadingSkeleton dataName="list of users" />
 
-    if (!(userList && userList.length > 0)) navigate("/error-not-found")
+    if (!(userList && userList.length > 0)) return <p className="empty-message">No users found</p>
 
     return (
         <main className="user-list-main">
             <ul className="user-list__wrapper">
-                <UserList userList={userList} />
+                {Array.isArray(userList) && <UserList userList={userList} />}
             </ul>
         </main>
     )

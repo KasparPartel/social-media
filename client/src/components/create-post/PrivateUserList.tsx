@@ -1,4 +1,4 @@
-import { User } from "../models"
+import { User } from "../../models"
 import altAvatar from "../../assets/default-avatar.png"
 
 export default function PrivateUserList(

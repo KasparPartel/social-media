@@ -1,4 +1,4 @@
-import { FormFields, RequestProps, ServerResponse, User } from "../components/models"
+import { FormFields, RequestProps, ServerResponse, User } from "../models"
 import { fetchErrorChecker } from "./fetchErr"
 
 export function formDataExtractor(formData: FormData, formFields: FormFields) {

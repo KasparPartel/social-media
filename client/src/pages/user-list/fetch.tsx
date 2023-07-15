@@ -1,8 +1,8 @@
 import { NavigateFunction } from "react-router-dom"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 import fetchHandler from "../../additional-functions/fetchHandler"
-import { User } from "../models"
-import { ErrorsDisplayType } from "../error-display/ErrorDisplay"
+import { User } from "../../models"
+import { ErrorsDisplayType } from "../../components/error-display/ErrorDisplay"
 
 type GetUsersProps = {
     idException: number

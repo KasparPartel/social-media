@@ -7,13 +7,13 @@ import FollowButton from "./FollowButton"
 import LabeledParagraph from "./Label"
 import ShortInfo from "./ShortInfo"
 import "./user-information.css"
-import FollowingFollowers from "../followers-following/FollowingFollowers"
-import CreatePost from "../create-post/CreatePost"
-import PostList from "../user-post/PostList"
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import FollowingFollowers from "../../components/followers-following/FollowingFollowers"
+import CreatePost from "../../components/create-post/CreatePost"
+import PostList from "../../components/user-post/PostList"
+import LoadingSkeleton from "../../components/render-states/LoadingSkeleton"
 import useParamId from "../../hooks/useParamId"
 import { useNavigate } from "react-router-dom"
-import { Chat } from "../chat-component/Chat"
+import { Chat } from "../../components/chat-component/Chat"
 
 export interface followProps {
     followClass: string
@@ -27,6 +27,7 @@ export function UserProfile() {
     const [user, isLoading, setUser] = useUserInfo(paramId)
     const { height, style, refText, openText } = useOpenText(0)
     const [followProps, setFollowProps] = useState<followProps>(followStatusHandler(0))
+    const [postIdList, setPostIdList] = useState<number[]>([])
 
     useEffect(() => {
         if (user && user.followStatus !== 0) setFollowProps(followStatusHandler(user.followStatus))
@@ -60,7 +61,7 @@ export function UserProfile() {
                                         setFollowPorps={setFollowProps}
                                     />
                                 ) : (
-                                    <CreatePost />
+                                    <CreatePost setPostIdList={setPostIdList} />
                                 )}
                             </div>
                         </div>
@@ -83,9 +84,16 @@ export function UserProfile() {
                         </div>
                     </div>
                     {isMyProfile || user.isPublic || user.followStatus === 3 ? (
-                        <div className="b">
+                        <div className="dashboard">
                             <FollowingFollowers />
-                            <PostList {...{ user, isMyProfile }} />
+                            <PostList
+                                {...{
+                                    user,
+                                    isMyProfile,
+                                    idList: postIdList,
+                                    setIdList: setPostIdList,
+                                }}
+                            />
                         </div>
                     ) : null}
                 </>

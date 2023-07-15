@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { ReactElement, useState } from "react"
 import { sendJoinRequest, leaveGroupInGroupList } from "./fetch"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 import { fetchErrorChecker } from "../../additional-functions/fetchErr"
 
 interface JoinGroupButtonsProps {

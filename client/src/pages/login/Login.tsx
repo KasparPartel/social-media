@@ -1,7 +1,7 @@
 import "./login.css"
 import { LoginRequest } from "../../additional-functions/authorization"
 import { useNavigate } from "react-router-dom"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
 
 export default function Login() {
     const navigate = useNavigate()

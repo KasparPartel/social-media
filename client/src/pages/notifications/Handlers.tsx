@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
-import { Group } from "../models"
-import Username from "../post-comment/Username"
+import { Group } from "../../models"
+import Username from "../../components/post-comment/Username"
 import { ReactNode } from "react"
 import DeclineImg from "../../assets/VectorDecline.svg"
 import AcceptImg from "../../assets/VectorAccept.svg"

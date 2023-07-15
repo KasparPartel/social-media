@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom"
-import { ErrorsDisplayType } from "./error-display/ErrorDisplay"
+import { ErrorsDisplayType } from "./components/error-display/ErrorDisplay"
 
 export type FormFields =
     | LoginFormFields

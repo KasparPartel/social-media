@@ -1,4 +1,4 @@
-import { FormFields } from "../components/models"
+import { FormFields } from "../models"
 
 export default async function fetchHandler(
     inputURL: string,

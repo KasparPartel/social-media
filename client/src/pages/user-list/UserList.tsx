@@ -1,5 +1,5 @@
 import altAvatar from "../../assets/default-avatar.png"
-import { User } from "../models"
+import { User } from "../../models"
 import "./userList.css"
 import { useNavigate } from "react-router-dom"
 

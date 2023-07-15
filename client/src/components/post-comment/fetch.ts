@@ -1,5 +1,5 @@
 import fetchHandler from "../../additional-functions/fetchHandler"
-import { PostComment, ServerResponse } from "../models"
+import { PostComment, ServerResponse } from "../../models"
 
 /**
  *   Fetches all comment ids related to post

@@ -2,12 +2,12 @@ import "./group.css"
 import useParamId from "../../hooks/useParamId"
 import { useGroupInfo } from "../../hooks/useEntityInfo"
 import { useNavigate } from "react-router-dom"
-import LoadingSkeleton from "../render-states/LoadingSkeleton"
+import LoadingSkeleton from "../../components/render-states/LoadingSkeleton"
 import { InviteButton } from "./InviteButton"
 import { leaveGroup } from "../groups/fetch"
 import { GroupContent } from "./GroupContent"
-import { useErrorsContext } from "../error-display/ErrorDisplay"
-import { Chat } from "../chat-component/Chat"
+import { useErrorsContext } from "../../components/error-display/ErrorDisplay"
+import { Chat } from "../../components/chat-component/Chat"
 
 const groupJoinStatus = {
     1: "Not joined",

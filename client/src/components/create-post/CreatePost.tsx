@@ -1,6 +1,6 @@
 import "./create-post.css"
 import { useState } from "react"
-import { PostFormFields } from "../models"
+import { Post, PostFormFields, ServerResponse } from "../../models"
 import fetchHandler from "../../additional-functions/fetchHandler"
 import toggleHook from "../../hooks/useToggle"
 import { NavigateFunction, useNavigate } from "react-router-dom"
@@ -11,7 +11,11 @@ import AddedAttachmentsList from "../attachments/AddedAttachmentsList"
 import { AttachmentInput } from "../attachments/AttachmentInput"
 import { ErrorsDisplayType, useErrorsContext } from "../error-display/ErrorDisplay"
 
-export default function CreatePost() {
+interface CreatePostProp {
+    setPostIdList: React.Dispatch<React.SetStateAction<number[]>>
+}
+
+export default function CreatePost({ setPostIdList }: CreatePostProp) {
     const { toggle: modalOpen, toggleChange: toggleModal } = toggleHook(false)
 
     return (
@@ -19,16 +23,17 @@ export default function CreatePost() {
             <button type="button" className="button button_non-stretched" onClick={toggleModal}>
                 Create post
             </button>
-            {modalOpen ? <Modal {...{ toggleModal }} /> : null}
+            {modalOpen ? <Modal {...{ toggleModal, setPostIdList }} /> : null}
         </div>
     )
 }
 
-interface ModalProp {
+interface ModalProps {
     toggleModal: () => void
+    setPostIdList: React.Dispatch<React.SetStateAction<number[]>>
 }
 
-function Modal({ toggleModal }: ModalProp) {
+function Modal({ toggleModal, setPostIdList }: ModalProps) {
     const navigate = useNavigate()
     const { displayErrors } = useErrorsContext()
     const defaultFormData: PostFormFields = {
@@ -49,10 +54,11 @@ function Modal({ toggleModal }: ModalProp) {
                     onSubmit={(e) => {
                         e.preventDefault()
                         formData.attachments = attachmentData.map((attachment) => attachment.value)
-                        handleSubmit(formData, navigate, displayErrors).then((result) => {
-                            if (result) {
+                        handleSubmit(formData, navigate, displayErrors).then((result: Post) => {
+                            if (result !== null) {
                                 setFormData(defaultFormData)
                                 setAttachmentData([])
+                                setPostIdList((prev) => [...prev, result.id])
                                 toggleModal()
                             }
                         })
@@ -110,7 +116,7 @@ function handleSubmit(
     formData: PostFormFields,
     navigate: NavigateFunction,
     displayErrors: ErrorsDisplayType,
-): Promise<boolean> {
+) {
     return fetchHandler(
         `http://localhost:8080/user/${localStorage.getItem("id")}/posts`,
         "POST",
@@ -122,13 +128,13 @@ function handleSubmit(
             }
             return r.json()
         })
-        .then((r) => {
+        .then((r: ServerResponse<Post>) => {
             if (r.errors) throw r.errors
-            return true
+            return r.data
         })
         .catch((errArr) => {
             // navigate("/internal-error")
             fetchErrorChecker(errArr, navigate, displayErrors)
-            return false
+            return null
         })
 }
