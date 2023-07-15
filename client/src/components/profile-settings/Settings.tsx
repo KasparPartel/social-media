@@ -42,8 +42,8 @@ export function ProfileSettings({
                                         r.data.isPublic === "true"
                                             ? true
                                             : r.data.isPublic === "false"
-                                            ? false
-                                            : r.data.isPublic
+                                                ? false
+                                                : r.data.isPublic
                                 Object.entries(r.data).forEach(([key, value]) => {
                                     if (Object.hasOwn(temp, key)) {
                                         temp[key] = value
@@ -81,7 +81,7 @@ export function ProfileSettings({
                             name="login"
                             placeholder="Username"
                             type="text"
-                            value={loginText}
+                            value={loginText ? loginText : ""}
                             onChange={(e) => setLoginText(e.target.value)}
                         />
                     </label>
@@ -91,7 +91,7 @@ export function ProfileSettings({
                             className="settings__textarea form__field"
                             name="aboutMe"
                             placeholder="Bio here"
-                            value={aboutMeText}
+                            value={aboutMeText ? aboutMeText : ""}
                             onChange={(e) => setAboutMeText(e.target.value)}
                         />
                     </label>
@@ -126,8 +126,8 @@ export function ProfileSettings({
                             currentAvatar
                                 ? URL.createObjectURL(currentAvatar)
                                 : avatar
-                                ? avatar
-                                : avatar_default
+                                    ? avatar
+                                    : avatar_default
                         }
                         alt="attachment"
                     />

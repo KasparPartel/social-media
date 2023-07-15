@@ -6,10 +6,6 @@
     box-sizing: border-box;
 }
 
-.notifications-list__empty-message {
-    font-size: 24px;
-}
-
 .notification {
     display: flex;
     flex-direction: column;

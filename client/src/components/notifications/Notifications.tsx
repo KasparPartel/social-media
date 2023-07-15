@@ -65,9 +65,9 @@ export function Notifications() {
     return (
         <div className="notifications-list">
             {followRequest.length === 0 &&
-            inviteRequest.length === 0 &&
-            joinRequest.length === 0 ? (
-                <p className="notifications-list__empty-message">No notifications yet</p>
+                inviteRequest.length === 0 &&
+                joinRequest.length === 0 ? (
+                <p className="empty-message">No notifications yet</p>
             ) : null}
             {followRequest.length > 0 ? (
                 <div className="user-list-main">

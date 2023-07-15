@@ -27,7 +27,7 @@ export function UserListPage() {
 
     if (isLoading) return <LoadingSkeleton dataName="list of users" />
 
-    // if (!(userList && userList.length > 0)) navigate("/error-not-found")
+    if (!(userList && userList.length > 0)) return <p className="empty-message">No users found</p>
 
     return (
         <main className="user-list-main">
