@@ -30,6 +30,7 @@ export function JoinGroupButtons({
                 sendJoinRequest(groupId, navigate, displayErrors, setJoinStatus)
                 break
             case 2: // requested
+            case 4: // Invited
                 alert("Cancel join request endpoint/logic not added, yet")
                 // sendCancelRequest(groupId, navigate, displayErrors, setJoinStatus)
                 break
@@ -37,14 +38,6 @@ export function JoinGroupButtons({
                 wantsToBeInGroup
                     ? navigate(`/group/${groupId}`)
                     : leaveGroupInGroupList(groupId, navigate, displayErrors, setJoinStatus)
-                break
-            case 4: // Invited
-                wantsToBeInGroup
-                    ? alert("Accept request endpoint/logic not added, yet")
-                    : alert("Decline request endpoint/logic not added, yet")
-                // wantsToBeInGroup ?
-                //     sendAcceptRequest(groupId, navigate, displayErrors, setJoinStatus) :
-                //     sendDeclineRequest(groupId, navigate, displayErrors, setJoinStatus);
                 break
             default:
                 fetchErrorChecker(
@@ -56,7 +49,7 @@ export function JoinGroupButtons({
     }
 
     if (joinStatus > 3 || joinStatus < 1) {
-        ;<h1>Error: Not existing joinStatus {joinStatus}</h1>
+        ; <h1>Error: Not existing joinStatus {joinStatus}</h1>
     }
 
     return (
@@ -70,7 +63,7 @@ export function JoinGroupButtons({
                     join
                 </button>
             )}
-            {joinStatus === 2 && (
+            {(joinStatus === 2 || joinStatus === 4) && (
                 <button
                     type="button"
                     onClick={(event) => onClickHandler(event)}
@@ -96,24 +89,6 @@ export function JoinGroupButtons({
                     className=" group-card__button group-card__button_red"
                 >
                     leave
-                </button>
-            )}
-            {joinStatus === 4 && (
-                <button
-                    type="button"
-                    onClick={(event) => onClickHandler(event, true)}
-                    className=" group-card__button"
-                >
-                    accept
-                </button>
-            )}
-            {joinStatus === 4 && (
-                <button
-                    type="button"
-                    onClick={(event) => onClickHandler(event, false)}
-                    className=" group-card__button group-card__button_red"
-                >
-                    decline
                 </button>
             )}
             {!(joinStatus >= 1 && joinStatus <= 4) && (
