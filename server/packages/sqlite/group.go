@@ -390,7 +390,7 @@ func RejectJoinGroup(groupId, userId int) error {
 func AcceptInvitationGroup(groupId, userId int) error {
 	result, err := db.Exec(`DELETE FROM group_invitation
 		WHERE groupId = ?
-			AND userId = ?`)
+			AND userId = ?`, groupId, userId)
 	if err != nil {
 		return err
 	}
@@ -415,7 +415,7 @@ func AcceptInvitationGroup(groupId, userId int) error {
 func RejectInvitationGroup(groupId, userId int) error {
 	_, err := db.Exec(`DELETE FROM group_invitation
 		WHERE groupId = ?
-			AND userId = ?`)
+			AND userId = ?`, groupId, userId)
 	if err != nil {
 		return err
 	}
